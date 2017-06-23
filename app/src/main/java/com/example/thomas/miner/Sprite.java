@@ -1,0 +1,196 @@
+package com.example.thomas.miner;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+
+/**
+ * Created by Thomas on 26/01/2017.
+ */
+
+public class Sprite {
+
+    private Context mContext;
+    private Canvas mCanvas;
+    private int dimensions = 0;
+    private Bitmap sprite;
+    private int canvasWidth;
+    private int canvasHeight;
+    boolean jumping = false;
+    private int heightLeftToJump = 0;
+    private int heightToFall = 0;
+    private int baseJumpSpeed;
+    private int baseGravitySpeed;
+    private int baseRunningSpeed;
+    private boolean falling;
+    private boolean isAir = false;
+    private int mBlockSize;
+    private boolean isClamberingLeft = false;
+    private boolean isClamberingRight = false;
+    private int heightToClamber;
+    private int widthToClamber;
+    private ArrayOfBlocksOnScreen blocksOnScreen;
+
+    public Sprite(Context context, Canvas canvas, int dimension, int blockSize, ArrayOfBlocksOnScreen blocks)
+    {
+        blocksOnScreen = blocks;
+        mBlockSize = blockSize;
+        mCanvas = canvas;
+        mContext = context;
+        dimensions = dimension;
+        baseJumpSpeed = (int) (dimensions/8.0);
+        baseGravitySpeed = (int) (dimension/8.0);
+        baseRunningSpeed = (int) (dimension/8.0);
+        sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.miner);
+        canvasHeight = canvas.getHeight();
+        canvasWidth = canvas.getWidth();
+    }
+
+    public boolean isClambering()
+    {
+        return (isClamberingLeft || isClamberingRight);
+    }
+
+    public void clamberLeft(int height)
+    {
+        isClamberingLeft = true;
+        heightToClamber = height;
+        widthToClamber = mBlockSize/2;
+    }
+
+    public void clamberRight(int height)
+    {
+        isClamberingRight = true;
+        heightToClamber = height;
+        widthToClamber = mBlockSize/2;
+    }
+
+
+    public int clamberY()
+    {
+        int yMovement = 0;
+        if (heightToClamber > baseRunningSpeed)
+        {
+            heightToClamber = heightToClamber - baseRunningSpeed;
+            yMovement = -baseRunningSpeed;
+        }
+        else
+        {
+            yMovement = -heightToClamber;
+            isAir = false;
+            heightToClamber = 0;
+        }
+        return yMovement;
+    }
+
+    public int clamberX()
+    {
+        int xMovement = 0;
+        if (heightToClamber == 0)
+        {
+            if (widthToClamber > baseRunningSpeed)
+            {
+                widthToClamber = widthToClamber - baseRunningSpeed;
+                xMovement = (isClamberingLeft)?(-baseRunningSpeed):baseRunningSpeed;
+            }
+            else {
+                xMovement = (isClamberingLeft) ? (-widthToClamber) : widthToClamber;
+                widthToClamber = 0;
+                isClamberingLeft = false;
+                isClamberingRight = false;
+            }
+        }
+        return xMovement;
+    }
+
+    public void draw()
+    {
+        Rect position = new Rect(((canvasWidth - dimensions) / 2), ((canvasHeight - dimensions)/2), ((canvasWidth + dimensions) / 2), ((canvasHeight + dimensions)/2));
+        mCanvas.drawBitmap(sprite, null, position, null);
+    }
+
+    public int getBaseGravitySpeed()
+    {
+        return baseGravitySpeed;
+    }
+
+    public int getGravitySpeed(int gap)
+    {
+        isAir = !(gap % mBlockSize == 0);
+        if (gap == baseGravitySpeed)
+        {
+            return baseGravitySpeed;
+        }
+        if (gap <= baseGravitySpeed && gap > 0)
+        {
+            return gap;
+        }
+        else if (mBlockSize - gap <= baseGravitySpeed)
+        {
+            return gap - mBlockSize;
+        }
+        return 0;
+    }
+
+    public boolean isJumping()
+    {
+        return jumping;
+    }
+
+    public void setInAir(boolean air)
+    {
+        isAir = air;
+    }
+
+    /*
+    Starts the jump, with a predefined jump height
+     */
+    public void startJumping(int heightToJump)
+    {
+        heightLeftToJump = heightToJump;
+        jumping = true;
+        isAir = true;
+    }
+
+    public boolean isInAir()
+    {
+        return isAir;
+    }
+
+    public int getJumpSpeed()
+    {
+        if (heightLeftToJump > baseJumpSpeed)
+        {
+            heightLeftToJump = heightLeftToJump - baseJumpSpeed;
+            return baseJumpSpeed;
+        }
+        else
+        {
+            isAir = false;
+            jumping = false;
+            return heightLeftToJump;
+        }
+    }
+
+    public boolean isInWater()
+    {
+        return (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getWaterPercentage() > 50);
+    }
+
+    public boolean isDead()
+    {
+        return (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isIce());
+    }
+
+    public int getRunningSpeed()
+    {
+        int speed = baseRunningSpeed;
+        if (isInWater())
+        {
+            speed = (int) (3*baseRunningSpeed/4.0);
+        }
+        return speed;
+    }
+}

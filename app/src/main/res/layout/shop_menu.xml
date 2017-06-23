@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:textSize="16sp"
+            android:id="@+id/button_back_from_shop"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/shop_scrollview">
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/shop_linearview">
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:weightSum="10">
+
+                <View
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent">
+                </View>
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    </View>
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/house1"
+                        android:adjustViewBounds="true"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    </View>
+
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:orientation="vertical"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:textSize="20sp"
+                            android:gravity="center"
+                            android:text="House"/>
+
+                        <TextView
+                            android:layout_weight="6"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:textSize="14sp"
+                            android:gravity="center"
+                            android:text="Upgrade your house to gain extra ore upon escape!"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    </View>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent">
+                </View>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

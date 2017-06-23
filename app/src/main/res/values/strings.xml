@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Miner</string>
+    <string name="level_data_file_name">saved_level.txt</string>
+    <string name="ore_data_file_name">saved_ore.txt</string>
+    <string name="shop_data_file_name">shop.txt</string>
+
+</resources>

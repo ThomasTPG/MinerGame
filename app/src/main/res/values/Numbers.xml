@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="blocks_across">25</integer>
+    <integer name="blocks_per_screen_width">8</integer>
+    <integer name="left_hand_side_wiggle_room">4</integer>
+
+    <integer name="number_of_items_in_shop">30</integer>
+    <integer name="max_pickaxe_upgrade">1</integer>
+
+
+</resources>
