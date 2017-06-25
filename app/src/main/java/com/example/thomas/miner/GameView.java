@@ -251,7 +251,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     blocksOnScreen.calculateCurrentBlocks();
                     blocksOnScreen.updateWater();
                     blocksOnScreen.drawCurrentBlocks(c);
-                    mapArt.drawArt(camera,c);
+                    mapArt.drawArt(c);
                     mainCharacter.draw();
                     Paint p = new Paint();
                     p.setColor(Color.BLACK);
@@ -316,7 +316,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             blocksOnScreen = new ArrayOfBlocksOnScreen(gameWidth, gameHeight, blockSize, mContext, seed, camera, minedLocations);
             blocksOnScreen.updateCurrentScreenDimensions();
             blocksOnScreen.updatePreviousScreenDimensions();
-            mapArt = new MapArt(c,mContext,blockSize, shopMemory);
+            mapArt = new MapArt(c,mContext,blockSize, shopMemory,camera);
             mainCharacter = new Sprite(mContext, c, spriteDimension, blockSize, blocksOnScreen);
             miningClass = new Mining(gameHeight, gameWidth, blocksOnScreen, blockSize, oreCounter);
             checkExit = new CheckExit(camera, blockSize,mContext);
@@ -328,9 +328,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         public void drawBackGround(Canvas c)
         {
+
             Paint p = new Paint();
             p.setColor(Color.WHITE);
             c.drawRect(0,0,gameWidth,gameHeight, p);
+
         }
 
         public void setRunning(boolean b){
@@ -470,6 +472,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     }
                     else {
                         int gap = blockSize - ((camera.getCameraX() + spriteDimension / 2) % blockSize);
+                        System.out.println("Beanz" + gap);
                         if (gap <= 2 * TOL) {
                             if (speed <= gap) {
                                 newCameraX = newCameraX + speed;
