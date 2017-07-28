@@ -10,13 +10,15 @@ public class Node {
     private Node nextNode = null;
     private int index;
     private int type;
-    private int amountOfLiquid;
+    private NonSolidBlocks blockLiquidData;
+    private int amountOfGas;
+    private int amountOfLava;
 
-    public Node(int ii, int type, int amountOfLiquid)
+    public Node(int ii, int type,  NonSolidBlocks newBlockLiquidData)
     {
         index = ii;
-        this.amountOfLiquid = amountOfLiquid;
         this.type = type;
+        blockLiquidData = newBlockLiquidData;
     }
 
     public Node getNextNode()
@@ -39,7 +41,7 @@ public class Node {
         return index;
     }
 
-    public Node addItem(int ii, int type, int amountOfLiquid)
+    public Node addItem(int ii, int type, NonSolidBlocks newBlockLiquidData)
     {
         if (ii < index)
         {
@@ -47,7 +49,7 @@ public class Node {
             {
                 if (ii > previousNode.getIndex())
                 {
-                    Node newNode = new Node(ii, type, amountOfLiquid);
+                    Node newNode = new Node(ii, type, newBlockLiquidData);
                     newNode.setNextNode(this);
                     newNode.setPreviousNode(previousNode);
                     previousNode.setNextNode(newNode);
@@ -56,12 +58,12 @@ public class Node {
                 }
                 else
                 {
-                    return previousNode.addItem(ii,type,amountOfLiquid);
+                    return previousNode.addItem(ii,type,newBlockLiquidData);
                 }
             }
             else
             {
-                Node newNode = new Node(ii,type,amountOfLiquid);
+                Node newNode = new Node(ii,type,newBlockLiquidData);
                 previousNode = newNode;
                 previousNode.setNextNode(this);
                 return previousNode;
@@ -73,7 +75,7 @@ public class Node {
             {
                 if (ii < nextNode.getIndex())
                 {
-                    Node newNode = new Node(ii,type,amountOfLiquid);
+                    Node newNode = new Node(ii,type,newBlockLiquidData);
                     newNode.setPreviousNode(this);
                     newNode.setNextNode(nextNode);
                     nextNode.setPreviousNode(newNode);
@@ -82,12 +84,12 @@ public class Node {
                 }
                 else
                 {
-                    return nextNode.addItem(ii,type,amountOfLiquid);
+                    return nextNode.addItem(ii,type,newBlockLiquidData);
                 }
             }
             else
             {
-                Node newNode = new Node(ii,type,amountOfLiquid);
+                Node newNode = new Node(ii,type,newBlockLiquidData);
                 nextNode = newNode;
                 nextNode.setPreviousNode(this);
                 return nextNode;
@@ -96,15 +98,15 @@ public class Node {
         else
         {
             //item already in list
-            this.amountOfLiquid= amountOfLiquid;
             this.type = type;
+            this.blockLiquidData = newBlockLiquidData;
             return this;
         }
     }
 
     public int getWaterPercentage()
     {
-        return amountOfLiquid;
+        return blockLiquidData.getWaterPercentage();
     }
 
 
@@ -190,7 +192,7 @@ public class Node {
 
     protected String getData()
     {
-        String output = Integer.toString(index) + "-" + Integer.toString(type)+ "-" + Integer.toString(amountOfLiquid);
+        String output = Integer.toString(index) + "-" + Integer.toString(type)+ "-" + blockLiquidData.getMemoryString();
         return output;
     }
 

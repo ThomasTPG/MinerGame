@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 /**
@@ -32,6 +34,10 @@ public class Sprite {
     private int heightToClamber;
     private int widthToClamber;
     private ArrayOfBlocksOnScreen blocksOnScreen;
+    private int maxOxygenAmount = 200;
+    private int oxygenAmount;
+    private boolean dead = false;
+
 
     public Sprite(Context context, Canvas canvas, int dimension, int blockSize, ArrayOfBlocksOnScreen blocks)
     {
@@ -181,7 +187,15 @@ public class Sprite {
 
     public boolean isDead()
     {
-        return (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isIce());
+        if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isIce())
+        {
+            dead = true;
+        }
+        else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isFire())
+        {
+            dead = true;
+        }
+        return (dead);
     }
 
     public int getRunningSpeed()
@@ -192,5 +206,24 @@ public class Sprite {
             speed = (int) (3*baseRunningSpeed/4.0);
         }
         return speed;
+    }
+
+    public void drawOxygen(Canvas canvas)
+    {
+        if (isInWater())
+        {
+            oxygenAmount --;
+        }
+        else
+        {
+            oxygenAmount = maxOxygenAmount;
+        }
+        if (oxygenAmount <=0)
+        {
+            dead = true;
+        }
+        Paint p = new Paint();
+        p.setColor(Color.BLACK);
+        canvas.drawText(Integer.toString(oxygenAmount) + "/" + Integer.toString(maxOxygenAmount),10,10,p);
     }
 }

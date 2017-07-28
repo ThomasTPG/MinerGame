@@ -80,7 +80,7 @@ public class MapArt {
 
     private void setSkyDimensions()
     {
-        LHSSky = blockDimensions * (context.getResources().getInteger(R.integer.left_hand_side_wiggle_room));
+        LHSSky = 0;
         RHSSky = blockDimensions * (blocksAcross + context.getResources().getInteger(R.integer.left_hand_side_wiggle_room) + blocksPerScreen/2);
         bottomSky = 0;
         topSky = -(blockDimensions * (blocksPerScreen + 1));
@@ -137,10 +137,18 @@ public class MapArt {
     {
         if (camera.getCameraY() - screenHeight/2 <= 0)
         {
-            Rect rSky = new Rect(LHSSky - camera.getCameraX(), topSky - camera.getCameraY()+canvas.getHeight()/2, RHSSky - camera.getCameraX(), bottomSky - camera.getCameraY()+canvas.getHeight()/2);
-            canvas.drawBitmap(skyBmp, null,rSky,null);
-            backgroundClouds.drawCloud(canvas);
-            foregroundClouds.drawCloud(canvas);
+            double vertPercentSky = (double)(bottomSky - camera.getCameraY()+canvas.getHeight()/2) / (double)(bottomSky - topSky);
+            double horizPercentSky = (double)(camera.getCameraX() + canvas.getWidth()/2 - LHSSky) / (double) (RHSSky - LHSSky);
+            int topDrawLimit = Math.max(0,topSky - camera.getCameraY()+canvas.getHeight()/2);
+            int bottomDrawLimit = Math.min(canvas.getHeight(), bottomSky - camera.getCameraY() + canvas.getHeight()/2);
+            int leftDrawLimit = Math.max(0,LHSSky - camera.getCameraX() + canvas.getWidth()/2);
+            int rightDrawLimit = Math.min(canvas.getWidth(), RHSSky - camera.getCameraX() + canvas.getWidth()/2);
+            double screenToSkyRatio = (double) (canvas.getWidth())/(double)(RHSSky - LHSSky);
+            Rect rSky = new Rect(leftDrawLimit, topDrawLimit, rightDrawLimit, bottomDrawLimit);
+            Rect rWhichSky = new Rect((int) ((horizPercentSky-screenToSkyRatio) * skyBmp.getWidth()),(int) (skyBmp.getHeight() * (1-vertPercentSky)), (int) (horizPercentSky * skyBmp.getWidth()), skyBmp.getHeight());
+            canvas.drawBitmap(skyBmp, rWhichSky,rSky,null);
+            backgroundClouds.drawCloud(canvas, vertPercentSky, horizPercentSky);
+            foregroundClouds.drawCloud(canvas, vertPercentSky, horizPercentSky);
 
 
             Rect rGarden = new Rect(LHSGarden - camera.getCameraX(), topGarden - camera.getCameraY()+canvas.getHeight()/2, RHSGarden - camera.getCameraX(), bottomGarden - camera.getCameraY()+canvas.getHeight()/2);

@@ -15,16 +15,16 @@ public class MinedLocations {
     {
     }
 
-    public void addToMinedLocations(int ii, int type, int water)
+    public synchronized void addToMinedLocations(int ii, int type, NonSolidBlocks blockData)
     {
         if (currentNode != null)
         {
-            Node newNode = currentNode.addItem(ii,type, water);
+            Node newNode = currentNode.addItem(ii,type, blockData);
             currentNode = newNode;
         }
         else
         {
-            currentNode = new Node(ii,type, water);
+            currentNode = new Node(ii,type, blockData);
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.thomas.miner;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -29,6 +30,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     boolean running = true;
     int gameWidth = 0;
     int gameHeight = 0;
+    int dynamiteButtonSize = 0;
+    Rect dynamiteButtonLocation;
+    Rect iceBombButtonLocation;
     int blockSize = 0;
     boolean jumpQueued = false;
     boolean moveLeft = false;
@@ -42,6 +46,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private OreMemory oreMemory;
     private ShopMemory shopMemory;
     private boolean gameOver = false;
+    private Bitmap dynamiteButton;
+    private Bitmap iceBombButton;
+    Camera camera;
+    private ActiveBombs activeBombs;
+    ArrayOfBlocksOnScreen blocksOnScreen;
+    boolean initialized = false;
 
     public GameView(Context context) {
         super(context);
@@ -63,6 +73,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         mHolder.addCallback(this);
         mThread = new GameThread(this.getContext());
         mContext = context;
+        activeBombs = new ActiveBombs();
+        dynamiteButton = BitmapFactory.decodeResource(context.getResources(), R.drawable.dynamitebutton);
+        iceBombButton = BitmapFactory.decodeResource(context.getResources(), R.drawable.icebombbutton);
     }
 
     @Override
@@ -90,59 +103,65 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     public void motionEvent(MotionEvent e)
     {
-        if (gameHeight > 0 && gameWidth > 0 && motion)
+        if (initialized)
         {
-            if (e.getX() > gameWidth/2 + blockSize * 3/2)
+            if (gameHeight > 0 && gameWidth > 0 && motion)
             {
-                moveRight = true;
-                moveLeft = false;
+                if (e.getX() > gameWidth/2 + blockSize * 3/2)
+                {
+                    moveRight = true;
+                    moveLeft = false;
+                }
+                else if (e.getX() < gameWidth/2 - blockSize * 3/2)
+                {
+                    moveLeft = true;
+                    moveRight = false;
+                }
+                else
+                {
+                    moveRight = false;
+                    moveLeft = false;
+                }
             }
-            else if (e.getX() < gameWidth/2 - blockSize * 3/2)
+            else if (miningClass != null && action)
             {
-                moveLeft = true;
-                moveRight = false;
-            }
-            else
-            {
-                moveRight = false;
-                moveLeft = false;
-            }
-        }
-        else if (miningClass != null && action)
-        {
-            int xLocation = (int) e.getX();
-            int yLocation = (int) e.getY();
-            if (!mainCharacter.isInAir())
-            {
-                //Time to mine!
-                miningClass.calculateMiningOctant(xLocation,yLocation);
-            }
+                int xLocation = (int) e.getX();
+                int yLocation = (int) e.getY();
+                if (!mainCharacter.isInAir())
+                {
+                    //Time to mine!
+                    miningClass.calculateMiningOctant(xLocation,yLocation);
+                }
 
+            }
         }
     }
 
     public void stopMotion(MotionEvent e)
     {
-        motion = false;
-        action = false;
-        if (miningClass != null)
+        if (initialized)
         {
-            miningClass.stopMining();
-        }
-        if (gameHeight > 0 && gameWidth > 0 && !mainCharacter.isInAir()) {
-            int midX = gameWidth / 2;
-            int midY = gameHeight / 2;
-            if (Math.abs(e.getX() - midX) < blockSize * 3 / 2) {
-                if (Math.abs(e.getY() - midY) < blockSize * 3 / 2) {
-                    long elapsedTime = System.currentTimeMillis() - jumpTime;
-                    if (elapsedTime < 1000)
-                    {
-                        jumpTime = 0;
-                        jumpQueued = true;
-                    }
-                    else
-                    {
-                        jumpQueued = false;
+            motion = false;
+            action = false;
+            if (miningClass != null)
+            {
+                miningClass.stopMining();
+            }
+            if (gameHeight > 0 && gameWidth > 0 && !mainCharacter.isInAir()) {
+                int midX = gameWidth / 2;
+                int midY = gameHeight / 2;
+                if (Math.abs(e.getX() - midX) < blockSize * 3 / 2) {
+                    if (Math.abs(e.getY() - midY) < blockSize * 3 / 2) {
+                        long elapsedTime = System.currentTimeMillis() - jumpTime;
+                        if (elapsedTime < 1000)
+                        {
+                            jumpTime = 0;
+                            jumpQueued = true;
+                        }
+                        else
+                        {
+                            jumpQueued = false;
+                        }
                     }
                 }
             }
@@ -151,27 +170,48 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
     public void requestAction(MotionEvent e)
     {
-        //Check screen initialized
-        if (gameHeight > 0 && gameWidth > 0 )
+        if (initialized)
         {
-            int midX = gameWidth/2;
-            int midY = gameHeight/2;
-            if (Math.abs(e.getX() - midX) < blockSize * 3/2)
+            //Check screen initialized
+            if (gameHeight > 0 && gameWidth > 0 )
             {
-                if (Math.abs(e.getY() - midY) < blockSize * 3/2)
+                int midX = gameWidth/2;
+                int midY = gameHeight/2;
+                if (Math.abs(e.getX() - midX) < blockSize * 3/2)
                 {
-                    //Jumping or mining to be performed
-                    jumpTime = System.currentTimeMillis();
-                    action = true;
-                    motion = false;
+                    if (Math.abs(e.getY() - midY) < blockSize * 3/2)
+                    {
+                        //Jumping or mining to be performed
+                        jumpTime = System.currentTimeMillis();
+                        action = true;
+                        motion = false;
+                    }
                 }
-            }
-            else
-            {
-                //Movement to be performed
-                motion = true;
-                action = false;
-                motionEvent(e);
+                else if (e.getX() < dynamiteButtonSize * 3 && e.getY() < dynamiteButtonSize * 3)
+                {
+                    //Player has pressed dynamite button
+                    if (activeBombs.newBomb(ActiveBombs.DYNAMITE, camera.getCameraX(),camera.getCameraY()))
+                    {
+                        Block current = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2);
+                        activeBombs.setBlock(current);
+                    }
+                }
+                else if (e.getX() < dynamiteButtonSize * 3 && e.getY() < dynamiteButtonSize * 6)
+                {
+                    //Player has pressed icebomb button
+                    if (activeBombs.newBomb(ActiveBombs.ICEBOMB, camera.getCameraX(),camera.getCameraY()))
+                    {
+                        Block current = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2);
+                        activeBombs.setBlock(current);
+                    }
+                }
+                else
+                {
+                    //Movement to be performed
+                    motion = true;
+                    action = false;
+                    motionEvent(e);
+                }
             }
         }
     }
@@ -204,7 +244,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         Context c;
         int verticalBlockLimit;
         int horizontalBlockLimit;
-        ArrayOfBlocksOnScreen blocksOnScreen;
         MapArt mapArt;
         // Define a number of blocks that the game will hold. Cannot move once reaches the edge?
         int blocksAcross = getResources().getInteger(R.integer.blocks_across);
@@ -213,14 +252,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         // Work out how many pixels this is in total - to be used to calculate which blocks are on screen.
         int pixelsAcross;
         int[][] cavernLocation = new int[1][4];
-        boolean initialized = false;
         //Sprite information
         int spriteDimension;
         int seed = 50;
         int AIR = 1;
         MinedLocations minedLocations;
         OreCounter oreCounter = new OreCounter();
-        Camera camera;
+
         CheckExit checkExit;
 
         public GameThread(Context context){
@@ -253,9 +291,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     blocksOnScreen.drawCurrentBlocks(c);
                     mapArt.drawArt(c);
                     mainCharacter.draw();
-                    Paint p = new Paint();
-                    p.setColor(Color.BLACK);
-                    c.drawText(Integer.toString(camera.getCameraX()) + Integer.toString(camera.getCameraY()), 10,10,p);
+                    mainCharacter.drawOxygen(c);
+                    drawDynamiteButton(c);
+                    drawIceBombButton(c);
+                    if (activeBombs.hasBombExploded())
+                    {
+                        blocksOnScreen.explodeBomb(activeBombs.getBombBlock());
+                    }
                     if (miningClass.isCurrentlyMining())
                     {
                         miningClass.mine();
@@ -294,6 +336,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             camera = new Camera();
             gameHeight = c.getHeight();
             gameWidth = c.getWidth();
+            dynamiteButtonSize = gameWidth/15;
+            dynamiteButtonLocation = new Rect(dynamiteButtonSize,dynamiteButtonSize,2*dynamiteButtonSize,2*dynamiteButtonSize);
+            iceBombButtonLocation = new Rect(dynamiteButtonSize,4*dynamiteButtonSize,2*dynamiteButtonSize,5*dynamiteButtonSize);
             blockSize = c.getWidth()/blocksAcrossScreen;
             spriteDimension= blockSize * 3 / 4;
             initialized = true;
@@ -304,7 +349,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             //Work out the total pixel size of the game if all could be seen at once
             pixelsAcross = blocksAcross * blockSize;
             camera.setCameraX(pixelsAcross/2);
-            camera.setCameraY(-3*blockSize - spriteDimension);
+            camera.setCameraY( - spriteDimension);
             minedLocations = new MinedLocations();
             levelMemory = new LevelMemory(mContext,minedLocations, seed, camera, oreCounter);
             oreMemory = new OreMemory(mContext);
@@ -333,6 +378,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             p.setColor(Color.WHITE);
             c.drawRect(0,0,gameWidth,gameHeight, p);
 
+        }
+
+        private void drawDynamiteButton(Canvas c)
+        {
+            c.drawBitmap(dynamiteButton,null,dynamiteButtonLocation,null);
+        }
+
+        private void drawIceBombButton(Canvas c)
+        {
+            c.drawBitmap(iceBombButton,null,iceBombButtonLocation,null);
         }
 
         public void setRunning(boolean b){
@@ -410,7 +465,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     else
                     {
                         int gap = (camera.getCameraX() - spriteDimension/2)%blockSize;
-                        if (gap <= 2*TOL)
+                        if (gap <= speed)
                         {
                             if (speed <= gap)
                             {
@@ -472,8 +527,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     }
                     else {
                         int gap = blockSize - ((camera.getCameraX() + spriteDimension / 2) % blockSize);
-                        System.out.println("Beanz" + gap);
-                        if (gap <= 2 * TOL) {
+                        if (gap <= speed) {
                             if (speed <= gap) {
                                 newCameraX = newCameraX + speed;
                             } else {

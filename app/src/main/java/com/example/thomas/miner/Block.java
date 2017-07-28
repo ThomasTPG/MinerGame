@@ -15,9 +15,10 @@ public class Block {
     private int type;
     private int xCoord;
     private int yCoord;
+    private NonSolidBlocks blockLiquidData;
 
     private int minePercentage = 0;
-    private int waterPercentage = 0;
+    private int thresholdWaterToFreeze = 5;
     private int index;
     Context context;
     private int blocksAcross;
@@ -26,6 +27,7 @@ public class Block {
     private int miningLimit = 20;
     private double softness;
     private int blocksPerScreen;
+    private int bombType = 0;
 
     //If this is a crystal block, we need to record the maximum ice that has surrounded it.
     private boolean frozen = false;
@@ -39,6 +41,7 @@ public class Block {
         this.blocksAcross = context.getResources().getInteger(R.integer.blocks_across);
         this.blocksPerScreen = context.getResources().getInteger(R.integer.blocks_per_screen_width);
         this.seed = seed;
+        blockLiquidData = new NonSolidBlocks();
         mMinedLocations = minedLocations;
         determineType();
     }
@@ -48,7 +51,7 @@ public class Block {
         if (mMinedLocations.isItemContained(index))
         {
             setType(mMinedLocations.getThisType());
-            waterPercentage = mMinedLocations.getWaterPercentage(index);
+            blockLiquidData.setWaterPercentage(mMinedLocations.getWaterPercentage(index));
         }
         else
         {
@@ -69,9 +72,9 @@ public class Block {
                     }
                     if (rand > 990 - waterLiklihood)
                     {
-                        waterPercentage = 100;
+                        blockLiquidData.setWaterPercentage(100);
                         type = GlobalConstants.WATER;
-                        mMinedLocations.addToMinedLocations(index,type,waterPercentage);
+                        mMinedLocations.addToMinedLocations(index,type,blockLiquidData);
                     }
 
                 }
@@ -103,13 +106,13 @@ public class Block {
         }
         if (xCoord < context.getResources().getInteger(R.integer.left_hand_side_wiggle_room) || xCoord > blocksAcross)
         {
-            setType(GlobalConstants.BOULDER);
+            setType(GlobalConstants.HARD_BOULDER);
         }
         if (yCoord == 0)
         {
             if (Math.abs(xCoord - blocksAcross) < blocksPerScreen )
             {
-                setType(GlobalConstants.BOULDER);
+                setType(GlobalConstants.HARD_BOULDER);
             }
         }
     }
@@ -159,7 +162,7 @@ public class Block {
 
     public boolean mineFurther(OreCounter oreCounter)
     {
-        if (type == GlobalConstants.LIFE && waterPercentage < 100)
+        if (type == GlobalConstants.LIFE && blockLiquidData.getWaterPercentage() < 100)
         {
             return false;
         }
@@ -172,8 +175,8 @@ public class Block {
         {
             oreCounter.incrementOre(type);
             setType(GlobalConstants.CAVERN);
-            waterPercentage = 0;
-            mMinedLocations.addToMinedLocations(index, type,waterPercentage);
+            blockLiquidData.setWaterPercentage(0);
+            mMinedLocations.addToMinedLocations(index, type,blockLiquidData);
             minePercentage = 0;
             return true;
         }
@@ -181,15 +184,61 @@ public class Block {
     }
 
 
+    public void detonateIceBomb()
+    {
+        setBomb(ActiveBombs.NO_BOMB);
+        if (type == GlobalConstants.WATER || type == GlobalConstants.CAVERN)
+        {
+            setType(GlobalConstants.ICE);
+            blockLiquidData.setWaterPercentage(0);
+            mMinedLocations.addToMinedLocations(index, type,blockLiquidData);
+        }
+    }
+
+    public void blowUp()
+    {
+        setBomb(ActiveBombs.NO_BOMB);
+        Thread explosionTimer = new Thread()
+        {
+            @Override
+            public void run()
+            {
+                try {
+                    synchronized (this)
+                    {
+                        wait(2 + ((index * xCoord * yCoord )*(index * xCoord * yCoord))%200);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                setType(GlobalConstants.FIREBALL);
+
+                try {
+                    synchronized (this)
+                    {
+                        wait(200 + (index * xCoord * yCoord )%83);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                setType(GlobalConstants.CAVERN);
+                mMinedLocations.addToMinedLocations(index, type,blockLiquidData);
+            }
+        };
+        if (type != GlobalConstants.HARD_BOULDER)
+        {
+            explosionTimer.start();
+        }
+    }
+
     private void setType(int newType)
     {
         type = newType;
         setSoftness();
-    }
-
-    public boolean isCavern()
-    {
-        return (type == GlobalConstants.CAVERN);
     }
 
     public boolean isWater()
@@ -202,14 +251,19 @@ public class Block {
         return (type == GlobalConstants.ICE);
     }
 
+    public boolean isFire()
+    {
+        return (type == GlobalConstants.FIREBALL);
+    }
+
     public boolean isSolid()
     {
-        return (type != GlobalConstants.WATER && type!= GlobalConstants.CAVERN);
+        return (type != GlobalConstants.WATER && type!= GlobalConstants.CAVERN && type!= GlobalConstants.FIREBALL);
     }
 
     public int getWaterPercentage()
     {
-        return waterPercentage;
+        return blockLiquidData.getWaterPercentage();
     }
 
     public void setWaterPercentage(int pct)
@@ -218,10 +272,10 @@ public class Block {
         {
             pct = 0;
         }
-        waterPercentage = pct;
+        blockLiquidData.setWaterPercentage(pct);
         if (type != GlobalConstants.LIFE)
         {
-            if (waterPercentage == 0)
+            if (blockLiquidData.getWaterPercentage() == 0)
             {
                 setType(GlobalConstants.CAVERN);
             }
@@ -233,7 +287,7 @@ public class Block {
 
         if (yCoord >= 0)
         {
-            mMinedLocations.addToMinedLocations(index, type ,pct);
+            mMinedLocations.addToMinedLocations(index, type ,blockLiquidData);
         }
     }
 
@@ -245,6 +299,12 @@ public class Block {
                 softness = 1;
                 break;
             case (GlobalConstants.BOULDER):
+                softness = 0;
+                break;
+            case (GlobalConstants.HARD_BOULDER):
+                softness = 0;
+                break;
+            case (GlobalConstants.FIREBALL):
                 softness = 0;
                 break;
             case (GlobalConstants.WATER):
@@ -297,12 +357,15 @@ public class Block {
 
     public void tryFreezing()
     {
-        Random iceRandom = new Random(System.nanoTime());
-        if (iceRandom.nextDouble() > 0.99)
+        if (blockLiquidData.getWaterPercentage() > thresholdWaterToFreeze)
         {
-            setType(GlobalConstants.ICE);
-            waterPercentage = 0;
-            mMinedLocations.addToMinedLocations(index, type,waterPercentage);
+            Random iceRandom = new Random(System.nanoTime());
+            if (iceRandom.nextDouble() > 0.99)
+            {
+                setType(GlobalConstants.ICE);
+                blockLiquidData.setWaterPercentage(0);
+                mMinedLocations.addToMinedLocations(index, type,blockLiquidData);
+            }
         }
     }
 
@@ -314,5 +377,20 @@ public class Block {
     public boolean setFrozen(boolean currentIce)
     {
         return frozen = frozen || currentIce;
+    }
+
+    public void setBomb(int type)
+    {
+        bombType = type;
+    }
+
+    public int getBomb()
+    {
+        return bombType;
+    }
+
+    public int getIndex()
+    {
+        return index;
     }
 }

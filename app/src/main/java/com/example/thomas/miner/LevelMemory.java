@@ -68,7 +68,10 @@ public class LevelMemory {
                 while ((line = bufferedReader.readLine()) != null)
                 {
                     System.err.println("LINE" + line);
-                    mMinedLocations.addToMinedLocations(Integer.parseInt(line.split("-")[0]),Integer.parseInt(line.split("-")[1]),Integer.parseInt(line.split("-")[2]));
+                    String liquidDataString = line.split("-")[2];
+                    NonSolidBlocks blockLiquidData = new NonSolidBlocks();
+                    blockLiquidData.setFromMemory(liquidDataString);
+                    mMinedLocations.addToMinedLocations(Integer.parseInt(line.split("-")[0]),Integer.parseInt(line.split("-")[1]),blockLiquidData);
                 }
             }
             catch (IOException e)
@@ -124,7 +127,6 @@ public class LevelMemory {
 
                 while (nodeToWrite != null)
                 {
-                    System.out.println("WRITNG " + nodeToWrite.getData());
                     bufferedWriter.write(nodeToWrite.getData());
                     bufferedWriter.newLine();
                     nodeToWrite = nodeToWrite.getNextNode();

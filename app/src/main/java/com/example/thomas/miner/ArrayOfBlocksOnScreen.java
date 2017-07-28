@@ -32,6 +32,8 @@ public class ArrayOfBlocksOnScreen {
     private Bitmap mining2;
     private Bitmap soilBitmap;
     private Bitmap boulderBitmap;
+    private Bitmap hardBoulderBitmap;
+    private Bitmap fireBallBitmap;
     private Bitmap copperBitmap;
     private Bitmap ironBitmap;
     private Bitmap alieniteBitmap;
@@ -46,6 +48,8 @@ public class ArrayOfBlocksOnScreen {
     private Bitmap crystal1;
     private Bitmap crystal2;
     private Bitmap crystal3;
+    private Bitmap dynamite;
+    private Bitmap iceBomb;
     //
     private Camera mCamera;
     private int borderSize = 8;
@@ -79,6 +83,8 @@ public class ArrayOfBlocksOnScreen {
         waterBitmap =BitmapFactory.decodeResource(context.getResources(), R.drawable.water);
         soilBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil);
         boulderBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
+        hardBoulderBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.hardrock);
+        fireBallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fireball);
         copperBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.copper);
         ironBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.iron);
         alieniteBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienite);
@@ -92,6 +98,8 @@ public class ArrayOfBlocksOnScreen {
         crystal1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal1);
         crystal2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal2);
         crystal3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal3);
+        dynamite = BitmapFactory.decodeResource(context.getResources(), R.drawable.dynamitebutton);
+        iceBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.icebombbutton);
     }
 
 
@@ -298,6 +306,7 @@ public class ArrayOfBlocksOnScreen {
                         c.drawBitmap(blockBitmap,source,location,null);
                     }
 
+
                     //Finally overlay any mining
                     if (blockArray[ii + borderSize][jj + borderSize].getMiningProgress() > 66)
                     {
@@ -308,7 +317,65 @@ public class ArrayOfBlocksOnScreen {
                         c.drawBitmap(mining1,source,location,null);
                     }
                 }
+                //Overlay any bombs
+                if (blockArray[ii + borderSize][jj + borderSize].getBomb() != ActiveBombs.NO_BOMB)
+                {
+                    switch (blockArray[ii + borderSize][jj + borderSize].getBomb())
+                    {
+                        case(ActiveBombs.DYNAMITE):
+                            c.drawBitmap(dynamite,null,location,null);
+                            break;
+                        case(ActiveBombs.ICEBOMB):
+                            c.drawBitmap(iceBomb,null,location,null);
+                            break;
+                    }
+                }
             }
+        }
+    }
+
+    public void explodeBomb(Block bomb)
+    {
+        int index = bomb.getIndex();
+        int x = 0;
+        int y = 0;
+        boolean foundBomb = false;
+        for (int ii = horizontalBlockLimit-2; ii >=0; ii --)
+        {
+            for (int jj = verticalBlockLimit - 2; jj >= 0; jj--)
+            {
+                if (blockArray[ii][jj].getIndex() == index)
+                {
+                    x = ii;
+                    y = jj;
+                    foundBomb = true;
+                }
+            }
+        }
+        if (foundBomb)
+        {
+            switch(bomb.getBomb())
+            {
+                case(ActiveBombs.DYNAMITE):
+                    for (int aa = -1; aa <=1; aa++)
+                    {
+                        for (int bb = -1; bb<=1; bb++)
+                        {
+                            blockArray[x + aa][y + bb].blowUp();
+                        }
+                    }
+                    break;
+                case(ActiveBombs.ICEBOMB):
+                    for (int aa = -1; aa <=1; aa++)
+                    {
+                        for (int bb = -1; bb<=1; bb++)
+                        {
+                            blockArray[x + aa][y + bb].detonateIceBomb();
+                        }
+                    }
+                    break;
+            }
+
         }
     }
 
@@ -328,6 +395,12 @@ public class ArrayOfBlocksOnScreen {
                 break;
             case (GlobalConstants.BOULDER):
                 blockBitmap = boulderBitmap;
+                break;
+            case (GlobalConstants.HARD_BOULDER):
+                blockBitmap = hardBoulderBitmap;
+                break;
+            case (GlobalConstants.FIREBALL):
+                blockBitmap = fireBallBitmap;
                 break;
             case (GlobalConstants.COPPER):
                 blockBitmap = copperBitmap;
