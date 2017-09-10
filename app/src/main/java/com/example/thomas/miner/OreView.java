@@ -30,4 +30,5 @@ public class OreView extends Activity {
         ores.setText(oreString);
 
     }
+
 }

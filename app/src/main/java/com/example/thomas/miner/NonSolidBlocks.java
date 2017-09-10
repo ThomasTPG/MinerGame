@@ -53,4 +53,9 @@ public class NonSolidBlocks {
         gasPercentage = Integer.parseInt(dataString.split("!")[1]);
         lavaPercentage = Integer.parseInt(dataString.split("!")[2]);
     }
+
+    public int getTotalVolume()
+    {
+        return waterPercentage + gasPercentage + lavaPercentage;
+    }
 }

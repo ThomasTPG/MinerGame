@@ -184,7 +184,7 @@ public class Mining {
     private void updateMiningProgress()
     {
         Random miningRandom = new Random(System.nanoTime());
-        if (miningRandom.nextDouble() * softness * pickaxeHardness > 0.5)
+        if (miningRandom.nextDouble() * softness * pickaxeHardness > 0.1)
         {
             if (currentlyMining != null && currentlyMining.mineFurther(oreCounter))
             {

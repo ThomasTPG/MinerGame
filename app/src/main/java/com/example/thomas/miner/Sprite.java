@@ -34,7 +34,7 @@ public class Sprite {
     private int heightToClamber;
     private int widthToClamber;
     private ArrayOfBlocksOnScreen blocksOnScreen;
-    private int maxOxygenAmount = 200;
+    private int maxOxygenAmount = 5000;
     private int oxygenAmount;
     private boolean dead = false;
 
@@ -187,13 +187,20 @@ public class Sprite {
 
     public boolean isDead()
     {
-        if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isIce())
+        if (oxygenAmount <=0)
         {
+            dead = true;
+            System.out.println("Died due to water");
+        }
+        else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isIce())
+        {
+            System.out.println("Died due to ice");
             dead = true;
         }
         else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isFire())
         {
             dead = true;
+            System.out.println("Died due to fire");
         }
         return (dead);
     }
@@ -217,10 +224,6 @@ public class Sprite {
         else
         {
             oxygenAmount = maxOxygenAmount;
-        }
-        if (oxygenAmount <=0)
-        {
-            dead = true;
         }
         Paint p = new Paint();
         p.setColor(Color.BLACK);

@@ -5,8 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+
+import java.util.Random;
 
 /**
  * Created by Thomas on 13/02/2017.
@@ -30,7 +35,9 @@ public class ArrayOfBlocksOnScreen {
     //Bitmaps
     private Bitmap mining1;
     private Bitmap mining2;
-    private Bitmap soilBitmap;
+    private Bitmap miningborder;
+    private Bitmap soil1Bitmap;
+    private Bitmap soil2Bitmap;
     private Bitmap boulderBitmap;
     private Bitmap hardBoulderBitmap;
     private Bitmap fireBallBitmap;
@@ -40,16 +47,32 @@ public class ArrayOfBlocksOnScreen {
     private Bitmap marbleBitmap;
     private Bitmap springBitmap;
     private Bitmap waterBitmap;
+    private Bitmap gasBitmap;
+    private Bitmap gasWaterBitmap;
     private Bitmap lifeBitmap;
     private Bitmap lifeGrown;
     private Bitmap iceBitmap;
     private Bitmap goldBitmap;
     private Bitmap crystalBase;
+    private Bitmap gasRockBitmap;
+    private Bitmap costumeGemBitmap;
     private Bitmap crystal1;
     private Bitmap crystal2;
     private Bitmap crystal3;
     private Bitmap dynamite;
     private Bitmap iceBomb;
+    // Bitmaps for borders
+    private Bitmap leftBorder;
+    private Bitmap bottomBorder;
+    private Bitmap topBorder;
+    private Bitmap rightBorder;
+    private Bitmap topLeftBorder;
+    private Bitmap topRightBorder;
+    private Bitmap bottomRightBorder;
+    private Bitmap bottomLeftBorder;
+    private Bitmap bottomSurroundBorder;
+    private Bitmap allBorders;
+
     //
     private Camera mCamera;
     private int borderSize = 8;
@@ -80,8 +103,12 @@ public class ArrayOfBlocksOnScreen {
     {
         mining1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.miningprogress1);
         mining2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.miningprogress2);
-        waterBitmap =BitmapFactory.decodeResource(context.getResources(), R.drawable.water);
-        soilBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil);
+        miningborder = BitmapFactory.decodeResource(context.getResources(), R.drawable.whichmined);
+        waterBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.water);
+        gasBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gas);
+        gasWaterBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gaswater);
+        soil1Bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil);
+        soil2Bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil2);
         boulderBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
         hardBoulderBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.hardrock);
         fireBallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fireball);
@@ -95,11 +122,26 @@ public class ArrayOfBlocksOnScreen {
         iceBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ice);
         goldBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gold);
         crystalBase = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystalbase);
+        gasRockBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gasrock);
+        costumeGemBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.costumegem);
         crystal1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal1);
         crystal2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal2);
         crystal3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal3);
         dynamite = BitmapFactory.decodeResource(context.getResources(), R.drawable.dynamitebutton);
         iceBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.icebombbutton);
+
+        leftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_left);
+        rightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_right);
+        bottomBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom);
+        topBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top);
+        topLeftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top_left);
+        topRightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top_right);
+        bottomRightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom_right);
+        bottomLeftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.bottom_left);
+        bottomSurroundBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom_surround);
+        allBorders = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_all_borders);
+
+
     }
 
 
@@ -227,7 +269,7 @@ public class ArrayOfBlocksOnScreen {
         {
             for (int jj = 0; jj < blocksVerticalScreen; jj++)
             {
-                Bitmap blockBitmap = workOutBitmap(blockArray[ii + borderSize][jj + borderSize].getType());
+                Bitmap blockBitmap = workOutBitmap(blockArray[ii + borderSize][jj + borderSize]);
 
                 int screenTopLeftX = mCamera.getCameraX() - mGameWidth/2;
                 int screenTopLeftY = mCamera.getCameraY() - mGameHeight/2;
@@ -240,46 +282,9 @@ public class ArrayOfBlocksOnScreen {
                 if (blockBitmap != null)
                 {
                     //Now work out the scalings for the blocks
-                    int left = 0;
-                    int right = blockBitmap.getWidth();
-                    int top = 0;
-                    int bottom = blockBitmap.getHeight();
-                    if (location.width() < blockSize)
-                    {
-                        if (ii == 0)
-                        {
-                            double scale = 1 - location.width()/(double)blockSize;
-                            left = (int) (blockBitmap.getWidth() * scale);
-                        }
-                        else if (ii == blocksHorizontalScreen-1)
-                        {
-                            double scale = location.width()/(double)blockSize;
-                            right = (int) (blockBitmap.getWidth() * scale);
-                        }
+                    Rect source = getScaledRectangle(blockBitmap,location,ii,jj);
 
-                    }
-                    if (location.height() < blockSize)
-                    {
-                        if (jj == 0)
-                        {
-                            double scale = 1 - location.height()/(double)blockSize;
-                            top = (int) (blockBitmap.getHeight() * scale);
-                        }
-                        else if (jj >= blocksVerticalScreen - 2)
-                        {
-                            double scale = location.height()/(double)blockSize;
-                            bottom = (int) (blockBitmap.getHeight() * scale);
-                        }
-                    }
-
-                    Rect source = new Rect(left, top, right, bottom);
-
-                    if (blockArray[ii +borderSize][jj+ borderSize].isWater())
-                    {
-                        Rect scaledLocation = new Rect(location.left,location.top + (int) ((100-blockArray[ii+borderSize][jj+borderSize].getWaterPercentage())/100.0 * (location.bottom-location.top)),location.right,location.bottom);
-                        c.drawBitmap(blockBitmap,source,scaledLocation,null);
-                    }
-                    else if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.LIFE)
+                    if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.LIFE)
                     {
                         if (blockArray[ii +borderSize][jj+ borderSize].getWaterPercentage() < 100)
                         {
@@ -308,14 +313,29 @@ public class ArrayOfBlocksOnScreen {
 
 
                     //Finally overlay any mining
-                    if (blockArray[ii + borderSize][jj + borderSize].getMiningProgress() > 66)
+                    if (blockArray[ii + borderSize][jj + borderSize].isCurrentlyBeingMined())
+                    {
+                        c.drawBitmap(miningborder,source,location,null);
+                    }
+                    if (blockArray[ii + borderSize][jj + borderSize].getMiningProgress() >= 70)
                     {
                         c.drawBitmap(mining2,source,location,null);
                     }
-                    else if (blockArray[ii +borderSize][jj+ borderSize].getMiningProgress() > 33)
+                    else if (blockArray[ii +borderSize][jj+ borderSize].getMiningProgress() >= 40)
                     {
                         c.drawBitmap(mining1,source,location,null);
                     }
+                }
+                else
+                {
+                    //Draw fluids
+                    if (blockArray[ii + borderSize][jj + borderSize].blockHasLiquid())
+                    {
+                        drawFluidBlock(blockArray[ii+borderSize][jj + borderSize].getBlockLiquidData(),c,location);
+                    }
+                    //Draw borders
+                    Rect source = getScaledRectangle(bottomBorder,location,ii,jj);
+                    drawBorders(ii,jj,source,location,c);
                 }
                 //Overlay any bombs
                 if (blockArray[ii + borderSize][jj + borderSize].getBomb() != ActiveBombs.NO_BOMB)
@@ -333,6 +353,140 @@ public class ArrayOfBlocksOnScreen {
             }
         }
     }
+
+    private void drawBorders(int ii, int jj, Rect source, Rect location, Canvas canvas)
+    {
+        int whichBitmapCode = 1;
+        //Draw any borders
+        if (blockArray[ii +borderSize - 1][jj+ borderSize].isSolid())
+        {
+            whichBitmapCode *=7;
+        }
+        if (blockArray[ii +borderSize + 1][jj+ borderSize].isSolid())
+        {
+            whichBitmapCode *=3;
+        }
+        if (blockArray[ii +borderSize][jj+ borderSize - 1].isSolid())
+        {
+            whichBitmapCode *=2;
+        }
+        if (blockArray[ii +borderSize][jj+ borderSize + 1].isSolid())
+        {
+            whichBitmapCode *=5;
+        }
+        //Code is given by
+        //   2
+        //  7 3
+        //   5
+        switch (whichBitmapCode)
+        {
+            case (2):
+                canvas.drawBitmap(topBorder,source,location,null);
+                break;
+            case (3):
+                canvas.drawBitmap(rightBorder,source,location,null);
+                break;
+            case (5):
+                canvas.drawBitmap(bottomBorder,source,location,null);
+                break;
+            case (7):
+                canvas.drawBitmap(leftBorder,source,location,null);
+                break;
+            case (6):
+                canvas.drawBitmap(topRightBorder,source,location,null);
+                break;
+            case (14):
+                canvas.drawBitmap(topLeftBorder,source,location,null);
+                break;
+            case (15):
+                canvas.drawBitmap(bottomRightBorder,source,location,null);
+                break;
+            case (35):
+                canvas.drawBitmap(bottomLeftBorder,source,location,null);
+                break;
+            case (21):
+                canvas.drawBitmap(leftBorder,source,location,null);
+                canvas.drawBitmap(rightBorder,source,location,null);
+                break;
+            case (10):
+                canvas.drawBitmap(topBorder,source,location,null);
+                canvas.drawBitmap(bottomBorder,source,location,null);
+                break;
+            case (105):
+                canvas.drawBitmap(bottomSurroundBorder,source,location,null);
+                break;
+            case (210):
+                canvas.drawBitmap(allBorders,source,location,null);
+                break;
+        }
+    }
+
+    private void drawFluidBlock(NonSolidBlocks blockLiquidData, Canvas canvas, Rect location)
+    {
+        int totalPercent = blockLiquidData.getGasPercentage() + blockLiquidData.getWaterPercentage();
+        int overlay = 0;
+        if (totalPercent > 100)
+        {
+            overlay = totalPercent - 100;
+        }
+        int gasHeight = (int) ((double)(Math.min(100 - blockLiquidData.getWaterPercentage(), blockLiquidData.getGasPercentage()) * blockSize)/(double)100);
+        int waterHeight = (int) ((double) ((100 - (blockLiquidData.getWaterPercentage() - overlay)) * blockSize) /(double) 100);
+
+        if (gasHeight > 0)
+        {
+            Rect scaledLocation = new Rect(location.left, location.top, location.right, location.top + gasHeight);
+            canvas.drawBitmap(gasBitmap,null,scaledLocation,null);
+        }
+        if (overlay > 0)
+        {
+            Rect scaledLocation = new Rect(location.left,location.top + gasHeight,location.right,location.top + waterHeight);
+            canvas.drawBitmap(gasWaterBitmap,null,scaledLocation,null);
+        }
+        if (waterHeight < 100)
+        {
+            Rect scaledLocation = new Rect(location.left, location.top + waterHeight, location.right, location.bottom);
+            canvas.drawBitmap(waterBitmap,null,scaledLocation,null);
+        }
+    }
+
+    private Rect getScaledRectangle(Bitmap blockBmp, Rect location, int ii, int jj)
+    {
+        int left = 0;
+        int right = blockBmp.getWidth();
+        int top = 0;
+        int bottom = blockBmp.getHeight();
+        if (location.width() < blockSize)
+        {
+            if (ii == 0)
+            {
+                double scale = 1 - location.width()/(double)blockSize;
+                left = (int) (blockBmp.getWidth() * scale);
+            }
+            else if (ii == blocksHorizontalScreen-1)
+            {
+                double scale = location.width()/(double)blockSize;
+                right = (int) (blockBmp.getWidth() * scale);
+            }
+
+        }
+        if (location.height() < blockSize)
+        {
+            if (jj == 0)
+            {
+                double scale = 1 - location.height()/(double)blockSize;
+                top = (int) (blockBmp.getHeight() * scale);
+            }
+            else if (jj >= blocksVerticalScreen - 2)
+            {
+                double scale = location.height()/(double)blockSize;
+                bottom = (int) (blockBmp.getHeight() * scale);
+            }
+        }
+
+        Rect source = new Rect(left, top, right, bottom);
+        return source;
+    }
+
 
     public void explodeBomb(Block bomb)
     {
@@ -379,19 +533,24 @@ public class ArrayOfBlocksOnScreen {
         }
     }
 
-    private Bitmap workOutBitmap(int type)
+    private Bitmap workOutBitmap(Block currentBlock)
     {
+        int type = currentBlock.getType();
         Bitmap blockBitmap ;
         switch (type)
         {
             case(GlobalConstants.CAVERN):
                 blockBitmap = null;
                 break;
-            case (GlobalConstants.WATER):
-                blockBitmap = waterBitmap;
-                break;
             case(GlobalConstants.SOIL):
-                blockBitmap = soilBitmap;
+                if (currentBlock.getIndex() % 2 == 0)
+                {
+                    blockBitmap = soil1Bitmap;
+                }
+                else
+                {
+                    blockBitmap = soil2Bitmap;
+                }
                 break;
             case (GlobalConstants.BOULDER):
                 blockBitmap = boulderBitmap;
@@ -429,219 +588,17 @@ public class ArrayOfBlocksOnScreen {
             case (GlobalConstants.CRYSTAL):
                 blockBitmap = crystalBase;
                 break;
-
+            case (GlobalConstants.GASROCK):
+                blockBitmap = gasRockBitmap;
+                break;
+            case (GlobalConstants.COSTUMEGEM):
+                blockBitmap = costumeGemBitmap;
+                break;
             default:
                 blockBitmap = null;
                 break;
         }
         return blockBitmap;
-    }
-
-    public void updateWater()
-    {
-        waterDelay ++;
-        for (int ii = horizontalBlockLimit-1; ii >=0; ii --)
-        {
-            for (int jj = verticalBlockLimit - 1; jj >=0; jj--)
-            {
-                if (!blockArray[ii][jj].isSolid())
-                {
-                    if (!updateWaterBelow(ii,jj) && (ii - waterDelay) % 5 == 0)
-                    {
-                        updateWaterSides(ii,jj);
-                    }
-                }
-                updateSpring(ii,jj);
-                updateLifeBlocks(ii,jj);
-                updateIceBlocks(ii,jj);
-                updateCrystalBlocks(ii,jj);
-            }
-        }
-    }
-
-    private void updateSpring(int ii ,int jj)
-    {
-        if (blockArray[ii][jj].getType() == GlobalConstants.SPRING)
-        {
-            if (ii > 0)
-            {
-                if (!blockArray[ii-1][jj].isSolid())
-                {
-                    blockArray[ii-1][jj].setWaterPercentage(100);
-                }
-            }
-            if (ii < horizontalBlockLimit-1)
-            {
-                if (!blockArray[ii+1][jj].isSolid())
-                {
-                    blockArray[ii+1][jj].setWaterPercentage(100);
-                }
-            }
-            if (jj < verticalBlockLimit - 1)
-            {
-                if (!blockArray[ii][jj+1].isSolid())
-                {
-                    blockArray[ii][jj+1].setWaterPercentage(100);
-                }
-            }
-        }
-    }
-
-    private void updateIceBlocks(int ii ,int jj)
-    {
-        if (blockArray[ii][jj].getType() == GlobalConstants.ICE)
-        {
-            if (ii > 0)
-            {
-                if (blockArray[ii-1][jj].isWater())
-                {
-                    blockArray[ii-1][jj].tryFreezing();
-                }
-            }
-            if (ii < horizontalBlockLimit-1)
-            {
-                if (blockArray[ii+1][jj].isWater())
-                {
-                    blockArray[ii+1][jj].tryFreezing();
-                }
-            }
-            if (jj < verticalBlockLimit - 1)
-            {
-                if (blockArray[ii][jj+1].isWater())
-                {
-                    blockArray[ii][jj+1].tryFreezing();
-                }
-            }
-            if (jj > 0)
-            {
-                if (blockArray[ii][jj-1].isWater())
-                {
-                    blockArray[ii][jj-1].tryFreezing();
-                }
-            }
-        }
-    }
-
-    private void updateLifeBlocks(int ii ,int jj)
-    {
-        if (blockArray[ii][jj].getType() == GlobalConstants.LIFE)
-        {
-            if (ii > 0)
-            {
-                if (blockArray[ii-1][jj].isWater())
-                {
-                    int waterMoved = 0;
-                    int neighbouringWater =  blockArray[ii-1][jj].getWaterPercentage();
-                    if (blockArray[ii][jj].getWaterPercentage() < 100)
-                    {
-                        waterMoved = Math.min(neighbouringWater, 100 - blockArray[ii][jj].getWaterPercentage());
-                    }
-                    blockArray[ii-1][jj].setWaterPercentage(neighbouringWater - waterMoved);
-                    blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + waterMoved);
-                }
-            }
-            if (ii < horizontalBlockLimit-1)
-            {
-                int waterMoved = 0;
-                int neighbouringWater =  blockArray[ii+1][jj].getWaterPercentage();
-                if (blockArray[ii][jj].getWaterPercentage() < 100)
-                {
-                    waterMoved = Math.min(neighbouringWater, 100 - blockArray[ii][jj].getWaterPercentage());
-                }
-                blockArray[ii+1][jj].setWaterPercentage(neighbouringWater - waterMoved);
-                blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + waterMoved);
-            }
-            if (jj > 0)
-            {
-                int waterMoved = 0;
-                int neighbouringWater =  blockArray[ii][jj-1].getWaterPercentage();
-                if (blockArray[ii][jj].getWaterPercentage() < 100)
-                {
-                    waterMoved = Math.min(neighbouringWater, 100 - blockArray[ii][jj].getWaterPercentage());
-                }
-                blockArray[ii][jj-1].setWaterPercentage(neighbouringWater - waterMoved);
-                blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + waterMoved);
-            }
-        }
-    }
-
-
-    private boolean updateWaterBelow(int ii, int jj)
-    {
-        boolean updated = false;
-        if (jj < verticalBlockLimit - 1)
-        {
-            //Check below
-            if ((!blockArray[ii][jj].isSolid()) && (blockArray[ii][jj].getWaterPercentage() > 0) && (!blockArray[ii][jj+1].isSolid()))
-            {
-                //Move water down
-                if (blockArray[ii][jj+1].getWaterPercentage() < 100)
-                {
-                    int waterMoved = Math.min(blockArray[ii][jj].getWaterPercentage(), 100-blockArray[ii][jj+1].getWaterPercentage());
-                    blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() - waterMoved);
-                    blockArray[ii][jj+1].setWaterPercentage(blockArray[ii][jj+1].getWaterPercentage() + waterMoved);
-                    updated = true;
-                }
-            }
-        }
-        return updated;
-    }
-
-    private void updateWaterSides(int ii, int jj)
-    {
-        if (ii < horizontalBlockLimit - 1 && ii > 0)
-        {
-            boolean leftValid = !blockArray[ii-1][jj].isSolid();
-            boolean rightValid = !blockArray[ii+1][jj].isSolid();
-            int blocksToAverage = 1;
-            int totalWater = blockArray[ii][jj].getWaterPercentage();
-            int incrementPercent = 1;
-            if (leftValid)
-            {
-                blocksToAverage ++;
-                totalWater = totalWater + blockArray[ii-1][jj].getWaterPercentage();
-            }
-            if (rightValid)
-            {
-                blocksToAverage ++;
-                totalWater = totalWater + blockArray[ii+1][jj].getWaterPercentage();
-            }
-            int average = (int) Math.floor(totalWater/(double)blocksToAverage);
-            int conservation = 0;
-            if (leftValid)
-            {
-                if (blockArray[ii-1][jj].getWaterPercentage() - incrementPercent> average)
-                {
-                    int amountToChange = Math.max((int) ((blockArray[ii-1][jj].getWaterPercentage() - average)/4.0), incrementPercent);
-                    blockArray[ii-1][jj].setWaterPercentage(blockArray[ii-1][jj].getWaterPercentage() - amountToChange);
-                    conservation = conservation -amountToChange;
-                }
-                else if (blockArray[ii-1][jj].getWaterPercentage() + incrementPercent< average)
-                {
-                    int amountToChange = Math.max((int) ((-blockArray[ii-1][jj].getWaterPercentage() + average)/4.0), incrementPercent);
-
-                    blockArray[ii-1][jj].setWaterPercentage(blockArray[ii-1][jj].getWaterPercentage() +amountToChange);
-                    conservation = conservation + amountToChange;
-                }
-
-            }
-            if (rightValid)
-            {
-                if (blockArray[ii+1][jj].getWaterPercentage()- incrementPercent> average)
-                {
-                    int amountToChange = Math.max((int) ((blockArray[ii+1][jj].getWaterPercentage() - average)/4.0), incrementPercent);
-                    blockArray[ii+1][jj].setWaterPercentage(blockArray[ii+1][jj].getWaterPercentage() - amountToChange);
-                    conservation = conservation -amountToChange;
-                }
-                else if (blockArray[ii+1][jj].getWaterPercentage()+incrementPercent < average)
-                {
-                    int amountToChange = Math.max((int) ((-blockArray[ii+1][jj].getWaterPercentage() + average)/4.0), incrementPercent);
-                    blockArray[ii+1][jj].setWaterPercentage(blockArray[ii+1][jj].getWaterPercentage() +amountToChange);
-                    conservation = conservation +amountToChange;
-                }
-            }
-            blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() - conservation);
-        }
     }
 
     public void moveWaterRight()
@@ -651,9 +608,10 @@ public class ArrayOfBlocksOnScreen {
         {
             Block currentBlock = getBlockFromArrayUsingScreenCoordinates(mGameWidth/2, mGameHeight/2);
             Block rightBlock = getBlockFromArrayUsingScreenCoordinates(mGameWidth/2 + blockSize, mGameHeight/2);
-            if (!rightBlock.isSolid() && rightBlock.getWaterPercentage() < 100 && !currentBlock.isSolid())
+            if (!rightBlock.isSolid() && rightBlock.getWaterPercentage() < 100 && !currentBlock.isSolid() && currentBlock.getWaterPercentage() > 5)
             {
-                int waterMoved = Math.min(100 - rightBlock.getWaterPercentage(), 5);
+                int rightTotalVol = rightBlock.getWaterPercentage();
+                int waterMoved = Math.min(100 - rightTotalVol, 5);
                 currentBlock.setWaterPercentage(currentBlock.getWaterPercentage() - waterMoved);
                 rightBlock.setWaterPercentage(rightBlock.getWaterPercentage() + waterMoved);
             }
@@ -663,13 +621,14 @@ public class ArrayOfBlocksOnScreen {
     public void moveWaterLeft()
     {
         Block aboveBlock = getBlockFromArrayUsingScreenCoordinates(mGameWidth/2, mGameHeight/2 - blockSize);
-        if (!aboveBlock.isWater() && waterDelay % 3 == 0)
+        if (!aboveBlock.hasWater() && waterDelay % 3 == 0)
         {
             Block currentBlock = getBlockFromArrayUsingScreenCoordinates(mGameWidth/2, mGameHeight/2);
             Block leftBlock = getBlockFromArrayUsingScreenCoordinates(mGameWidth/2 - blockSize, mGameHeight/2);
-            if (!leftBlock.isSolid() && leftBlock.getWaterPercentage() < 100 && !currentBlock.isSolid())
+            if (!leftBlock.isSolid() && leftBlock.getWaterPercentage() < 100 && !currentBlock.isSolid() && currentBlock.getWaterPercentage() > 5)
             {
-                int waterMoved = Math.min(100 - leftBlock.getWaterPercentage(), 5);
+                int leftTotalVol = leftBlock.getWaterPercentage();
+                int waterMoved = Math.min(100 - leftTotalVol, 5);
                 currentBlock.setWaterPercentage(currentBlock.getWaterPercentage() - waterMoved);
                 leftBlock.setWaterPercentage(leftBlock.getWaterPercentage() + waterMoved);
             }
@@ -699,23 +658,23 @@ public class ArrayOfBlocksOnScreen {
         }
     }
 
-    private void updateCrystalBlocks(int ii ,int jj)
+    public int getVerticalBlockLimit()
     {
-        if (blockArray[ii][jj].getType() == GlobalConstants.CRYSTAL && ii > 0 && jj > 0 && ii < horizontalBlockLimit-1 && jj < verticalBlockLimit - 1)
-        {
-            int currentIce = 0;
-            for (int hh = -1; hh < 2; hh ++)
-            {
-                for (int kk = -1; kk < 2; kk++)
-                {
-                    if (blockArray[ii+hh][jj+kk].isIce())
-                    {
-                        currentIce ++;
-                    }
-                }
-            }
-            blockArray[ii][jj].setFrozen(currentIce > 0);
-        }
+        return verticalBlockLimit;
     }
 
+    public int getHorizontalBlockLimit()
+    {
+        return horizontalBlockLimit;
+    }
+
+    public Block[][] getBlockArray()
+    {
+        return blockArray;
+    }
+
+    public void setBlockArray(Block[][] newBlockArray)
+    {
+        blockArray = newBlockArray;
+    }
 }

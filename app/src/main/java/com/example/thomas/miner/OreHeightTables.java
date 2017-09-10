@@ -10,7 +10,11 @@ public final class OreHeightTables {
 
     public static int determineOreTable1(double random)
     {
-        if (random < 0.7)
+        if (random < 0.01)
+        {
+            return GlobalConstants.COSTUMEGEM;
+        }
+        else if (random < 0.7)
         {
             return GlobalConstants.COPPER;
         }
@@ -22,7 +26,11 @@ public final class OreHeightTables {
 
     public static int determineOreTable2(double random)
     {
-        if (random < 0.4)
+        if (random < 0.01)
+        {
+            return GlobalConstants.COSTUMEGEM;
+        }
+        else if (random < 0.4)
         {
             return GlobalConstants.COPPER;
         }
@@ -42,13 +50,21 @@ public final class OreHeightTables {
 
     public static int determineOreTable3(double random)
     {
-        if (random < 0.2)
+        if (random < 0.01)
+        {
+            return GlobalConstants.COSTUMEGEM;
+        }
+        else if (random < 0.2)
         {
             return GlobalConstants.COPPER;
         }
         else if (random < 0.4)
         {
             return GlobalConstants.IRON;
+        }
+        else if (random < 0.5)
+        {
+            return GlobalConstants.GASROCK;
         }
         else if (random < 0.9)
         {
@@ -66,13 +82,21 @@ public final class OreHeightTables {
 
     public static int determineOreTable4(double random)
     {
-        if (random < 0.15)
+        if (random < 0.01)
+        {
+            return GlobalConstants.COSTUMEGEM;
+        }
+        else if (random < 0.15)
         {
             return GlobalConstants.COPPER;
         }
-        else if (random < 0.35)
+        else if (random < 0.3)
         {
             return GlobalConstants.IRON;
+        }
+        else if (random < 0.4)
+        {
+            return GlobalConstants.GASROCK;
         }
         else if (random < 0.5)
         {
@@ -98,7 +122,11 @@ public final class OreHeightTables {
 
     public static int determineOreTable5(double random)
     {
-        if (random < 0.05)
+        if (random < 0.01)
+        {
+            return GlobalConstants.COSTUMEGEM;
+        }
+        else if (random < 0.05)
         {
             return GlobalConstants.COPPER;
         }

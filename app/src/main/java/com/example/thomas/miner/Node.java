@@ -9,16 +9,14 @@ public class Node {
     private Node previousNode = null;
     private Node nextNode = null;
     private int index;
-    private int type;
     private NonSolidBlocks blockLiquidData;
-    private int amountOfGas;
-    private int amountOfLava;
+    private BlockStatusData blockStatusData;
 
-    public Node(int ii, int type,  NonSolidBlocks newBlockLiquidData)
+    public Node(int ii, BlockStatusData newBlockStatusData,  NonSolidBlocks newBlockLiquidData)
     {
         index = ii;
-        this.type = type;
         blockLiquidData = newBlockLiquidData;
+        blockStatusData = newBlockStatusData;
     }
 
     public Node getNextNode()
@@ -41,7 +39,7 @@ public class Node {
         return index;
     }
 
-    public Node addItem(int ii, int type, NonSolidBlocks newBlockLiquidData)
+    public Node addItem(int ii, BlockStatusData newBlockStatusData, NonSolidBlocks newBlockLiquidData)
     {
         if (ii < index)
         {
@@ -49,7 +47,7 @@ public class Node {
             {
                 if (ii > previousNode.getIndex())
                 {
-                    Node newNode = new Node(ii, type, newBlockLiquidData);
+                    Node newNode = new Node(ii, newBlockStatusData, newBlockLiquidData);
                     newNode.setNextNode(this);
                     newNode.setPreviousNode(previousNode);
                     previousNode.setNextNode(newNode);
@@ -58,12 +56,12 @@ public class Node {
                 }
                 else
                 {
-                    return previousNode.addItem(ii,type,newBlockLiquidData);
+                    return previousNode.addItem(ii,newBlockStatusData,newBlockLiquidData);
                 }
             }
             else
             {
-                Node newNode = new Node(ii,type,newBlockLiquidData);
+                Node newNode = new Node(ii,newBlockStatusData,newBlockLiquidData);
                 previousNode = newNode;
                 previousNode.setNextNode(this);
                 return previousNode;
@@ -75,7 +73,7 @@ public class Node {
             {
                 if (ii < nextNode.getIndex())
                 {
-                    Node newNode = new Node(ii,type,newBlockLiquidData);
+                    Node newNode = new Node(ii,newBlockStatusData,newBlockLiquidData);
                     newNode.setPreviousNode(this);
                     newNode.setNextNode(nextNode);
                     nextNode.setPreviousNode(newNode);
@@ -84,12 +82,12 @@ public class Node {
                 }
                 else
                 {
-                    return nextNode.addItem(ii,type,newBlockLiquidData);
+                    return nextNode.addItem(ii,newBlockStatusData,newBlockLiquidData);
                 }
             }
             else
             {
-                Node newNode = new Node(ii,type,newBlockLiquidData);
+                Node newNode = new Node(ii,newBlockStatusData,newBlockLiquidData);
                 nextNode = newNode;
                 nextNode.setPreviousNode(this);
                 return nextNode;
@@ -98,7 +96,7 @@ public class Node {
         else
         {
             //item already in list
-            this.type = type;
+            this.blockStatusData = newBlockStatusData;
             this.blockLiquidData = newBlockLiquidData;
             return this;
         }
@@ -107,6 +105,16 @@ public class Node {
     public int getWaterPercentage()
     {
         return blockLiquidData.getWaterPercentage();
+    }
+
+    public int getGasPercentage()
+    {
+        return blockLiquidData.getGasPercentage();
+    }
+
+    public int getMinedPercentage()
+    {
+        return blockStatusData.getMinedPercentage();
     }
 
 
@@ -192,13 +200,13 @@ public class Node {
 
     protected String getData()
     {
-        String output = Integer.toString(index) + "-" + Integer.toString(type)+ "-" + blockLiquidData.getMemoryString();
+        String output = Integer.toString(index) + "-" + blockStatusData.getMemoryString()+ "-" + blockLiquidData.getMemoryString();
         return output;
     }
 
     int getType()
     {
-        return type;
+        return blockStatusData.getType();
     }
 
 

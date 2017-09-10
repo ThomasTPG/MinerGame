@@ -67,11 +67,13 @@ public class LevelMemory {
                 //Read the mined blocks
                 while ((line = bufferedReader.readLine()) != null)
                 {
-                    System.err.println("LINE" + line);
                     String liquidDataString = line.split("-")[2];
                     NonSolidBlocks blockLiquidData = new NonSolidBlocks();
                     blockLiquidData.setFromMemory(liquidDataString);
-                    mMinedLocations.addToMinedLocations(Integer.parseInt(line.split("-")[0]),Integer.parseInt(line.split("-")[1]),blockLiquidData);
+                    String statusDataString = line.split("-")[1];
+                    BlockStatusData blockStatusData = new BlockStatusData();
+                    blockStatusData.setFromMemory(statusDataString);
+                    mMinedLocations.addToMinedLocations(Integer.parseInt(line.split("-")[0]),blockStatusData,blockLiquidData);
                 }
             }
             catch (IOException e)

@@ -52,6 +52,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private ActiveBombs activeBombs;
     ArrayOfBlocksOnScreen blocksOnScreen;
     boolean initialized = false;
+    BlockPhysics blockPhysics;
 
     public GameView(Context context) {
         super(context);
@@ -287,7 +288,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
                     drawBackGround(c);
                     blocksOnScreen.calculateCurrentBlocks();
-                    blocksOnScreen.updateWater();
+                    blockPhysics.updateDynamicBlocks();
                     blocksOnScreen.drawCurrentBlocks(c);
                     mapArt.drawArt(c);
                     mainCharacter.draw();
@@ -361,10 +362,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             blocksOnScreen = new ArrayOfBlocksOnScreen(gameWidth, gameHeight, blockSize, mContext, seed, camera, minedLocations);
             blocksOnScreen.updateCurrentScreenDimensions();
             blocksOnScreen.updatePreviousScreenDimensions();
+            blockPhysics = new BlockPhysics(blocksOnScreen);
             mapArt = new MapArt(c,mContext,blockSize, shopMemory,camera);
             mainCharacter = new Sprite(mContext, c, spriteDimension, blockSize, blocksOnScreen);
             miningClass = new Mining(gameHeight, gameWidth, blocksOnScreen, blockSize, oreCounter);
-            checkExit = new CheckExit(camera, blockSize,mContext);
+            checkExit = new CheckExit(camera, blockSize,mContext, gameHeight, gameWidth);
         }
 
 
@@ -592,6 +594,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             {
                 levelMemory.saveLocations();
                 running = false;
+                System.out.println("Paused");
             }
         }
     }

@@ -13,7 +13,7 @@ public final class GlobalConstants {
     public static final int HARD_BOULDER = 3;
     //When a bomb detonates the surrounding blocks are fireball types
     public static final int FIREBALL = 4;
-    static final int WATER = 5;
+
     public static final int SOIL = 6;
     public static final int COPPER = 7;
     public static final int IRON = 8;
@@ -26,8 +26,10 @@ public final class GlobalConstants {
     static final int ICE = 13;
     static final int GOLD = 14;
     static final int CRYSTAL = 15;
+    static final int GASROCK = 16;
+    static final int COSTUMEGEM = 17;
     //Number of types of block
-    public static final int NUMBEROFTYPES = 15;
+    public static final int NUMBEROFTYPES = 17;
 
     //Items in shop
     public static final int NUMBEROFITEMS = 5;
@@ -36,5 +38,13 @@ public final class GlobalConstants {
     public static final int GARDENUPGRADE = 2;
     public static final int CLAMBERUPGRADE = 3;
     public static final int AIRTANKUPGRADE = 4;
+
+    //Percentage to dislodge blocks
+    public static final int UNMINED = 0;
+    public static final int SLIGHTLY_MINED = 1;
+    public static final int ALMOST_MINED = 2;
+    public static final int SLIGHT_PERCENTAGE = 40;
+    public static final int ALMOST_PERCENTAGE = 70;
+
 
 }
