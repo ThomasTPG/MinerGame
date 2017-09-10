@@ -262,232 +262,7 @@ public class ArrayOfBlocksOnScreen {
             previousScreenDimensions[kk]=currentScreenDimensions[kk];
         }
     }
-
-    public void drawCurrentBlocks(Canvas c)
-    {
-        for (int ii = 0; ii < blocksHorizontalScreen; ii ++)
-        {
-            for (int jj = 0; jj < blocksVerticalScreen; jj++)
-            {
-                Bitmap blockBitmap = workOutBitmap(blockArray[ii + borderSize][jj + borderSize]);
-
-                int screenTopLeftX = mCamera.getCameraX() - mGameWidth/2;
-                int screenTopLeftY = mCamera.getCameraY() - mGameHeight/2;
-                int topLeftX = (int) Math.max(screenTopLeftX, blockSize * Math.floor(screenTopLeftX / (double)blockSize + ii));
-                int topLeftY = (int) Math.max(screenTopLeftY,  blockSize * Math.floor(screenTopLeftY / (double)blockSize + jj));
-                int topRightX = (int) Math.min(blockSize * Math.floor(screenTopLeftX / (double)blockSize + ii+1), screenTopLeftX + mGameWidth);
-                int bottomLeftY = (int) Math.min(blockSize * Math.floor(screenTopLeftY / (double)blockSize + jj+1), screenTopLeftY + mGameHeight);
-                Rect location = new Rect(topLeftX - mCamera.getCameraX() + mGameWidth/2, topLeftY -mCamera.getCameraY() + mGameHeight/2, topRightX - mCamera.getCameraX() + mGameWidth/2, bottomLeftY - mCamera.getCameraY() + mGameHeight/2);
-
-                if (blockBitmap != null)
-                {
-                    //Now work out the scalings for the blocks
-                    Rect source = getScaledRectangle(blockBitmap,location,ii,jj);
-
-                    if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.LIFE)
-                    {
-                        if (blockArray[ii +borderSize][jj+ borderSize].getWaterPercentage() < 100)
-                        {
-                            c.drawBitmap(lifeBitmap,source,location,null);
-                        }
-                        else
-                        {
-                            c.drawBitmap(lifeGrown,source,location,null);
-                        }
-                    }
-                    else if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.CRYSTAL)
-                    {
-                        if (!blockArray[ii +borderSize][jj+ borderSize].getFrozen())
-                        {
-                            c.drawBitmap(crystalBase,source,location,null);
-                        }
-                        else
-                        {
-                            c.drawBitmap(crystal3,source,location,null);
-                        }
-                    }
-                    else
-                    {
-                        c.drawBitmap(blockBitmap,source,location,null);
-                    }
-
-
-                    //Finally overlay any mining
-                    if (blockArray[ii + borderSize][jj + borderSize].isCurrentlyBeingMined())
-                    {
-                        c.drawBitmap(miningborder,source,location,null);
-                    }
-                    if (blockArray[ii + borderSize][jj + borderSize].getMiningProgress() >= 70)
-                    {
-                        c.drawBitmap(mining2,source,location,null);
-                    }
-                    else if (blockArray[ii +borderSize][jj+ borderSize].getMiningProgress() >= 40)
-                    {
-                        c.drawBitmap(mining1,source,location,null);
-                    }
-                }
-                else
-                {
-                    //Draw fluids
-                    if (blockArray[ii + borderSize][jj + borderSize].blockHasLiquid())
-                    {
-                        drawFluidBlock(blockArray[ii+borderSize][jj + borderSize].getBlockLiquidData(),c,location);
-                    }
-                    //Draw borders
-                    Rect source = getScaledRectangle(bottomBorder,location,ii,jj);
-                    drawBorders(ii,jj,source,location,c);
-                }
-                //Overlay any bombs
-                if (blockArray[ii + borderSize][jj + borderSize].getBomb() != ActiveBombs.NO_BOMB)
-                {
-                    switch (blockArray[ii + borderSize][jj + borderSize].getBomb())
-                    {
-                        case(ActiveBombs.DYNAMITE):
-                            c.drawBitmap(dynamite,null,location,null);
-                            break;
-                        case(ActiveBombs.ICEBOMB):
-                            c.drawBitmap(iceBomb,null,location,null);
-                            break;
-                    }
-                }
-            }
-        }
-    }
-
-    private void drawBorders(int ii, int jj, Rect source, Rect location, Canvas canvas)
-    {
-        int whichBitmapCode = 1;
-        //Draw any borders
-        if (blockArray[ii +borderSize - 1][jj+ borderSize].isSolid())
-        {
-            whichBitmapCode *=7;
-        }
-        if (blockArray[ii +borderSize + 1][jj+ borderSize].isSolid())
-        {
-            whichBitmapCode *=3;
-        }
-        if (blockArray[ii +borderSize][jj+ borderSize - 1].isSolid())
-        {
-            whichBitmapCode *=2;
-        }
-        if (blockArray[ii +borderSize][jj+ borderSize + 1].isSolid())
-        {
-            whichBitmapCode *=5;
-        }
-        //Code is given by
-        //   2
-        //  7 3
-        //   5
-        switch (whichBitmapCode)
-        {
-            case (2):
-                canvas.drawBitmap(topBorder,source,location,null);
-                break;
-            case (3):
-                canvas.drawBitmap(rightBorder,source,location,null);
-                break;
-            case (5):
-                canvas.drawBitmap(bottomBorder,source,location,null);
-                break;
-            case (7):
-                canvas.drawBitmap(leftBorder,source,location,null);
-                break;
-            case (6):
-                canvas.drawBitmap(topRightBorder,source,location,null);
-                break;
-            case (14):
-                canvas.drawBitmap(topLeftBorder,source,location,null);
-                break;
-            case (15):
-                canvas.drawBitmap(bottomRightBorder,source,location,null);
-                break;
-            case (35):
-                canvas.drawBitmap(bottomLeftBorder,source,location,null);
-                break;
-            case (21):
-                canvas.drawBitmap(leftBorder,source,location,null);
-                canvas.drawBitmap(rightBorder,source,location,null);
-                break;
-            case (10):
-                canvas.drawBitmap(topBorder,source,location,null);
-                canvas.drawBitmap(bottomBorder,source,location,null);
-                break;
-            case (105):
-                canvas.drawBitmap(bottomSurroundBorder,source,location,null);
-                break;
-            case (210):
-                canvas.drawBitmap(allBorders,source,location,null);
-                break;
-        }
-    }
-
-    private void drawFluidBlock(NonSolidBlocks blockLiquidData, Canvas canvas, Rect location)
-    {
-        int totalPercent = blockLiquidData.getGasPercentage() + blockLiquidData.getWaterPercentage();
-        int overlay = 0;
-        if (totalPercent > 100)
-        {
-            overlay = totalPercent - 100;
-        }
-        int gasHeight = (int) ((double)(Math.min(100 - blockLiquidData.getWaterPercentage(), blockLiquidData.getGasPercentage()) * blockSize)/(double)100);
-        int waterHeight = (int) ((double) ((100 - (blockLiquidData.getWaterPercentage() - overlay)) * blockSize) /(double) 100);
-
-        if (gasHeight > 0)
-        {
-            Rect scaledLocation = new Rect(location.left, location.top, location.right, location.top + gasHeight);
-            canvas.drawBitmap(gasBitmap,null,scaledLocation,null);
-        }
-        if (overlay > 0)
-        {
-            Rect scaledLocation = new Rect(location.left,location.top + gasHeight,location.right,location.top + waterHeight);
-            canvas.drawBitmap(gasWaterBitmap,null,scaledLocation,null);
-        }
-        if (waterHeight < 100)
-        {
-            Rect scaledLocation = new Rect(location.left, location.top + waterHeight, location.right, location.bottom);
-            canvas.drawBitmap(waterBitmap,null,scaledLocation,null);
-        }
-    }
-
-    private Rect getScaledRectangle(Bitmap blockBmp, Rect location, int ii, int jj)
-    {
-        int left = 0;
-        int right = blockBmp.getWidth();
-        int top = 0;
-        int bottom = blockBmp.getHeight();
-        if (location.width() < blockSize)
-        {
-            if (ii == 0)
-            {
-                double scale = 1 - location.width()/(double)blockSize;
-                left = (int) (blockBmp.getWidth() * scale);
-            }
-            else if (ii == blocksHorizontalScreen-1)
-            {
-                double scale = location.width()/(double)blockSize;
-                right = (int) (blockBmp.getWidth() * scale);
-            }
-
-        }
-        if (location.height() < blockSize)
-        {
-            if (jj == 0)
-            {
-                double scale = 1 - location.height()/(double)blockSize;
-                top = (int) (blockBmp.getHeight() * scale);
-            }
-            else if (jj >= blocksVerticalScreen - 2)
-            {
-                double scale = location.height()/(double)blockSize;
-                bottom = (int) (blockBmp.getHeight() * scale);
-            }
-        }
-
-        Rect source = new Rect(left, top, right, bottom);
-        return source;
-    }
-
-
+    
     public void explodeBomb(Block bomb)
     {
         int index = bomb.getIndex();
@@ -676,5 +451,20 @@ public class ArrayOfBlocksOnScreen {
     public void setBlockArray(Block[][] newBlockArray)
     {
         blockArray = newBlockArray;
+    }
+
+    public int getBorderSize()
+    {
+        return borderSize;
+    }
+
+    public int getBlocksHorizontalScreen()
+    {
+        return blocksHorizontalScreen;
+    }
+
+    public int getBlocksVerticalScreen()
+    {
+        return blocksVerticalScreen;
     }
 }

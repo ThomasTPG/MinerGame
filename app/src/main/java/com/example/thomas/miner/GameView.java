@@ -53,6 +53,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     ArrayOfBlocksOnScreen blocksOnScreen;
     boolean initialized = false;
     BlockPhysics blockPhysics;
+    BlockDrawing blockDrawing;
 
     public GameView(Context context) {
         super(context);
@@ -289,7 +290,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     drawBackGround(c);
                     blocksOnScreen.calculateCurrentBlocks();
                     blockPhysics.updateDynamicBlocks();
-                    blocksOnScreen.drawCurrentBlocks(c);
+                    blockDrawing.drawBlocks(c);
+                    //blocksOnScreen.drawCurrentBlocks(c);
                     mapArt.drawArt(c);
                     mainCharacter.draw();
                     mainCharacter.drawOxygen(c);
@@ -363,6 +365,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             blocksOnScreen.updateCurrentScreenDimensions();
             blocksOnScreen.updatePreviousScreenDimensions();
             blockPhysics = new BlockPhysics(blocksOnScreen);
+            blockDrawing = new BlockDrawing(blocksOnScreen,mContext,blockSize, camera, gameWidth, gameHeight);
             mapArt = new MapArt(c,mContext,blockSize, shopMemory,camera);
             mainCharacter = new Sprite(mContext, c, spriteDimension, blockSize, blocksOnScreen);
             miningClass = new Mining(gameHeight, gameWidth, blocksOnScreen, blockSize, oreCounter);
