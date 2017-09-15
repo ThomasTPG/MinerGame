@@ -46,6 +46,7 @@ public class BlockPhysics {
                 createGas(ii,jj);
                 decayGas(ii,jj);
                 blowUpGas(ii,jj);
+                blowUpExplodium(ii,jj);
             }
         }
         blocksOnScreen.setBlockArray(blockArray);
@@ -85,6 +86,51 @@ public class BlockPhysics {
                 }
             }
         }
+    }
+
+    private void blowUpExplodium(int ii, int jj)
+    {
+        if (blockArray[ii][jj].getType() == GlobalConstants.EXPLODIUM)
+        {
+            if (ii > 0)
+            {
+                if (shouldExplodeExplodium(ii-1,jj))
+                {
+                    blocksOnScreen.explodeBlock(blockArray[ii][jj]);
+                    return;
+                }
+            }
+            if (ii < horizontalBlockLimit-1)
+            {
+                if (shouldExplodeExplodium(ii+1,jj))
+                {
+                    blocksOnScreen.explodeBlock(blockArray[ii][jj]);
+                    return;
+                }
+            }
+            if (jj > 0)
+            {
+                if (shouldExplodeExplodium(ii,jj-1))
+                {
+                    blocksOnScreen.explodeBlock(blockArray[ii][jj]);
+                    return;
+                }
+            }
+            if (jj < verticalBlockLimit - 1)
+            {
+                if (shouldExplodeExplodium(ii,jj+1))
+                {
+                    blocksOnScreen.explodeBlock(blockArray[ii][jj]);
+                    return;
+                }
+            }
+        }
+
+    }
+
+    private boolean shouldExplodeExplodium(int ii, int jj)
+    {
+        return (blockArray[ii][jj].getLiquidData().getWaterPercentage() + blockArray[ii][jj].getLiquidData().getGasPercentage() > 0) || (blockArray[ii][jj].isFire());
     }
 
     private void decayGas(int ii, int jj)
@@ -244,6 +290,20 @@ public class BlockPhysics {
                     blockArray[ii][jj+1].setBlockStatusData(blockStatusDataUpper);
                     blockArray[ii][jj].saveToMemory();
                     blockArray[ii][jj+1].saveToMemory();
+
+                    //Check explodium
+                    if (jj < verticalBlockLimit - 2)
+                    {
+                        if (blockArray[ii][jj+2].isSolid() && blockArray[ii][jj+1].getType() ==GlobalConstants.EXPLODIUM)
+                        {
+                            blocksOnScreen.explodeBlock(blockArray[ii][jj+1]);
+                        }
+                        if (blockArray[ii][jj+2].getType() == GlobalConstants.EXPLODIUM)
+                        {
+                            blocksOnScreen.explodeBlock(blockArray[ii][jj+2]);
+                        }
+                    }
+
                 }
             }
         }

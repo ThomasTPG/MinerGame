@@ -22,6 +22,7 @@ public class BlockDrawing {
     int mGameHeight;
     int blocksHorizontalScreen;
     int blocksVerticalScreen;
+    private EncyclopediaMemory encyclopediaMemory;
 
     //Bitmaps
     private Bitmap mining1;
@@ -34,7 +35,7 @@ public class BlockDrawing {
     private Bitmap fireBallBitmap;
     private Bitmap copperBitmap;
     private Bitmap ironBitmap;
-    private Bitmap alieniteBitmap;
+    private Bitmap explodiumBitmap;
     private Bitmap marbleBitmap;
     private Bitmap springBitmap;
     private Bitmap waterBitmap;
@@ -62,14 +63,18 @@ public class BlockDrawing {
     private Bitmap bottomRightBorder;
     private Bitmap bottomLeftBorder;
     private Bitmap bottomSurroundBorder;
+    private Bitmap topSurroundBorder;
+    private Bitmap rightSurroundBorder;
+    private Bitmap leftSurroundBorder;
     private Bitmap allBorders;
 
-    public BlockDrawing(ArrayOfBlocksOnScreen arrayOfBlocksOnScreen, Context context, int blockDimensions, Camera camera, int gameWidth, int gameHeight)
+    public BlockDrawing(ArrayOfBlocksOnScreen arrayOfBlocksOnScreen, Context context, int blockDimensions, Camera camera, int gameWidth, int gameHeight, EncyclopediaMemory encyclopediaMemory)
     {
         blocksOnScreen = arrayOfBlocksOnScreen;
         blocksHorizontalScreen = blocksOnScreen.getBlocksHorizontalScreen();
         blocksVerticalScreen = blocksOnScreen.getBlocksVerticalScreen();
         this.context = context;
+        this.encyclopediaMemory = encyclopediaMemory;
         blockSize = blockDimensions;
         borderSize = blocksOnScreen.getBorderSize();
         mCamera = camera;
@@ -94,7 +99,7 @@ public class BlockDrawing {
         fireBallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fireball);
         copperBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.copper);
         ironBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.iron);
-        alieniteBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienite);
+        explodiumBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explodium);
         marbleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.marble);
         springBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.spring);
         lifeBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.life);
@@ -117,11 +122,43 @@ public class BlockDrawing {
         topLeftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top_left);
         topRightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top_right);
         bottomRightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom_right);
-        bottomLeftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.bottom_left);
+        bottomLeftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom_left);
         bottomSurroundBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom_surround);
+        topSurroundBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top_surround);
+        leftSurroundBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_left_surround);
+        rightSurroundBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_right_surround);
         allBorders = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_all_borders);
 
 
+    }
+
+    private void checkEncyclopedia(Block block)
+    {
+        int type = block.getType();
+        if (!encyclopediaMemory.isOreUnlocked(GlobalConstants.WATER))
+        {
+            if (type == GlobalConstants.CAVERN)
+            {
+                if (block.getWaterPercentage() > 0)
+                {
+                    encyclopediaMemory.writeFile(GlobalConstants.WATER);
+                }
+            }
+        }
+        if (!encyclopediaMemory.isOreUnlocked(GlobalConstants.GAS))
+        {
+            if (type == GlobalConstants.CAVERN)
+            {
+                if (block.getGasPercentage() > 0)
+                {
+                    encyclopediaMemory.writeFile(GlobalConstants.GAS);
+                }
+            }
+        }
+        if (!encyclopediaMemory.isOreUnlocked(type))
+        {
+            encyclopediaMemory.writeFile(type);
+        }
     }
 
     public void drawBlocks(Canvas c)
@@ -132,6 +169,8 @@ public class BlockDrawing {
             for (int jj = 0; jj < blocksVerticalScreen; jj++)
             {
                 Bitmap blockBitmap = workOutBitmap(blockArray[ii + borderSize][jj + borderSize]);
+
+                checkEncyclopedia(blockArray[ii + borderSize][jj + borderSize]);
 
                 int screenTopLeftX = mCamera.getCameraX() - mGameWidth/2;
                 int screenTopLeftY = mCamera.getCameraY() - mGameHeight/2;
@@ -275,6 +314,15 @@ public class BlockDrawing {
                 canvas.drawBitmap(topBorder,source,location,null);
                 canvas.drawBitmap(bottomBorder,source,location,null);
                 break;
+            case (30):
+                canvas.drawBitmap(rightSurroundBorder,source,location,null);
+                break;
+            case (42):
+                canvas.drawBitmap(topSurroundBorder,source,location,null);
+                break;
+            case (70):
+                canvas.drawBitmap(leftSurroundBorder,source,location,null);
+                break;
             case (105):
                 canvas.drawBitmap(bottomSurroundBorder,source,location,null);
                 break;
@@ -385,8 +433,8 @@ public class BlockDrawing {
             case (GlobalConstants.IRON):
                 blockBitmap = ironBitmap;
                 break;
-            case (GlobalConstants.ALIENITE):
-                blockBitmap = alieniteBitmap;
+            case (GlobalConstants.EXPLODIUM):
+                blockBitmap = explodiumBitmap;
                 break;
             case (GlobalConstants.MARBLE):
                 blockBitmap = marbleBitmap;

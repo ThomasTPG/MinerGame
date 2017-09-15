@@ -1,7 +1,5 @@
 package com.example.thomas.miner;
 
-import javax.microedition.khronos.opengles.GL;
-
 /**
  * Created by Thomas on 16/02/2017.
  */
@@ -40,7 +38,7 @@ public final class OreHeightTables {
         }
         else if (random < 0.99)
         {
-            return GlobalConstants.ALIENITE;
+            return GlobalConstants.EXPLODIUM;
         }
         else
         {
@@ -68,7 +66,7 @@ public final class OreHeightTables {
         }
         else if (random < 0.9)
         {
-            return GlobalConstants.ALIENITE;
+            return GlobalConstants.EXPLODIUM;
         }
         else if (random < 0.99)
         {
@@ -100,7 +98,7 @@ public final class OreHeightTables {
         }
         else if (random < 0.5)
         {
-            return GlobalConstants.ALIENITE;
+            return GlobalConstants.EXPLODIUM;
         }
         else if (random < 0.65)
         {
@@ -136,7 +134,7 @@ public final class OreHeightTables {
         }
         else if (random < 0.25)
         {
-            return GlobalConstants.ALIENITE;
+            return GlobalConstants.EXPLODIUM;
         }
         else if (random < 0.4)
         {

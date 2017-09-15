@@ -3,5 +3,35 @@
     <string name="level_data_file_name">saved_level.txt</string>
     <string name="ore_data_file_name">saved_ore.txt</string>
     <string name="shop_data_file_name">shop.txt</string>
+    <string name="encyclopedia_data_file_name">encyclopedia.txt</string>
+
+
+    <string name="pickaxe_update_name">Pickaxe</string>
+    <string name="current_pickaxe">Current pickaxe: </string>
+    <string name="next_pickaxe">Next pickaxe: </string>
+    <string name="pickaxe_update_0">Wood</string>
+    <string name="pickaxe_update_1">Copper</string>
+    <string name="pickaxe_update_1_benefit">Allows you to mine iron ore.</string>
+
+    <string name="airtank_update_name">Air Tank</string>
+    <string name="current_air_tank">Current air tank: </string>
+    <string name="next_air_tank">Next air tank: </string>
+    <string name="air_tank_update_0">1</string>
+    <string name="air_tank_update_1">2</string>
+    <string name="air_tank_update_1_benefit">Doubles air tank capacity.</string>
+
+    <string name="house_update_name">House</string>
+    <string name="current_house">Current house: </string>
+    <string name="next_house">Next house: </string>
+    <string name="house_update_0">Tent</string>
+    <string name="house_update_1">Shack</string>
+    <string name="air_tank_update_1_benefit">More copper.</string>
+
+    //Data for the encyclopedia
+    <string name="soil_name">Rock</string>
+    <string name="hard_rock_name">Boulder</string>
+    <string name="pernament_rock_name">Hard Boulder</string>
+    <string name="water_name">Water</string>
+    <string name="gas_name">Gas</string>
 
 </resources>

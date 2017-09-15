@@ -245,9 +245,8 @@ public class Block {
         }
     }
 
-    public void blowUp()
+    public void explode()
     {
-        setBomb(ActiveBombs.NO_BOMB);
         Thread explosionTimer = new Thread()
         {
             @Override
@@ -257,7 +256,8 @@ public class Block {
                 try {
                     synchronized (this)
                     {
-                        wait(2 + ((index * xCoord * yCoord )*(index * xCoord * yCoord))%200);
+                        int time = 2 + ((index * xCoord * yCoord )*(index * xCoord * yCoord));
+                        wait((time*time)%200);
                     }
                 }
                 catch (Exception e)
@@ -284,6 +284,12 @@ public class Block {
         {
             explosionTimer.start();
         }
+    }
+
+    public void blowUp()
+    {
+        setBomb(ActiveBombs.NO_BOMB);
+        explode();
     }
 
     private void setType(int newType)
@@ -400,7 +406,7 @@ public class Block {
             case (GlobalConstants.IRON):
                 softness = 0.7;
                 break;
-            case (GlobalConstants.ALIENITE):
+            case (GlobalConstants.EXPLODIUM):
                 softness = 0.65;
                 break;
             case (GlobalConstants.MARBLE):

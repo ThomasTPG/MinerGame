@@ -17,7 +17,7 @@ public final class GlobalConstants {
     public static final int SOIL = 6;
     public static final int COPPER = 7;
     public static final int IRON = 8;
-    public static final int ALIENITE = 9;
+    public static final int EXPLODIUM = 9;
     public static final int MARBLE = 10;
     //Spring blocks create water
     static final int SPRING = 11;
@@ -28,16 +28,20 @@ public final class GlobalConstants {
     static final int CRYSTAL = 15;
     static final int GASROCK = 16;
     static final int COSTUMEGEM = 17;
+    static final int WATER = 18;
+    static final int GAS = 19;
     //Number of types of block
     public static final int NUMBEROFTYPES = 17;
+    public static final int ENCYCLOPEDIA_NUMBERS = 16;
+    public static final int MEMORY_LENGTH_ARRAY_ORE = 30;
 
     //Items in shop
     public static final int NUMBEROFITEMS = 5;
     public static final int PICKAXEUPGRADE = 0;
-    public static final int HOUSEUPGRADE = 1;
-    public static final int GARDENUPGRADE = 2;
-    public static final int CLAMBERUPGRADE = 3;
-    public static final int AIRTANKUPGRADE = 4;
+    public static final int AIRTANKUPGRADE = 1;
+    public static final int HOUSEUPGRADE = 2;
+    public static final int GARDENUPGRADE = 3;
+    public static final int CLAMBERUPGRADE = 4;
 
     //Percentage to dislodge blocks
     public static final int UNMINED = 0;

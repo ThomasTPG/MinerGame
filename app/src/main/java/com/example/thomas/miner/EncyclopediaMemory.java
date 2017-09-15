@@ -4,7 +4,6 @@ import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.Console;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,32 +14,24 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 /**
- * Created by Thomas on 24/02/2017.
+ * Created by Thomas on 15/09/2017.
  */
 
-public class OreMemory {
+public class EncyclopediaMemory {
 
-    /*
-    We save the ore file in the following format:
-    123-123
-    123-123
-    Where the first number is the total number of that ore mined
-    The second number is the amount mined on the previous run
-    The rows are ordered by those in GlobalConstants, starting with soil
-    */
-
-    int[] oreArray = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
-    int[] previouslyMinedOre = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
     private File oreFile;
+    private int[] oreArray;
 
-    public OreMemory(Context context)
+    public EncyclopediaMemory(Context context)
     {
         File path = context.getFilesDir();
-        oreFile = new File(path, context.getResources().getString(R.string.ore_data_file_name));
+        oreFile = new File(path, context.getResources().getString(R.string.encyclopedia_data_file_name));
+        oreArray = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
         checkFileExists();
+        readFile();
     }
 
-    private void checkFileExists()
+    public void checkFileExists()
     {
         if (!oreFile.exists())
         {
@@ -58,7 +49,7 @@ public class OreMemory {
             {
                 for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
                 {
-                    bufferedWriter.write("0-0");
+                    bufferedWriter.write("0");
                     bufferedWriter.newLine();
                 }
                 bufferedWriter.close();
@@ -89,8 +80,7 @@ public class OreMemory {
                 {
                     if ((line = bufferedReader.readLine()) != null)
                     {
-                        oreArray[ii] = Integer.parseInt(line.split("-")[0]);
-                        previouslyMinedOre[ii] = Integer.parseInt(line.split("-")[1]);
+                        oreArray[ii] = Integer.parseInt(line);
                     }
                     else
                     {
@@ -110,7 +100,7 @@ public class OreMemory {
         }
     }
 
-    public void writeFile(OreCounter oreCounter)
+    public void writeFile(int oreNumber)
     {
         readFile();
         try
@@ -121,10 +111,12 @@ public class OreMemory {
             {
                 for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
                 {
-                    int lastMined = oreCounter.getCount(GlobalConstants.SOIL + ii);
-                    int totalMined = oreArray[ii] + lastMined;
-                    System.out.println("MINED" + lastMined + " " + totalMined);
-                    bufferedWriter.write(Integer.toString(totalMined) + "-" + Integer.toString(lastMined));
+                    int entry = oreArray[ii];
+                    if (ii == oreNumber)
+                    {
+                        entry = 1;
+                    }
+                    bufferedWriter.write(Integer.toString(entry));
                     bufferedWriter.newLine();
                 }
                 bufferedWriter.close();
@@ -141,16 +133,13 @@ public class OreMemory {
         }
     }
 
-    public int[] getTotalOre()
+    public boolean isOreUnlocked(int ore)
     {
-        readFile();
-        return oreArray;
-    }
-
-    public int[] getPreviouslyMinedOre()
-    {
-        readFile();
-        return previouslyMinedOre;
+        if (oreArray[ore] == 1)
+        {
+            return true;
+        }
+        return false;
     }
 
 }

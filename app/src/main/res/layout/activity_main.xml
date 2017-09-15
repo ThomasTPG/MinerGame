@@ -38,4 +38,14 @@
         android:layout_below="@+id/buttonStart"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Encyclopedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonEncyclopedia"
+        android:layout_marginTop="29dp"
+        android:layout_below="@id/buttonShop"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

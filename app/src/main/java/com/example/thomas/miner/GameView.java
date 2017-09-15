@@ -6,17 +6,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.WindowManager;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 
 /**
  * Created by Thomas on 25/01/2017.
@@ -45,6 +39,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private LevelMemory levelMemory;
     private OreMemory oreMemory;
     private ShopMemory shopMemory;
+    private EncyclopediaMemory encyclopediaMemory;
     private boolean gameOver = false;
     private Bitmap dynamiteButton;
     private Bitmap iceBombButton;
@@ -299,7 +294,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     drawIceBombButton(c);
                     if (activeBombs.hasBombExploded())
                     {
-                        blocksOnScreen.explodeBomb(activeBombs.getBombBlock());
+                        blocksOnScreen.explodeBlock(activeBombs.getBombBlock());
                     }
                     if (miningClass.isCurrentlyMining())
                     {
@@ -357,6 +352,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             levelMemory = new LevelMemory(mContext,minedLocations, seed, camera, oreCounter);
             oreMemory = new OreMemory(mContext);
             shopMemory = new ShopMemory(mContext);
+            encyclopediaMemory = new EncyclopediaMemory(mContext);
             if (levelMemory.canLoadLevel())
             {
                 seed = levelMemory.loadLevelData();
@@ -365,7 +361,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             blocksOnScreen.updateCurrentScreenDimensions();
             blocksOnScreen.updatePreviousScreenDimensions();
             blockPhysics = new BlockPhysics(blocksOnScreen);
-            blockDrawing = new BlockDrawing(blocksOnScreen,mContext,blockSize, camera, gameWidth, gameHeight);
+            blockDrawing = new BlockDrawing(blocksOnScreen,mContext,blockSize, camera, gameWidth, gameHeight, encyclopediaMemory);
             mapArt = new MapArt(c,mContext,blockSize, shopMemory,camera);
             mainCharacter = new Sprite(mContext, c, spriteDimension, blockSize, blocksOnScreen);
             miningClass = new Mining(gameHeight, gameWidth, blocksOnScreen, blockSize, oreCounter);

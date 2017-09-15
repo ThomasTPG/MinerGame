@@ -2,16 +2,6 @@ package com.example.thomas.miner;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-
-import java.util.Random;
 
 /**
  * Created by Thomas on 13/02/2017.
@@ -32,46 +22,6 @@ public class ArrayOfBlocksOnScreen {
     private int[] previousScreenDimensions = new int[4];
     private MinedLocations minedLocations;
     private Context context;
-    //Bitmaps
-    private Bitmap mining1;
-    private Bitmap mining2;
-    private Bitmap miningborder;
-    private Bitmap soil1Bitmap;
-    private Bitmap soil2Bitmap;
-    private Bitmap boulderBitmap;
-    private Bitmap hardBoulderBitmap;
-    private Bitmap fireBallBitmap;
-    private Bitmap copperBitmap;
-    private Bitmap ironBitmap;
-    private Bitmap alieniteBitmap;
-    private Bitmap marbleBitmap;
-    private Bitmap springBitmap;
-    private Bitmap waterBitmap;
-    private Bitmap gasBitmap;
-    private Bitmap gasWaterBitmap;
-    private Bitmap lifeBitmap;
-    private Bitmap lifeGrown;
-    private Bitmap iceBitmap;
-    private Bitmap goldBitmap;
-    private Bitmap crystalBase;
-    private Bitmap gasRockBitmap;
-    private Bitmap costumeGemBitmap;
-    private Bitmap crystal1;
-    private Bitmap crystal2;
-    private Bitmap crystal3;
-    private Bitmap dynamite;
-    private Bitmap iceBomb;
-    // Bitmaps for borders
-    private Bitmap leftBorder;
-    private Bitmap bottomBorder;
-    private Bitmap topBorder;
-    private Bitmap rightBorder;
-    private Bitmap topLeftBorder;
-    private Bitmap topRightBorder;
-    private Bitmap bottomRightBorder;
-    private Bitmap bottomLeftBorder;
-    private Bitmap bottomSurroundBorder;
-    private Bitmap allBorders;
 
     //
     private Camera mCamera;
@@ -95,55 +45,8 @@ public class ArrayOfBlocksOnScreen {
         verticalBlockLimit = blocksVerticalScreen + 2*borderSize;
         horizontalBlockLimit = blocksHorizontalScreen + 2*borderSize;
         blockArray = new Block[horizontalBlockLimit][verticalBlockLimit];
-        loadBitmaps();
         createInitialBlockArray();
     }
-
-    private void loadBitmaps()
-    {
-        mining1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.miningprogress1);
-        mining2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.miningprogress2);
-        miningborder = BitmapFactory.decodeResource(context.getResources(), R.drawable.whichmined);
-        waterBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.water);
-        gasBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gas);
-        gasWaterBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gaswater);
-        soil1Bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil);
-        soil2Bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil2);
-        boulderBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
-        hardBoulderBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.hardrock);
-        fireBallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fireball);
-        copperBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.copper);
-        ironBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.iron);
-        alieniteBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienite);
-        marbleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.marble);
-        springBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.spring);
-        lifeBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.life);
-        lifeGrown = BitmapFactory.decodeResource(context.getResources(), R.drawable.lifegrown);
-        iceBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ice);
-        goldBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gold);
-        crystalBase = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystalbase);
-        gasRockBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gasrock);
-        costumeGemBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.costumegem);
-        crystal1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal1);
-        crystal2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal2);
-        crystal3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal3);
-        dynamite = BitmapFactory.decodeResource(context.getResources(), R.drawable.dynamitebutton);
-        iceBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.icebombbutton);
-
-        leftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_left);
-        rightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_right);
-        bottomBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom);
-        topBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top);
-        topLeftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top_left);
-        topRightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top_right);
-        bottomRightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom_right);
-        bottomLeftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.bottom_left);
-        bottomSurroundBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom_surround);
-        allBorders = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_all_borders);
-
-
-    }
-
 
     public void createInitialBlockArray()
     {
@@ -262,13 +165,13 @@ public class ArrayOfBlocksOnScreen {
             previousScreenDimensions[kk]=currentScreenDimensions[kk];
         }
     }
-    
-    public void explodeBomb(Block bomb)
+
+    public void explodeBlock(Block block)
     {
-        int index = bomb.getIndex();
+        int index = block.getIndex();
         int x = 0;
         int y = 0;
-        boolean foundBomb = false;
+        boolean foundBlock = false;
         for (int ii = horizontalBlockLimit-2; ii >=0; ii --)
         {
             for (int jj = verticalBlockLimit - 2; jj >= 0; jj--)
@@ -277,103 +180,52 @@ public class ArrayOfBlocksOnScreen {
                 {
                     x = ii;
                     y = jj;
-                    foundBomb = true;
+                    foundBlock = true;
                 }
             }
         }
-        if (foundBomb)
+        if (foundBlock)
         {
-            switch(bomb.getBomb())
+            if (block.getType() == GlobalConstants.EXPLODIUM)
             {
-                case(ActiveBombs.DYNAMITE):
-                    for (int aa = -1; aa <=1; aa++)
+                for (int aa = -2; aa <=2; aa++)
+                {
+                    for (int bb = -2; bb<=2; bb++)
                     {
-                        for (int bb = -1; bb<=1; bb++)
+                        if (x + aa < horizontalBlockLimit && x + aa >= 0 && y + bb >=0 && y + bb < verticalBlockLimit)
                         {
                             blockArray[x + aa][y + bb].blowUp();
                         }
                     }
-                    break;
-                case(ActiveBombs.ICEBOMB):
-                    for (int aa = -1; aa <=1; aa++)
-                    {
-                        for (int bb = -1; bb<=1; bb++)
-                        {
-                            blockArray[x + aa][y + bb].detonateIceBomb();
-                        }
-                    }
-                    break;
+                }
             }
-
-        }
-    }
-
-    private Bitmap workOutBitmap(Block currentBlock)
-    {
-        int type = currentBlock.getType();
-        Bitmap blockBitmap ;
-        switch (type)
-        {
-            case(GlobalConstants.CAVERN):
-                blockBitmap = null;
-                break;
-            case(GlobalConstants.SOIL):
-                if (currentBlock.getIndex() % 2 == 0)
+            else
+            {
+                switch(block.getBomb())
                 {
-                    blockBitmap = soil1Bitmap;
+                    case(ActiveBombs.DYNAMITE):
+                        for (int aa = -1; aa <=1; aa++)
+                        {
+                            for (int bb = -1; bb<=1; bb++)
+                            {
+                                blockArray[x + aa][y + bb].blowUp();
+                            }
+                        }
+                        break;
+                    case(ActiveBombs.ICEBOMB):
+                        for (int aa = -1; aa <=1; aa++)
+                        {
+                            for (int bb = -1; bb<=1; bb++)
+                            {
+                                blockArray[x + aa][y + bb].detonateIceBomb();
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                else
-                {
-                    blockBitmap = soil2Bitmap;
-                }
-                break;
-            case (GlobalConstants.BOULDER):
-                blockBitmap = boulderBitmap;
-                break;
-            case (GlobalConstants.HARD_BOULDER):
-                blockBitmap = hardBoulderBitmap;
-                break;
-            case (GlobalConstants.FIREBALL):
-                blockBitmap = fireBallBitmap;
-                break;
-            case (GlobalConstants.COPPER):
-                blockBitmap = copperBitmap;
-                break;
-            case (GlobalConstants.IRON):
-                blockBitmap = ironBitmap;
-                break;
-            case (GlobalConstants.ALIENITE):
-                blockBitmap = alieniteBitmap;
-                break;
-            case (GlobalConstants.MARBLE):
-                blockBitmap = marbleBitmap;
-                break;
-            case (GlobalConstants.SPRING):
-                blockBitmap = springBitmap;
-                break;
-            case (GlobalConstants.LIFE):
-                blockBitmap = lifeBitmap;
-                break;
-            case (GlobalConstants.ICE):
-                blockBitmap = iceBitmap;
-                break;
-            case (GlobalConstants.GOLD):
-                blockBitmap = goldBitmap;
-                break;
-            case (GlobalConstants.CRYSTAL):
-                blockBitmap = crystalBase;
-                break;
-            case (GlobalConstants.GASROCK):
-                blockBitmap = gasRockBitmap;
-                break;
-            case (GlobalConstants.COSTUMEGEM):
-                blockBitmap = costumeGemBitmap;
-                break;
-            default:
-                blockBitmap = null;
-                break;
+            }
         }
-        return blockBitmap;
     }
 
     public void moveWaterRight()
