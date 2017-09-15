@@ -13,8 +13,8 @@ class OreCounter {
     OreCounter()
     {
         //Initialise the ore array
-        oreArray = new int[GlobalConstants.NUMBEROFTYPES];
-        for (int ii = 0; ii < GlobalConstants.NUMBEROFTYPES; ii++)
+        oreArray = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
+        for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
         {
             oreArray[ii] = 0;
         }
@@ -22,7 +22,7 @@ class OreCounter {
 
     void empty()
     {
-        for (int ii = 0; ii < GlobalConstants.NUMBEROFTYPES; ii++)
+        for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
         {
             oreArray[ii] = 0;
         }
@@ -40,9 +40,9 @@ class OreCounter {
 
     String[] getOre()
     {
-        String[] oreOutput = new String[GlobalConstants.NUMBEROFTYPES+1];
-        oreOutput[0] = Integer.toString(GlobalConstants.NUMBEROFTYPES);
-        for (int ii = 0; ii < GlobalConstants.NUMBEROFTYPES; ii++)
+        String[] oreOutput = new String[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE+1];
+        oreOutput[0] = Integer.toString(GlobalConstants.MEMORY_LENGTH_ARRAY_ORE);
+        for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
         {
             oreOutput[ii+1] = Integer.toString(GlobalConstants.SOIL + ii) + "-" + Integer.toString(oreArray[ii]);
         }

@@ -41,8 +41,12 @@ public class BlockDrawing {
     private Bitmap waterBitmap;
     private Bitmap gasBitmap;
     private Bitmap gasWaterBitmap;
-    private Bitmap lifeBitmap;
-    private Bitmap lifeGrown;
+    private Bitmap life1;
+    private Bitmap life2;
+    private Bitmap life3;
+    private Bitmap life4;
+    private Bitmap life5;
+    private Bitmap life6;
     private Bitmap iceBitmap;
     private Bitmap goldBitmap;
     private Bitmap crystalBase;
@@ -102,8 +106,12 @@ public class BlockDrawing {
         explodiumBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explodium);
         marbleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.marble);
         springBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.spring);
-        lifeBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.life);
-        lifeGrown = BitmapFactory.decodeResource(context.getResources(), R.drawable.lifegrown);
+        life1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_1);
+        life2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_2);
+        life3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_3);
+        life4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_4);
+        life5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_5);
+        life6 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_6);
         iceBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ice);
         goldBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gold);
         crystalBase = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystalbase);
@@ -185,18 +193,7 @@ public class BlockDrawing {
                     //Now work out the scalings for the blocks
                     Rect source = getScaledRectangle(blockBitmap,location,ii,jj);
 
-                    if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.LIFE)
-                    {
-                        if (blockArray[ii +borderSize][jj+ borderSize].getWaterPercentage() < 100)
-                        {
-                            c.drawBitmap(lifeBitmap,source,location,null);
-                        }
-                        else
-                        {
-                            c.drawBitmap(lifeGrown,source,location,null);
-                        }
-                    }
-                    else if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.CRYSTAL)
+                    if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.CRYSTAL)
                     {
                         if (!blockArray[ii +borderSize][jj+ borderSize].getFrozen())
                         {
@@ -443,7 +440,26 @@ public class BlockDrawing {
                 blockBitmap = springBitmap;
                 break;
             case (GlobalConstants.LIFE):
-                blockBitmap = lifeBitmap;
+                if (currentBlock.getWaterPercentage() >= 100)
+                {
+                    blockBitmap = life6;
+                }
+                else if (currentBlock.getWaterPercentage() > 80)
+                {
+                    blockBitmap = life5;
+                }
+                else if (currentBlock.getWaterPercentage() > 60)
+                {
+                    blockBitmap = life4;
+                }
+                else if (currentBlock.getWaterPercentage() > 40)
+                {
+                    blockBitmap = life3;
+                }
+                else
+                {
+                    blockBitmap = life2;
+                }
                 break;
             case (GlobalConstants.ICE):
                 blockBitmap = iceBitmap;

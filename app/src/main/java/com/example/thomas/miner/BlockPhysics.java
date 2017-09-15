@@ -10,6 +10,7 @@ public class BlockPhysics {
     private int horizontalBlockLimit;
     private int verticalBlockLimit;
     private int delay = 0;
+    private int lifeFactor = 3;
     Block[][] blockArray;
 
     public BlockPhysics(ArrayOfBlocksOnScreen arrayOfBlocksOnScreen)
@@ -394,7 +395,7 @@ public class BlockPhysics {
                         waterMoved = Math.min(neighbouringWater, 100 - blockArray[ii][jj].getWaterPercentage());
                     }
                     blockArray[ii-1][jj].setWaterPercentage(neighbouringWater - waterMoved);
-                    blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + waterMoved);
+                    blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + (int)Math.ceil(((double)waterMoved/(double)lifeFactor)));
                 }
             }
             if (ii < horizontalBlockLimit-1)
@@ -406,7 +407,7 @@ public class BlockPhysics {
                     waterMoved = Math.min(neighbouringWater, 100 - blockArray[ii][jj].getWaterPercentage());
                 }
                 blockArray[ii+1][jj].setWaterPercentage(neighbouringWater - waterMoved);
-                blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + waterMoved);
+                blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + (int)Math.ceil(((double)waterMoved/(double)lifeFactor)));
             }
             if (jj > 0)
             {
@@ -417,7 +418,7 @@ public class BlockPhysics {
                     waterMoved = Math.min(neighbouringWater, 100 - blockArray[ii][jj].getWaterPercentage());
                 }
                 blockArray[ii][jj-1].setWaterPercentage(neighbouringWater - waterMoved);
-                blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + waterMoved);
+                blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + (int)Math.ceil(((double)waterMoved/(double)lifeFactor)));
             }
         }
     }

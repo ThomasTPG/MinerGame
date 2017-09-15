@@ -145,7 +145,7 @@ public class OreEncyclopedia extends Activity
                     currentOre = GlobalConstants.LIFE;
                     if (encyclopediaMemory.isOreUnlocked(currentOre))
                     {
-                        imageButton.setImageDrawable(getResources().getDrawable(R.drawable.life));
+                        imageButton.setImageDrawable(getResources().getDrawable(R.drawable.life_2));
                         whichOre = currentOre;
                     }
                     break;

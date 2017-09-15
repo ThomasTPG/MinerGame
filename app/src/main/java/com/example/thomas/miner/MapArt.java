@@ -116,7 +116,7 @@ public class MapArt {
         switch (houseLvl)
         {
             case (0):
-                houseBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.house1);
+                houseBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_tent);
                 break;
             case(1):
                 break;

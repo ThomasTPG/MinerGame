@@ -224,7 +224,14 @@ public class Block {
         {
             oreCounter.incrementOre(blockStatusData.getType());
             setType(GlobalConstants.CAVERN);
-            blockLiquidData.setWaterPercentage(0);
+            if (blockStatusData.getType() == GlobalConstants.ICE)
+            {
+                blockLiquidData.setWaterPercentage(50);
+            }
+            else
+            {
+                blockLiquidData.setWaterPercentage(0);
+            }
             saveToMemory();
             blockStatusData.setMinedPercentage(0);
             currentlyBeingMined = false;
@@ -247,6 +254,7 @@ public class Block {
 
     public void explode()
     {
+        final int initialType = getType();
         Thread explosionTimer = new Thread()
         {
             @Override
@@ -277,6 +285,10 @@ public class Block {
                     e.printStackTrace();
                 }
                 setType(GlobalConstants.CAVERN);
+                if (initialType == GlobalConstants.ICE)
+                {
+                    setWaterPercentage(50);
+                }
                 saveToMemory();
             }
         };
@@ -455,7 +467,7 @@ public class Block {
 
     public void tryFreezing()
     {
-        if (blockLiquidData.getWaterPercentage() > thresholdWaterToFreeze)
+        if (blockLiquidData.getWaterPercentage() > thresholdWaterToFreeze && isCavern())
         {
             Random iceRandom = new Random(System.nanoTime());
             if (iceRandom.nextDouble() > 0.99)

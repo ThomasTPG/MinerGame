@@ -22,10 +22,7 @@ public class Shop extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shop_menu);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        screenWidth = size.x;
+        setButtons();
     }
 
     private void setButtons()
