@@ -87,7 +87,7 @@ public class ShopDetails extends Activity{
             case (0):
                 currentLevel.append(getResources().getString(R.string.house_update_0));
                 nextItemLevel.append(getResources().getString(R.string.house_update_1));
-                //nextItemBenefit.setText(getResources().getString(R.string.house_up));
+                nextItemBenefit.setText(getResources().getString(R.string.house_update_1_benefit));
                 break;
         }
     }

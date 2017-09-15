@@ -25,7 +25,7 @@
     <string name="next_house">Next house: </string>
     <string name="house_update_0">Tent</string>
     <string name="house_update_1">Shack</string>
-    <string name="air_tank_update_1_benefit">More copper.</string>
+    <string name="house_update_1_benefit">More copper.</string>
 
     //Data for the encyclopedia
     <string name="soil_name">Rock</string>
