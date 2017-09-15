@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 /**
@@ -57,6 +58,7 @@ public class BlockDrawing {
     private Bitmap crystal3;
     private Bitmap dynamite;
     private Bitmap iceBomb;
+    private Bitmap background1;
     // Bitmaps for borders
     private Bitmap leftBorder;
     private Bitmap bottomBorder;
@@ -122,6 +124,7 @@ public class BlockDrawing {
         crystal3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal3);
         dynamite = BitmapFactory.decodeResource(context.getResources(), R.drawable.dynamitebutton);
         iceBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.icebombbutton);
+        background1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_cave_1);
 
         leftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_left);
         rightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_right);
@@ -204,6 +207,14 @@ public class BlockDrawing {
                             c.drawBitmap(crystal3,source,location,null);
                         }
                     }
+                    else if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.ICE)
+                    {
+                        Paint alphaPaint = new Paint();
+                        alphaPaint.setAlpha(170);
+                        c.drawBitmap(background1,source,location,null);
+                        c.drawBitmap(blockBitmap,source,location,alphaPaint);
+                        drawBorders(ii,jj,source,location,c);
+                    }
                     else
                     {
                         c.drawBitmap(blockBitmap,source,location,null);
@@ -226,13 +237,14 @@ public class BlockDrawing {
                 }
                 else
                 {
+                    Rect source = getScaledRectangle(background1,location,ii,jj);
+                    c.drawBitmap(background1,source,location,null);
                     //Draw fluids
                     if (blockArray[ii + borderSize][jj + borderSize].blockHasLiquid())
                     {
                         drawFluidBlock(blockArray[ii+borderSize][jj + borderSize].getBlockLiquidData(),c,location);
                     }
                     //Draw borders
-                    Rect source = getScaledRectangle(bottomBorder,location,ii,jj);
                     drawBorders(ii,jj,source,location,c);
                 }
                 //Overlay any bombs
@@ -257,19 +269,19 @@ public class BlockDrawing {
     {
         int whichBitmapCode = 1;
         //Draw any borders
-        if (blockArray[ii +borderSize - 1][jj+ borderSize].isSolid())
+        if (blockArray[ii +borderSize - 1][jj+ borderSize].canNeedBorder())
         {
             whichBitmapCode *=7;
         }
-        if (blockArray[ii +borderSize + 1][jj+ borderSize].isSolid())
+        if (blockArray[ii +borderSize + 1][jj+ borderSize].canNeedBorder())
         {
             whichBitmapCode *=3;
         }
-        if (blockArray[ii +borderSize][jj+ borderSize - 1].isSolid())
+        if (blockArray[ii +borderSize][jj+ borderSize - 1].canNeedBorder())
         {
             whichBitmapCode *=2;
         }
-        if (blockArray[ii +borderSize][jj+ borderSize + 1].isSolid())
+        if (blockArray[ii +borderSize][jj+ borderSize + 1].canNeedBorder())
         {
             whichBitmapCode *=5;
         }
@@ -340,20 +352,23 @@ public class BlockDrawing {
         int gasHeight = (int) ((double)(Math.min(100 - blockLiquidData.getWaterPercentage(), blockLiquidData.getGasPercentage()) * blockSize)/(double)100);
         int waterHeight = (int) ((double) ((100 - (blockLiquidData.getWaterPercentage() - overlay)) * blockSize) /(double) 100);
 
+        Paint alphaPaint = new Paint();
+        alphaPaint.setAlpha(170);
+
         if (gasHeight > 0)
         {
             Rect scaledLocation = new Rect(location.left, location.top, location.right, location.top + gasHeight);
-            canvas.drawBitmap(gasBitmap,null,scaledLocation,null);
+            canvas.drawBitmap(gasBitmap,null,scaledLocation,alphaPaint);
         }
         if (overlay > 0)
         {
             Rect scaledLocation = new Rect(location.left,location.top + gasHeight,location.right,location.top + waterHeight);
-            canvas.drawBitmap(gasWaterBitmap,null,scaledLocation,null);
+            canvas.drawBitmap(gasWaterBitmap,null,scaledLocation,alphaPaint);
         }
         if (waterHeight < 100)
         {
             Rect scaledLocation = new Rect(location.left, location.top + waterHeight, location.right, location.bottom);
-            canvas.drawBitmap(waterBitmap,null,scaledLocation,null);
+            canvas.drawBitmap(waterBitmap,null,scaledLocation,alphaPaint);
         }
     }
 

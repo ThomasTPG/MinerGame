@@ -9,17 +9,22 @@
         android:id="@+id/enc_ore_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="32sp"
         android:text="TextView" />
 
     <ImageView
         android:id="@+id/enc_ore_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:src="@drawable/locked_ore" />
 
     <TextView
         android:id="@+id/enc_ore_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp"
         android:text="TextView" />
 </LinearLayout>

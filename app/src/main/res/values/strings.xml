@@ -29,9 +29,37 @@
 
     //Data for the encyclopedia
     <string name="soil_name">Rock</string>
+    <string name="soil_details"><![CDATA[ &#8226; foo<br /> &#8226; doo<br />]]></string>
     <string name="hard_rock_name">Boulder</string>
+    <string name="hard_rock_details"><![CDATA[ &#8226; Cannot be mined<br /> &#8226; Can be destroyed by explosions<br />]]></string>
     <string name="pernament_rock_name">Hard Boulder</string>
+    <string name="pernament_rock_details"><![CDATA[ &#8226; Cannot be mined or blown up<br />]]></string>
     <string name="water_name">Water</string>
+    <string name="water_details"><![CDATA[ &#8226; If you spend too much time underwater without coming up for air, you will drown<br /> &#8226; Can be frozen<br />]]></string>
     <string name="gas_name">Gas</string>
+    <string name="gas_details"><![CDATA[ &#8226; If you spend too much time in gas you will suffocate<br /> &#8226; Gas will decay blocks above it, causing them to fall<br /> &#8226; Gas can be blown up<br />]]></string>
+    <string name="copper_name">Copper</string>
+    <string name="copper_details"><![CDATA[ &#8226; Useful for updating your pickaxe and house<br />]]></string>
+    <string name="iron_name">Iron</string>
+    <string name="iron_details"><![CDATA[ &#8226; Useful for updating your pickaxe and house<br />]]></string>
+    <string name="explodium_name">Explodium</string>
+    <string name="explodium_details"><![CDATA[ &#8226; If this comes into contact with gas or water it will explode<br /> &#8226; If this block falls, or another block falls onto it then it will explode<br /> &#8226; Useful for creating dynamite<br /> &#8226; doo<br />]]></string>
+    <string name="marble_name">Marble</string>
+    <string name="marble_details"><![CDATA[ &#8226; Useful for upgrading your house and garden<br /> ]]></string>
+    <string name="spring_name">Underground Spring</string>
+    <string name="spring_details"><![CDATA[ &#8226; Water continuously flows from the sides and beneath this block <br /> &#8226; Useful for upgrading your air tank<br />]]></string>
+    <string name="life_name">Foliage</string>
+    <string name="life_details"><![CDATA[ &#8226; Needs water to grow<br /> &#8226; Can only be mined once fully grown<br /> &#8226; Useful for upgrading your garden and air tank<br />]]></string>
+    <string name="ice_name">Ice</string>
+    <string name="ice_details"><![CDATA[ &#8226; Ice will freeze any adjacent water<br /> &#8226; If you are standing in the water as it is frozen you will die<br /> &#8226; Mining ice will produce water<br />]]></string>
+    <string name="gold_name">Gold</string>
+    <string name="gold_details"><![CDATA[ &#8226; Useful for upgrading your house and pickaxe<br />]]></string>
+    <string name="gasrock_name">Gas Rock</string>
+    <string name="gasrock_details"><![CDATA[ &#8226; Gas continuously flows from the sides and above this block<br /> &#8226; Useful for upgrading your air tank and dynamite<br />]]></string>
+    <string name="crystal_name">Crystal</string>
+    <string name="crystal_details"><![CDATA[ &#8226; Crystals will grow when this block has adjacent ice blocks<br /> &#8226; Can only be mined once fully grown<br />]]></string>
+    <string name="costume_name">Costume Gem</string>
+    <string name="costume_details"><![CDATA[ &#8226; Mining this will unlock a random costume<br /> &#8226; Uncommon<br />]]></string>
+
 
 </resources>

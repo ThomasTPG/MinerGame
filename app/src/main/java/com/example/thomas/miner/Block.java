@@ -223,7 +223,6 @@ public class Block {
         if (blockStatusData.getMinedPercentage() >= miningLimit)
         {
             oreCounter.incrementOre(blockStatusData.getType());
-            setType(GlobalConstants.CAVERN);
             if (blockStatusData.getType() == GlobalConstants.ICE)
             {
                 blockLiquidData.setWaterPercentage(50);
@@ -232,6 +231,7 @@ public class Block {
             {
                 blockLiquidData.setWaterPercentage(0);
             }
+            setType(GlobalConstants.CAVERN);
             saveToMemory();
             blockStatusData.setMinedPercentage(0);
             currentlyBeingMined = false;
@@ -344,6 +344,12 @@ public class Block {
     {
         return (blockStatusData.getType()!= GlobalConstants.CAVERN && blockStatusData.getType()!= GlobalConstants.FIREBALL);
     }
+
+    public boolean canNeedBorder()
+    {
+        return (isSolid() && !isIce());
+    }
+
 
     public boolean isCavern()
     {
