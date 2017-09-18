@@ -14,7 +14,7 @@ public final class OreHeightTables {
         }
         else if (random < 0.7)
         {
-            return GlobalConstants.COPPER;
+            return GlobalConstants.SPRING;
         }
         else
         {

@@ -57,8 +57,7 @@ public class LevelMemory {
                 camera.setCameraY(Integer.parseInt(bufferedReader.readLine()));
                 camera.setCameraX(Integer.parseInt(bufferedReader.readLine()));
                 //Read the number of ore types
-                int numberOfOres = Integer.parseInt(bufferedReader.readLine());
-                for (int ii = 0; ii < numberOfOres; ii++)
+                for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
                 {
                     String currentline = bufferedReader.readLine();
                     String[] parts = currentline.split("-");
@@ -121,7 +120,7 @@ public class LevelMemory {
 
                 //Write the ores mined
                 String[] oreOutput = oreCounter.getOre();
-                for (int ii = 0; ii < Integer.parseInt(oreOutput[0]) + 1; ii++)
+                for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
                 {
                     bufferedWriter.write(oreOutput[ii]);
                     bufferedWriter.newLine();

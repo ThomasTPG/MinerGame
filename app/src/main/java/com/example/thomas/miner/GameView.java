@@ -289,6 +289,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     //blocksOnScreen.drawCurrentBlocks(c);
                     mapArt.drawArt(c);
                     mainCharacter.draw();
+                    mapArt.drawForeGround(c);
                     mainCharacter.drawOxygen(c);
                     drawDynamiteButton(c);
                     drawIceBombButton(c);

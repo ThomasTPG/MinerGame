@@ -18,6 +18,7 @@ public class MapArt {
     private int screenWidth;
     private Context context;
     private Bitmap gardenBmp;
+    private Bitmap gardenForeBmp;
     private Bitmap houseBmp;
     private Bitmap skyBmp;
     private Bitmap bgcloudBmp;
@@ -101,11 +102,13 @@ public class MapArt {
         {
             case (0):
                 gardenBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.garden1);
+                gardenForeBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.garden_foreground_1);
                 break;
             case(1):
                 break;
             default:
                 gardenBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.garden1);
+                gardenForeBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.garden_foreground_1);
                 break;
         }
     }
@@ -149,16 +152,16 @@ public class MapArt {
             canvas.drawBitmap(skyBmp, rWhichSky,rSky,null);
             backgroundClouds.drawCloud(canvas, vertPercentSky, horizPercentSky);
             foregroundClouds.drawCloud(canvas, vertPercentSky, horizPercentSky);
-
-
             Rect rGarden = new Rect(LHSGarden - camera.getCameraX(), topGarden - camera.getCameraY()+canvas.getHeight()/2, RHSGarden - camera.getCameraX(), bottomGarden - camera.getCameraY()+canvas.getHeight()/2);
             canvas.drawBitmap(gardenBmp, null,rGarden,null);
             Rect rHouse = new Rect(LHSHouse - camera.getCameraX(), topHouse - camera.getCameraY()+canvas.getHeight()/2, RHSHouse - camera.getCameraX(), bottomHouse - camera.getCameraY()+canvas.getHeight()/2);
             canvas.drawBitmap(houseBmp, null,rHouse,null);
         }
+    }
 
-
-
-
+    public void drawForeGround(Canvas canvas)
+    {
+        Rect rGarden = new Rect(LHSGarden - camera.getCameraX(), topGarden - camera.getCameraY()+canvas.getHeight()/2, RHSGarden - camera.getCameraX(), bottomGarden - camera.getCameraY()+canvas.getHeight()/2);
+        canvas.drawBitmap(gardenForeBmp, null,rGarden,null);
     }
 }

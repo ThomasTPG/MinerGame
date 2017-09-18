@@ -59,6 +59,7 @@
                         android:layout_weight="3"
                         android:layout_height="wrap_content"
                         android:src="@drawable/house1"
+                        android:id="@+id/shop_house_image"
                         android:adjustViewBounds="true"/>
 
                     <View

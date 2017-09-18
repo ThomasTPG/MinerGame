@@ -95,8 +95,8 @@ public class BlockDrawing {
         mining1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.miningprogress1);
         mining2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.miningprogress2);
         miningborder = BitmapFactory.decodeResource(context.getResources(), R.drawable.whichmined);
-        waterBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.water);
-        gasBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gas);
+        waterBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.water_test);
+        gasBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gas_background);
         gasWaterBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gaswater);
         soil1Bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil);
         soil2Bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil2);
@@ -114,7 +114,7 @@ public class BlockDrawing {
         life4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_4);
         life5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_5);
         life6 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_6);
-        iceBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ice);
+        iceBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ice_test);
         goldBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gold);
         crystalBase = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystalbase);
         gasRockBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gasrock);
@@ -209,10 +209,7 @@ public class BlockDrawing {
                     }
                     else if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.ICE)
                     {
-                        Paint alphaPaint = new Paint();
-                        alphaPaint.setAlpha(170);
-                        c.drawBitmap(background1,source,location,null);
-                        c.drawBitmap(blockBitmap,source,location,alphaPaint);
+                        c.drawBitmap(blockBitmap,source,location,null);
                         drawBorders(ii,jj,source,location,c);
                     }
                     else
@@ -242,7 +239,7 @@ public class BlockDrawing {
                     //Draw fluids
                     if (blockArray[ii + borderSize][jj + borderSize].blockHasLiquid())
                     {
-                        drawFluidBlock(blockArray[ii+borderSize][jj + borderSize].getBlockLiquidData(),c,location);
+                        drawFluidBlock(blockArray[ii+borderSize][jj + borderSize].getBlockLiquidData(),c,location, ii ,jj);
                     }
                     //Draw borders
                     drawBorders(ii,jj,source,location,c);
@@ -341,7 +338,7 @@ public class BlockDrawing {
         }
     }
 
-    private void drawFluidBlock(NonSolidBlocks blockLiquidData, Canvas canvas, Rect location)
+    private void drawFluidBlock(NonSolidBlocks blockLiquidData, Canvas canvas, Rect location, int ii, int jj)
     {
         int totalPercent = blockLiquidData.getGasPercentage() + blockLiquidData.getWaterPercentage();
         int overlay = 0;
@@ -350,64 +347,118 @@ public class BlockDrawing {
             overlay = totalPercent - 100;
         }
         int gasHeight = (int) ((double)(Math.min(100 - blockLiquidData.getWaterPercentage(), blockLiquidData.getGasPercentage()) * blockSize)/(double)100);
-        int waterHeight = (int) ((double) ((100 - (blockLiquidData.getWaterPercentage() - overlay)) * blockSize) /(double) 100);
-
-        Paint alphaPaint = new Paint();
-        alphaPaint.setAlpha(170);
+        double waterPercentageDown = ((double) (100 - (blockLiquidData.getWaterPercentage() - overlay)) /(double) 100);
+        int waterHeight = (int) Math.ceil(waterPercentageDown * blockSize);
 
         if (gasHeight > 0)
         {
-            Rect scaledLocation = new Rect(location.left, location.top, location.right, location.top + gasHeight);
-            canvas.drawBitmap(gasBitmap,null,scaledLocation,alphaPaint);
+            int bottomBmp = (int) ((double)(Math.min(100 - blockLiquidData.getWaterPercentage(), blockLiquidData.getGasPercentage()) * gasBitmap.getHeight())/(double)100);
+
+            Rect whichBmp = getScaledRectangle(gasBitmap,location,ii,jj);
+            whichBmp.bottom = Math.min(bottomBmp, whichBmp.bottom);
+            Rect scaledLocation;
+            if (location.top  == 0)
+            {
+                scaledLocation = new Rect(location.left, location.top, location.right, location.bottom - blockSize + gasHeight);
+            }
+            else if (location.height() < gasHeight)
+            {
+                scaledLocation = new Rect(location.left, location.top, location.right, mGameHeight);
+            }
+            else
+            {
+                scaledLocation = new Rect(location.left, location.top, location.right, location.top + gasHeight);
+            }
+            canvas.drawBitmap(gasBitmap,whichBmp,scaledLocation,null);
         }
         if (overlay > 0)
         {
             Rect scaledLocation = new Rect(location.left,location.top + gasHeight,location.right,location.top + waterHeight);
-            canvas.drawBitmap(gasWaterBitmap,null,scaledLocation,alphaPaint);
+            canvas.drawBitmap(gasWaterBitmap,null,scaledLocation,null);
         }
         if (waterHeight < 100)
         {
-            Rect scaledLocation = new Rect(location.left, location.top + waterHeight, location.right, location.bottom);
-            canvas.drawBitmap(waterBitmap,null,scaledLocation,alphaPaint);
+            int topBmp = (int) ((double)((100 - blockLiquidData.getWaterPercentage() - overlay) * waterBitmap.getHeight())/(double)100);
+            Rect scaledLocation;
+            int top = Math.max(topBmp,getTopScaling(waterBitmap,location,jj));
+            Rect whichBmp = new Rect(getLeftScaling(waterBitmap,location,ii), top,getRightScaling(waterBitmap,location,ii),getBottomScaling(waterBitmap, location,jj));//getScaledRectangleWater(location,ii,jj,waterPercentageDown);
+            if (location.top  == 0)
+            {
+                if (location.height() < blockSize - waterHeight)
+                {
+                    scaledLocation = new Rect(location.left, 0, location.right, location.bottom);
+                }
+                else
+                {
+                    scaledLocation = new Rect(location.left, location.bottom - blockSize + waterHeight, location.right, location.bottom);
+                }
+            }
+            else
+            {
+                scaledLocation = new Rect(location.left, location.top + waterHeight, location.right, location.bottom);
+            }
+            canvas.drawBitmap(waterBitmap,whichBmp,scaledLocation,null);
         }
     }
 
-    private Rect getScaledRectangle(Bitmap blockBmp, Rect location, int ii, int jj)
+    private int getLeftScaling(Bitmap bitmap, Rect location, int ii)
     {
         int left = 0;
-        int right = blockBmp.getWidth();
-        int top = 0;
-        int bottom = blockBmp.getHeight();
         if (location.width() < blockSize)
         {
             if (ii == 0)
             {
                 double scale = 1 - location.width()/(double)blockSize;
-                left = (int) (blockBmp.getWidth() * scale);
+                left = (int) (bitmap.getWidth() * scale);
             }
-            else if (ii == blocksHorizontalScreen-1)
+        }
+        return left;
+    }
+
+    private int getRightScaling(Bitmap bitmap, Rect location, int ii)
+    {
+        int right = bitmap.getWidth();
+        if (location.width() < blockSize)
+        {
+            if (ii == blocksHorizontalScreen-1)
             {
                 double scale = location.width()/(double)blockSize;
-                right = (int) (blockBmp.getWidth() * scale);
+                right = (int) (bitmap.getWidth() * scale);
             }
-
         }
+        return right;
+    }
+
+    private int getTopScaling(Bitmap bitmap, Rect location, int jj)
+    {
+        int top = 0;
+        if (location.height() < blockSize) {
+            if (jj == 0) {
+                double scaleDueToScreen = 1 - location.height() / (double) blockSize;
+                top = (int) Math.floor(bitmap.getHeight() * scaleDueToScreen);
+            }
+        }
+        return top;
+    }
+
+    private int getBottomScaling(Bitmap bitmap, Rect location ,int jj)
+    {
+        int bottom = bitmap.getHeight();
         if (location.height() < blockSize)
         {
-            if (jj == 0)
-            {
-                double scale = 1 - location.height()/(double)blockSize;
-                top = (int) (blockBmp.getHeight() * scale);
-            }
-            else if (jj >= blocksVerticalScreen - 2)
+            if (jj >= blocksVerticalScreen - 2)
             {
                 double scale = location.height()/(double)blockSize;
-                bottom = (int) (blockBmp.getHeight() * scale);
+                bottom = (int) (bitmap.getHeight() * scale);
             }
         }
+        return bottom;
 
-        Rect source = new Rect(left, top, right, bottom);
-        return source;
+    }
+
+    private Rect getScaledRectangle(Bitmap blockBmp, Rect location, int ii, int jj)
+    {
+        return new Rect(getLeftScaling(blockBmp,location,ii), getTopScaling(blockBmp,location,jj), getRightScaling(blockBmp,location,ii), getBottomScaling(blockBmp,location,jj));
     }
 
 

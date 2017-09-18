@@ -4,7 +4,6 @@ import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.Console;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,14 +21,16 @@ public class OreMemory {
 
     /*
     We save the ore file in the following format:
-    123-123
-    123-123
+    123-123-123
+    123-123-123
     Where the first number is the total number of that ore mined
-    The second number is the amount mined on the previous run
+    The second number is the amount currently owned
+    The third number is the amount mined on the previous run
     The rows are ordered by those in GlobalConstants, starting with soil
     */
 
-    int[] oreArray = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
+    int[] totalOreArray = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
+    int[] currentOreArray = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
     int[] previouslyMinedOre = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
     private File oreFile;
 
@@ -38,6 +39,7 @@ public class OreMemory {
         File path = context.getFilesDir();
         oreFile = new File(path, context.getResources().getString(R.string.ore_data_file_name));
         checkFileExists();
+        readFile();
     }
 
     private void checkFileExists()
@@ -58,7 +60,7 @@ public class OreMemory {
             {
                 for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
                 {
-                    bufferedWriter.write("0-0");
+                    bufferedWriter.write("0-0-0");
                     bufferedWriter.newLine();
                 }
                 bufferedWriter.close();
@@ -89,12 +91,15 @@ public class OreMemory {
                 {
                     if ((line = bufferedReader.readLine()) != null)
                     {
-                        oreArray[ii] = Integer.parseInt(line.split("-")[0]);
-                        previouslyMinedOre[ii] = Integer.parseInt(line.split("-")[1]);
+                        totalOreArray[ii] = Integer.parseInt(line.split("-")[0]);
+                        currentOreArray[ii] = Integer.parseInt(line.split("-")[1]);
+                        previouslyMinedOre[ii] = Integer.parseInt(line.split("-")[2]);
                     }
                     else
                     {
-                        oreArray[ii] = 0;
+                        totalOreArray[ii] = 0;
+                        currentOreArray[ii] = 0;
+                        previouslyMinedOre[ii] = 0;
                     }
                 }
             }
@@ -121,10 +126,14 @@ public class OreMemory {
             {
                 for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
                 {
-                    int lastMined = oreCounter.getCount(GlobalConstants.SOIL + ii);
-                    int totalMined = oreArray[ii] + lastMined;
-                    System.out.println("MINED" + lastMined + " " + totalMined);
-                    bufferedWriter.write(Integer.toString(totalMined) + "-" + Integer.toString(lastMined));
+                    int lastMined = oreCounter.getCount(ii);
+                    totalOreArray[ii] += lastMined;
+                    int totalMined = totalOreArray[ii];
+                    currentOreArray[ii] += lastMined;
+                    int currentMined = currentOreArray[ii];
+                    previouslyMinedOre[ii] = lastMined;
+                    String toWrite = Integer.toString(totalMined) + "-" + Integer.toString(currentMined) + "-" + Integer.toString(lastMined);
+                    bufferedWriter.write(toWrite);
                     bufferedWriter.newLine();
                 }
                 bufferedWriter.close();
@@ -144,7 +153,17 @@ public class OreMemory {
     public int[] getTotalOre()
     {
         readFile();
-        return oreArray;
+        return totalOreArray;
+    }
+
+    public int getCurrentOre(int ore)
+    {
+        return currentOreArray[ore];
+    }
+
+    public int getTotalOre(int ore)
+    {
+        return totalOreArray[ore];
     }
 
     public int[] getPreviouslyMinedOre()

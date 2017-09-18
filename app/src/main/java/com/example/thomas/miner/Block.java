@@ -15,7 +15,8 @@ public class Block {
     private NonSolidBlocks blockLiquidData;
     private BlockStatusData blockStatusData;
 
-    private int thresholdWaterToFreeze = 5;
+    private int thresholdWaterToFreeze = 10;
+    private int waterProducedFromIce = 30;
     private int index;
     Context context;
     private int blocksAcross;
@@ -225,7 +226,7 @@ public class Block {
             oreCounter.incrementOre(blockStatusData.getType());
             if (blockStatusData.getType() == GlobalConstants.ICE)
             {
-                blockLiquidData.setWaterPercentage(50);
+                blockLiquidData.setWaterPercentage(waterProducedFromIce);
             }
             else
             {
@@ -287,7 +288,7 @@ public class Block {
                 setType(GlobalConstants.CAVERN);
                 if (initialType == GlobalConstants.ICE)
                 {
-                    setWaterPercentage(50);
+                    setWaterPercentage(waterProducedFromIce);
                 }
                 saveToMemory();
             }

@@ -3,9 +3,11 @@ package com.example.thomas.miner;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -15,13 +17,13 @@ import android.widget.LinearLayout;
 
 public class Shop extends Activity {
 
-    private int screenWidth;
+    private ShopMemory shopMemory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shop_menu);
-
+        shopMemory = new ShopMemory(this);
         setButtons();
     }
 
@@ -36,6 +38,24 @@ public class Shop extends Activity {
                 startActivity(houseDetails);
             }
         });
+        ImageView imageViewHouse = (ImageView) findViewById(R.id.shop_house_image);
+        imageViewHouse.setImageDrawable(getHouseDrawable());
     }
+
+    private Drawable getHouseDrawable()
+    {
+        int itemLevel = shopMemory.getItem(GlobalConstants.HOUSEUPGRADE);
+        switch (itemLevel)
+        {
+            case (0):
+                return getResources().getDrawable(R.drawable.house_tent);
+            case (1):
+                return getResources().getDrawable(R.drawable.house_caravan);
+            default:
+                return getResources().getDrawable(R.drawable.house_tent);
+        }
+
+    }
+
 
 }
