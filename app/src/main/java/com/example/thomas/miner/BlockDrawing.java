@@ -24,6 +24,7 @@ public class BlockDrawing {
     int blocksHorizontalScreen;
     int blocksVerticalScreen;
     private EncyclopediaMemory encyclopediaMemory;
+    int crystalCount = 0;
 
     //Bitmaps
     private Bitmap mining1;
@@ -53,9 +54,12 @@ public class BlockDrawing {
     private Bitmap crystalBase;
     private Bitmap gasRockBitmap;
     private Bitmap costumeGemBitmap;
+    private Bitmap tinBitmap;
     private Bitmap crystal1;
     private Bitmap crystal2;
     private Bitmap crystal3;
+    private Bitmap crystal4;
+    private Bitmap crystal5;
     private Bitmap dynamite;
     private Bitmap iceBomb;
     private Bitmap background1;
@@ -108,6 +112,7 @@ public class BlockDrawing {
         explodiumBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explodium);
         marbleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.marble);
         springBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.spring);
+        tinBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.tin);
         life1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_1);
         life2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_2);
         life3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.life_3);
@@ -122,6 +127,8 @@ public class BlockDrawing {
         crystal1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal1);
         crystal2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal2);
         crystal3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal3);
+        crystal4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal4);
+        crystal5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal5);
         dynamite = BitmapFactory.decodeResource(context.getResources(), R.drawable.dynamitebutton);
         iceBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.icebombbutton);
         background1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_cave_1);
@@ -196,18 +203,7 @@ public class BlockDrawing {
                     //Now work out the scalings for the blocks
                     Rect source = getScaledRectangle(blockBitmap,location,ii,jj);
 
-                    if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.CRYSTAL)
-                    {
-                        if (!blockArray[ii +borderSize][jj+ borderSize].getFrozen())
-                        {
-                            c.drawBitmap(crystalBase,source,location,null);
-                        }
-                        else
-                        {
-                            c.drawBitmap(crystal3,source,location,null);
-                        }
-                    }
-                    else if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.ICE)
+                    if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.ICE)
                     {
                         c.drawBitmap(blockBitmap,source,location,null);
                         drawBorders(ii,jj,source,location,c);
@@ -534,13 +530,44 @@ public class BlockDrawing {
                 blockBitmap = goldBitmap;
                 break;
             case (GlobalConstants.CRYSTAL):
-                blockBitmap = crystalBase;
+                int surroundingIce = currentBlock.getSurroundingIce();
+                if (surroundingIce == 0)
+                {
+                    blockBitmap = crystal1;
+                }
+                else if (surroundingIce < 3)
+                {
+                    blockBitmap = crystal2;
+                }
+                else if (surroundingIce < GlobalConstants.CRYSTALFREEZEAMOUNT)
+                {
+                    blockBitmap = crystal3;
+                }
+                else
+                {
+                    if (crystalCount < 10)
+                    {
+                        blockBitmap = crystal4;
+                    }
+                    else
+                    {
+                        blockBitmap = crystal5;
+                    }
+                    crystalCount ++;
+                    if (crystalCount == 20)
+                    {
+                        crystalCount = 0;
+                    }
+                }
                 break;
             case (GlobalConstants.GASROCK):
                 blockBitmap = gasRockBitmap;
                 break;
             case (GlobalConstants.COSTUMEGEM):
                 blockBitmap = costumeGemBitmap;
+                break;
+            case (GlobalConstants.TIN):
+                blockBitmap = tinBitmap;
                 break;
             default:
                 blockBitmap = null;

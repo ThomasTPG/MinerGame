@@ -8,17 +8,17 @@ public final class OreHeightTables {
 
     public static int determineOreTable1(double random)
     {
-        if (random < 0.01)
+        if (random < 0.001)
         {
             return GlobalConstants.COSTUMEGEM;
         }
         else if (random < 0.7)
         {
-            return GlobalConstants.SPRING;
+            return GlobalConstants.CRYSTAL;
         }
         else
         {
-            return GlobalConstants.IRON;
+            return GlobalConstants.COPPER;
         }
     }
 

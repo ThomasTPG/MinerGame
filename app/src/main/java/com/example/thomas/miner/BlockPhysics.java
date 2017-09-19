@@ -518,7 +518,7 @@ public class BlockPhysics {
                     }
                 }
             }
-            blockArray[ii][jj].setFrozen(currentIce > 0);
+            blockArray[ii][jj].setSurroundingIce(currentIce);
         }
     }
 

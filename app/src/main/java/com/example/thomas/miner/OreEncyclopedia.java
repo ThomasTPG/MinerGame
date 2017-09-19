@@ -177,7 +177,7 @@ public class OreEncyclopedia extends Activity
                     currentOre = GlobalConstants.CRYSTAL;
                     if (encyclopediaMemory.isOreUnlocked(currentOre))
                     {
-                        imageButton.setImageDrawable(getResources().getDrawable(R.drawable.crystalbase));
+                        imageButton.setImageDrawable(getResources().getDrawable(R.drawable.crystal1));
                         whichOre = currentOre;
                     }
                     break;
@@ -186,6 +186,14 @@ public class OreEncyclopedia extends Activity
                     if (encyclopediaMemory.isOreUnlocked(currentOre))
                     {
                         imageButton.setImageDrawable(getResources().getDrawable(R.drawable.costumegem));
+                        whichOre = currentOre;
+                    }
+                    break;
+                case (17):
+                    currentOre = GlobalConstants.TIN;
+                    if (encyclopediaMemory.isOreUnlocked(currentOre))
+                    {
+                        imageButton.setImageDrawable(getResources().getDrawable(R.drawable.tin));
                         whichOre = currentOre;
                     }
                     break;

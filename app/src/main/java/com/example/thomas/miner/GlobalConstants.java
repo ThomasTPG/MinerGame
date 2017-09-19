@@ -28,12 +28,13 @@ public final class GlobalConstants {
     static final int CRYSTAL = 15;
     static final int GASROCK = 16;
     static final int COSTUMEGEM = 17;
-    static final int WATER = 18;
-    static final int GAS = 19;
+    static final int TIN = 18;
+    static final int WATER = 19;
+    static final int GAS = 20;
     //Number of types of block
-    public static final int NUMBEROFTYPES = 17;
-    public static final int ENCYCLOPEDIA_NUMBERS = 16;
-    public static final int MEMORY_LENGTH_ARRAY_ORE = 30;
+    public static final int NUMBEROFTYPES = 18;
+    public static final int ENCYCLOPEDIA_NUMBERS = 17;
+    public static final int MEMORY_LENGTH_ARRAY_ORE = 40;
 
     //Items in shop
     public static final int NUMBEROFITEMS = 5;
@@ -49,6 +50,7 @@ public final class GlobalConstants {
     public static final int ALMOST_MINED = 2;
     public static final int SLIGHT_PERCENTAGE = 40;
     public static final int ALMOST_PERCENTAGE = 70;
+    public static final int CRYSTALFREEZEAMOUNT = 6;
 
 
 }

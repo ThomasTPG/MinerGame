@@ -15,8 +15,8 @@ public class Block {
     private NonSolidBlocks blockLiquidData;
     private BlockStatusData blockStatusData;
 
-    private int thresholdWaterToFreeze = 10;
-    private int waterProducedFromIce = 30;
+    private int thresholdWaterToFreeze = 15;
+    private int waterProducedFromIce = 12;
     private int index;
     Context context;
     private int blocksAcross;
@@ -27,6 +27,7 @@ public class Block {
     private int blocksPerScreen;
     private int bombType = 0;
     private boolean currentlyBeingMined = false;
+    private int surroundingIce = 0;
 
     //If this is a crystal block, we need to record the maximum ice that has surrounded it.
     private boolean frozen = false;
@@ -216,7 +217,7 @@ public class Block {
         {
             return false;
         }
-        if (blockStatusData.getType() == GlobalConstants.CRYSTAL && !frozen)
+        if (blockStatusData.getType() == GlobalConstants.CRYSTAL && getSurroundingIce() < GlobalConstants.CRYSTALFREEZEAMOUNT)
         {
             return false;
         }
@@ -446,6 +447,9 @@ public class Block {
             case (GlobalConstants.GASROCK):
                 softness = 0.5;
                 break;
+            case(GlobalConstants.TIN):
+                softness = 0.6;
+                break;
             case (GlobalConstants.COSTUMEGEM):
                 softness = 1;
                 break;
@@ -539,5 +543,15 @@ public class Block {
             int incrementPct = Math.min(5, 100-totalVol);
             setGasPercentage(getGasPercentage() + incrementPct);
         }
+    }
+
+    public void setSurroundingIce(int ice)
+    {
+        surroundingIce = ice;
+    }
+
+    public int getSurroundingIce()
+    {
+        return surroundingIce;
     }
 }

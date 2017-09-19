@@ -43,12 +43,12 @@ public class MapArt {
     private int bottomSky;
     private int topSky;
 
-    private Clouds backgroundClouds;
-    private Clouds foregroundClouds;
 
 
 
     private ShopMemory shopMemory;
+
+    private SkyObject[] skyObjects;
 
 
     public MapArt(Canvas c, Context context, int blockSize, ShopMemory shopMemory, Camera camera)
@@ -67,8 +67,12 @@ public class MapArt {
         loadGardenBitmap();
         loadHouseBitmap();
         loadSkyBitmap();
-        backgroundClouds = new Clouds(5, bgcloudBmp, camera, LHSSky, topSky, RHSSky, bottomSky);
-        foregroundClouds = new Clouds(3, fgcloudBmp, camera, LHSSky, topSky, RHSSky, bottomSky);
+        skyObjects = new SkyObject[15];
+        for (int ii = 0; ii < 15; ii++)
+        {
+            skyObjects[ii] = new SkyObject(new Rect(LHSSky, topSky, RHSSky,bottomSky),screenHeight,screenWidth,context,blockSize);
+            skyObjects[ii].setInitialLocation();
+        }
     }
 
     private void setGardenDimensions()
@@ -150,12 +154,15 @@ public class MapArt {
             Rect rSky = new Rect(leftDrawLimit, topDrawLimit, rightDrawLimit, bottomDrawLimit);
             Rect rWhichSky = new Rect((int) ((horizPercentSky-screenToSkyRatio) * skyBmp.getWidth()),(int) (skyBmp.getHeight() * (1-vertPercentSky)), (int) (horizPercentSky * skyBmp.getWidth()), skyBmp.getHeight());
             canvas.drawBitmap(skyBmp, rWhichSky,rSky,null);
-            backgroundClouds.drawCloud(canvas, vertPercentSky, horizPercentSky);
-            foregroundClouds.drawCloud(canvas, vertPercentSky, horizPercentSky);
+
             Rect rGarden = new Rect(LHSGarden - camera.getCameraX(), topGarden - camera.getCameraY()+canvas.getHeight()/2, RHSGarden - camera.getCameraX(), bottomGarden - camera.getCameraY()+canvas.getHeight()/2);
             canvas.drawBitmap(gardenBmp, null,rGarden,null);
             Rect rHouse = new Rect(LHSHouse - camera.getCameraX(), topHouse - camera.getCameraY()+canvas.getHeight()/2, RHSHouse - camera.getCameraX(), bottomHouse - camera.getCameraY()+canvas.getHeight()/2);
             canvas.drawBitmap(houseBmp, null,rHouse,null);
+            for (int ii = 0; ii < 15; ii++)
+            {
+                skyObjects[ii].drawArt(canvas,camera);
+            }
         }
     }
 

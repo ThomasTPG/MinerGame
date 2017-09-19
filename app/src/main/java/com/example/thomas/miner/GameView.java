@@ -318,13 +318,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                         gameOver = true;
                         running = false;
                     }
-
-
                     mHolder.unlockCanvasAndPost(c);
-
-
                 }
-
             } catch (Exception e){
                 e.printStackTrace();
             }
