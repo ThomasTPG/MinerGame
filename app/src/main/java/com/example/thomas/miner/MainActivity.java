@@ -72,6 +72,12 @@ public class MainActivity extends FragmentActivity implements OnClickFragment.On
                 transaction.replace(R.id.fragment_container, newShopFragment);
                 transaction.addToBackStack(null);
                 break;
+            case(GlobalConstants.MAIN_MENU):
+                MainMenuFragment newMainMenuFragment = new MainMenuFragment();
+                newMainMenuFragment.setArguments(args);
+                transaction.replace(R.id.fragment_container, newMainMenuFragment);
+                transaction.addToBackStack(null);
+                break;
         }
         transaction.commit();
     }

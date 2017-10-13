@@ -1,6 +1,7 @@
 package com.example.thomas.miner;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,10 +14,12 @@ import android.view.ViewGroup;
  * Created by Thomas on 25/01/2017.
  */
 
-public class GameMain extends Fragment implements View.OnTouchListener{
+public class GameMain extends OnClickFragment implements View.OnTouchListener{
 
     GameView gameView;
     Thread scoreKeeper;
+    OnButtonClickedListener mCallback;
+    boolean paused = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +70,18 @@ public class GameMain extends Fragment implements View.OnTouchListener{
     public void onPause() {
         super.onPause();
         gameView.onPause();
+        paused = true;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if (paused)
+        {
+            mCallback.onButtonClicked(GlobalConstants.MAIN_MENU);
+            paused = false;
+        }
     }
 
     @Override
@@ -86,5 +101,19 @@ public class GameMain extends Fragment implements View.OnTouchListener{
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnButtonClickedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnButtonClickedListener");
+        }
     }
 }
