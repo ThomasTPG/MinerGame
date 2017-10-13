@@ -58,5 +58,6 @@ public final class GlobalConstants {
     public static final int VIEWORES = 2;
     public static final int ENCYCLOPEDIA = 3;
     public static final int ENCYCLOPEDIA_PAGES = 4;
+    public static final int SHOP_PAGES = 5;
 
 }

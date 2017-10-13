@@ -66,6 +66,12 @@ public class MainActivity extends FragmentActivity implements OnClickFragment.On
                 transaction.replace(R.id.fragment_container, newOreEncyclopediaFragment);
                 transaction.addToBackStack(null);
                 break;
+            case(GlobalConstants.SHOP):
+                Shop newShopFragment = new Shop();
+                newShopFragment.setArguments(args);
+                transaction.replace(R.id.fragment_container, newShopFragment);
+                transaction.addToBackStack(null);
+                break;
         }
         transaction.commit();
     }
@@ -81,6 +87,12 @@ public class MainActivity extends FragmentActivity implements OnClickFragment.On
                 EncyclopediaData newEncyclopediaFragment = new EncyclopediaData();
                 newEncyclopediaFragment.setArguments(args);
                 transaction.replace(R.id.fragment_container, newEncyclopediaFragment);
+                transaction.addToBackStack(null);
+                break;
+            case(GlobalConstants.SHOP_PAGES):
+                ShopDetails newShopPagesFragment = new ShopDetails();
+                newShopPagesFragment.setArguments(args);
+                transaction.replace(R.id.fragment_container, newShopPagesFragment);
                 transaction.addToBackStack(null);
                 break;
         }

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,7 +17,7 @@ import android.widget.TextView;
  * Created by Thomas on 11/09/2017.
  */
 
-public class ShopDetails extends Activity{
+public class ShopDetails extends OnClickFragment{
 
     int item;
     TextView itemName;
@@ -32,21 +33,25 @@ public class ShopDetails extends Activity{
     boolean canAfford;
     boolean confirm;
     boolean nextUpdate;
+    View myView;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.shop_details);
-        item = getIntent().getIntExtra("Item", GlobalConstants.HOUSEUPGRADE);
-        itemName = (TextView) findViewById(R.id.itemForChange);
-        currentLevel = (TextView) findViewById(R.id.currentItemLevel);
-        nextItemLevel = (TextView) findViewById(R.id.nextItemLevel);
-        nextItemBenefit = (TextView) findViewById(R.id.nextItemBenefit);
-        shopMemory = new ShopMemory(this);
-        oreMemory = new OreMemory(this);
-        encyclopediaMemory = new EncyclopediaMemory(this);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        myView = inflater.inflate(R.layout.shop_details, container, false);
+        Bundle bundle = getArguments();
+        item = bundle.getInt("PAGE",GlobalConstants.HOUSEUPGRADE);
+        itemName = (TextView) myView.findViewById(R.id.itemForChange);
+        currentLevel = (TextView) myView.findViewById(R.id.currentItemLevel);
+        nextItemLevel = (TextView) myView.findViewById(R.id.nextItemLevel);
+        nextItemBenefit = (TextView) myView.findViewById(R.id.nextItemBenefit);
+        shopMemory = new ShopMemory(getActivity());
+        oreMemory = new OreMemory(getActivity());
+        encyclopediaMemory = new EncyclopediaMemory(getActivity());
         findScreenWidth();
         initialise();
+        return myView;
     }
 
     private void initialise()
@@ -60,7 +65,7 @@ public class ShopDetails extends Activity{
 
     private void setBuyButton()
     {
-        buyButton = (Button) findViewById(R.id.purchase_item);
+        buyButton = (Button) myView.findViewById(R.id.purchase_item);
         if (!nextUpdate)
         {
             buyButton.setText("No more upgrades.");
@@ -119,7 +124,7 @@ public class ShopDetails extends Activity{
 
     private void setCosts()
     {
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.shopdetails_cost_ll);
+        LinearLayout linearLayout = (LinearLayout) myView.findViewById(R.id.shopdetails_cost_ll);
         linearLayout.removeAllViews();
         getOreNeeded();
 
@@ -128,7 +133,7 @@ public class ShopDetails extends Activity{
             if (oreTypeNeeded[ii] > 0)
             {
                 nextUpdate = true;
-                LinearLayout newRow = new LinearLayout(this);
+                LinearLayout newRow = new LinearLayout(getActivity());
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
                 newRow.setOrientation(LinearLayout.HORIZONTAL);
                 newRow.setLayoutParams(layoutParams);
@@ -220,12 +225,12 @@ public class ShopDetails extends Activity{
 
     private LinearLayout getImageHolder(int ii)
     {
-        LinearLayout imageHolder = new LinearLayout(this);
+        LinearLayout imageHolder = new LinearLayout(getActivity());
         LinearLayout.LayoutParams layoutParamsImage = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.4f);
         imageHolder.setOrientation(LinearLayout.HORIZONTAL);
         imageHolder.setLayoutParams(layoutParamsImage);
         imageHolder.setGravity(View.TEXT_ALIGNMENT_CENTER);
-        ImageView imageView = new ImageView(this);
+        ImageView imageView = new ImageView(getActivity());
         imageView.setImageDrawable(getCorrectDrawable(ii));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setAdjustViewBounds(true);
@@ -277,7 +282,7 @@ public class ShopDetails extends Activity{
 
     private TextView addCurrentOres(int ii)
     {
-        TextView currentOres = new TextView(this);
+        TextView currentOres = new TextView(getActivity());
         LinearLayout.LayoutParams layoutParamsCurrentOre = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 0.3f);
         currentOres.setGravity(View.TEXT_ALIGNMENT_CENTER);
         currentOres.setLayoutParams(layoutParamsCurrentOre);
@@ -287,7 +292,7 @@ public class ShopDetails extends Activity{
 
     private TextView addRequiredOres(int ii)
     {
-        TextView totalOres = new TextView(this);
+        TextView totalOres = new TextView(getActivity());
         LinearLayout.LayoutParams layoutParamsTotalOre = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 0.3f);
         totalOres.setGravity(View.TEXT_ALIGNMENT_CENTER);
         totalOres.setLayoutParams(layoutParamsTotalOre);
@@ -298,7 +303,7 @@ public class ShopDetails extends Activity{
     private void findScreenWidth()
     {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
     }
 
