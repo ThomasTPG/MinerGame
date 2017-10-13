@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -16,29 +17,30 @@ import android.widget.LinearLayout;
  * Created by Thomas on 12/09/2017.
  */
 
-public class OreEncyclopedia extends Activity
+public class OreEncyclopedia extends OnClickFragment
 {
-
     int screenWidth;
     EncyclopediaMemory encyclopediaMemory;
     Context context;
+    View myView;
+    OnButtonClickedListener mCallback;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.ore_encyclopedia);
-        context = this;
-        encyclopediaMemory = new EncyclopediaMemory(this);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        myView = inflater.inflate(R.layout.ore_encyclopedia, container, false);
+        context = getActivity();
+        encyclopediaMemory = new EncyclopediaMemory(context);
         findScreenWidth();
         populateEncyclopedia();
-
-
+        return myView;
     }
 
     private void findScreenWidth()
     {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
     }
 
@@ -48,8 +50,8 @@ public class OreEncyclopedia extends Activity
         for (int ii = 1; ii <= GlobalConstants.ENCYCLOPEDIA_NUMBERS; ii++)
         {
             String buttonID = "enc_button_" + ii;
-            int resID = getResources().getIdentifier(buttonID, "id", getPackageName());
-            ImageButton imageButton = (ImageButton) findViewById(resID);
+            int resID = getResources().getIdentifier(buttonID, "id", getActivity().getPackageName());
+            ImageButton imageButton = (ImageButton) myView.findViewById(resID);
             imageButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageButton.setAdjustViewBounds(true);
             ViewGroup.LayoutParams params = imageButton.getLayoutParams();
@@ -198,17 +200,30 @@ public class OreEncyclopedia extends Activity
                     }
                     break;
             }
-            final Intent details = new Intent(context, EncyclopediaData.class);
-            details.putExtra("Ore",whichOre);
+            final int selectedOre = whichOre;
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (details.getIntExtra("Ore",0) != 0)
+                    if (selectedOre != 0)
                     {
-                        startActivity(details);
+                        mCallback.onButtonClicked(GlobalConstants.ENCYCLOPEDIA_PAGES, selectedOre);
                     }
                 }
             });
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnButtonClickedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnButtonClickedListener");
         }
     }
 }

@@ -129,8 +129,8 @@ public class BlockDrawing {
         crystal3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal3);
         crystal4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal4);
         crystal5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.crystal5);
-        dynamite = BitmapFactory.decodeResource(context.getResources(), R.drawable.dynamitebutton);
-        iceBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.icebombbutton);
+        dynamite = BitmapFactory.decodeResource(context.getResources(), R.drawable.dynamitesquare);
+        iceBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.icedynamitesquare);
         background1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_cave_1);
 
         leftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_left);

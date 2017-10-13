@@ -21,8 +21,6 @@ public class MapArt {
     private Bitmap gardenForeBmp;
     private Bitmap houseBmp;
     private Bitmap skyBmp;
-    private Bitmap bgcloudBmp;
-    private Bitmap fgcloudBmp;
     private Camera camera;
     private int blockDimensions;
     private int blocksAcross;
@@ -126,18 +124,17 @@ public class MapArt {
                 houseBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_tent);
                 break;
             case(1):
+                houseBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_shack);
                 break;
             default:
-                houseBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.house1);
+                houseBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_shack);
                 break;
         }
     }
 
     private void loadSkyBitmap()
     {
-        skyBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.nightsky);
-        bgcloudBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.nightskyclouds);
-        fgcloudBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.nightskyclouds2);
+        skyBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.daysky);
     }
 
     public void drawArt(Canvas canvas)

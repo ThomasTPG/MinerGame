@@ -3,23 +3,27 @@ package com.example.thomas.miner;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Created by Thomas on 25/01/2017.
  */
 
-public class GameMain extends Activity implements View.OnTouchListener{
+public class GameMain extends Fragment implements View.OnTouchListener{
 
     GameView gameView;
     Thread scoreKeeper;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.gameview_content, container, false);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gameview_content);
-        gameView = (GameView) findViewById(R.id.gameviewsurface);
+        gameView = (GameView) view.findViewById(R.id.gameviewsurface);
         gameView.setOnTouchListener(this);
 
         scoreKeeper = new Thread() {
@@ -39,7 +43,7 @@ public class GameMain extends Activity implements View.OnTouchListener{
                     });
                     */
                     if (gameView.isGameOver()) {
-                        runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
                             public void run() {
                                 gameExit();
                             }
@@ -49,27 +53,20 @@ public class GameMain extends Activity implements View.OnTouchListener{
             }
         };
         scoreKeeper.start();
-
+        return view;
 
     }
 
     private void gameExit()
     {
-        final Intent menuIntent = new Intent(this, MainActivity.class);
+        final Intent menuIntent = new Intent(getActivity(), MainActivity.class);
         startActivity(menuIntent);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         gameView.onPause();
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        this.onCreate(null);
     }
 
     @Override

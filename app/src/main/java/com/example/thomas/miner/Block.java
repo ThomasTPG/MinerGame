@@ -96,7 +96,7 @@ public class Block {
                 {
                     setType(GlobalConstants.BOULDER);
                 }
-                else if (rand > 880 - oreLiklihood)
+                else if (rand > 890 - oreLiklihood)
                 {
                     setOre();
                 }
@@ -124,19 +124,19 @@ public class Block {
     {
         Random oreRandom = new Random(seed * xCoord * yCoord + yCoord*xCoord);
         double randomOreType = oreRandom.nextDouble();
-        if (yCoord < 30)
+        if (yCoord < 20)
         {
             setType(OreHeightTables.determineOreTable1(randomOreType));
         }
-        else if (yCoord < 60)
+        else if (yCoord < 40)
         {
             setType(OreHeightTables.determineOreTable2(randomOreType));
         }
-        else if (yCoord < 90)
+        else if (yCoord < 60)
         {
             setType(OreHeightTables.determineOreTable3(randomOreType));
         }
-        else if (yCoord < 120)
+        else if (yCoord < 80)
         {
             setType(OreHeightTables.determineOreTable4(randomOreType));
         }

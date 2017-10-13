@@ -11,10 +11,12 @@ public class BlockPhysics {
     private int verticalBlockLimit;
     private int delay = 0;
     private int lifeFactor = 3;
+    private ActiveBombs activeBombs;
     Block[][] blockArray;
 
-    public BlockPhysics(ArrayOfBlocksOnScreen arrayOfBlocksOnScreen)
+    public BlockPhysics(ArrayOfBlocksOnScreen arrayOfBlocksOnScreen, ActiveBombs activeBombs)
     {
+        this.activeBombs = activeBombs;
         blocksOnScreen = arrayOfBlocksOnScreen;
         horizontalBlockLimit = blocksOnScreen.getHorizontalBlockLimit();
         verticalBlockLimit = blocksOnScreen.getVerticalBlockLimit();
@@ -48,6 +50,7 @@ public class BlockPhysics {
                 decayGas(ii,jj);
                 blowUpGas(ii,jj);
                 blowUpExplodium(ii,jj);
+                checkDynamiteFall(ii,jj);
             }
         }
         blocksOnScreen.setBlockArray(blockArray);
@@ -119,7 +122,7 @@ public class BlockPhysics {
             }
             if (jj < verticalBlockLimit - 1)
             {
-                if (shouldExplodeExplodium(ii,jj+1))
+                if (shouldExplodeExplodiumBelow(ii,jj+1))
                 {
                     blocksOnScreen.explodeBlock(blockArray[ii][jj]);
                     return;
@@ -129,9 +132,14 @@ public class BlockPhysics {
 
     }
 
+    private boolean shouldExplodeExplodiumBelow(int ii, int jj)
+    {
+        return (blockArray[ii][jj].getLiquidData().getGasPercentage() > 5) || (blockArray[ii][jj].isFire());
+    }
+
     private boolean shouldExplodeExplodium(int ii, int jj)
     {
-        return (blockArray[ii][jj].getLiquidData().getWaterPercentage() + blockArray[ii][jj].getLiquidData().getGasPercentage() > 0) || (blockArray[ii][jj].isFire());
+        return (blockArray[ii][jj].getLiquidData().getWaterPercentage() + blockArray[ii][jj].getLiquidData().getGasPercentage() > 5) || (blockArray[ii][jj].isFire());
     }
 
     private void decayGas(int ii, int jj)
@@ -519,6 +527,26 @@ public class BlockPhysics {
                 }
             }
             blockArray[ii][jj].setSurroundingIce(currentIce);
+        }
+    }
+
+    private void checkDynamiteFall(int ii, int jj)
+    {
+        if (activeBombs.isBombActive())
+        {
+            if (activeBombs.getBombBlock().getIndex() == blockArray[ii][jj].getIndex() )
+            {
+                //Have got the bomb block
+                //Check below
+                if (jj < verticalBlockLimit - 1)
+                {
+                    if (blockArray[ii][jj+1].isCavern())
+                    {
+                        activeBombs.updateLocation(blockArray[ii][jj+1]);
+                    }
+                }
+            }
+
         }
     }
 

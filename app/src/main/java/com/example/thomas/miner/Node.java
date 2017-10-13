@@ -41,6 +41,10 @@ public class Node {
 
     public Node addItem(int ii, BlockStatusData newBlockStatusData, NonSolidBlocks newBlockLiquidData)
     {
+        if (ii < 0)
+        {
+            return this;
+        }
         if (ii < index)
         {
             if (previousNode != null)

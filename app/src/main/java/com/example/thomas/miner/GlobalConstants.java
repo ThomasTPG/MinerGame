@@ -42,7 +42,7 @@ public final class GlobalConstants {
     public static final int AIRTANKUPGRADE = 1;
     public static final int HOUSEUPGRADE = 2;
     public static final int GARDENUPGRADE = 3;
-    public static final int CLAMBERUPGRADE = 4;
+    public static final int DYNAMITEUPGRADE = 4;
 
     //Percentage to dislodge blocks
     public static final int UNMINED = 0;
@@ -52,5 +52,11 @@ public final class GlobalConstants {
     public static final int ALMOST_PERCENTAGE = 70;
     public static final int CRYSTALFREEZEAMOUNT = 6;
 
+    //Buttons in menus
+    public static final int START = 0;
+    public static final int SHOP = 1;
+    public static final int VIEWORES = 2;
+    public static final int ENCYCLOPEDIA = 3;
+    public static final int ENCYCLOPEDIA_PAGES = 4;
 
 }

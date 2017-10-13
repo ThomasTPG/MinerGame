@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +28,10 @@ public class ShopDetails extends Activity{
     EncyclopediaMemory encyclopediaMemory;
     int screenWidth;
     int[] oreTypeNeeded = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
+    Button buyButton;
+    boolean canAfford;
+    boolean confirm;
+    boolean nextUpdate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +46,51 @@ public class ShopDetails extends Activity{
         oreMemory = new OreMemory(this);
         encyclopediaMemory = new EncyclopediaMemory(this);
         findScreenWidth();
+        initialise();
+    }
+
+    private void initialise()
+    {
+        canAfford = true;
+        confirm = false;
+        nextUpdate = false;
         setItemDetails();
+        setBuyButton();
+    }
+
+    private void setBuyButton()
+    {
+        buyButton = (Button) findViewById(R.id.purchase_item);
+        if (!nextUpdate)
+        {
+            buyButton.setText("No more upgrades.");
+        }
+        else if (canAfford)
+        {
+            buyButton.setText("Buy");
+        }
+        else
+        {
+            buyButton.setText("Can't afford");
+        }
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (canAfford && nextUpdate)
+                {
+                    if (!confirm)
+                    {
+                        buyButton.setText("Are you sure?");
+                        confirm = true;
+                    }
+                    else
+                    {
+                        shopMemory.writeFile(item);
+                        initialise();
+                    }
+                }
+            }
+        });
     }
 
     public void setItemDetails()
@@ -60,6 +109,10 @@ public class ShopDetails extends Activity{
                 itemName.setText(getResources().getString(R.string.house_update_name));
                 setHouseUpdates();
                 break;
+            case (GlobalConstants.DYNAMITEUPGRADE):
+                itemName.setText(getResources().getString(R.string.dynamite_update_name));
+                setDynamiteUpdates();
+                break;
         }
         setCosts();
     }
@@ -67,12 +120,14 @@ public class ShopDetails extends Activity{
     private void setCosts()
     {
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.shopdetails_cost_ll);
+        linearLayout.removeAllViews();
         getOreNeeded();
 
         for (int ii = GlobalConstants.SOIL; ii < GlobalConstants.NUMBEROFTYPES; ii++)
         {
             if (oreTypeNeeded[ii] > 0)
             {
+                nextUpdate = true;
                 LinearLayout newRow = new LinearLayout(this);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
                 newRow.setOrientation(LinearLayout.HORIZONTAL);
@@ -85,6 +140,11 @@ public class ShopDetails extends Activity{
                 newRow.addView(addRequiredOres(ii));
 
                 linearLayout.addView(newRow);
+
+                if (oreMemory.getCurrentOre(ii) < oreTypeNeeded[ii])
+                {
+                    canAfford = false;
+                }
 
             }
         }
@@ -130,6 +190,30 @@ public class ShopDetails extends Activity{
                 nextItemLevel.append(getResources().getString(R.string.house_update_1));
                 nextItemBenefit.setText(getResources().getString(R.string.house_update_1_benefit));
                 break;
+            case (1):
+                currentLevel.append(getResources().getString(R.string.house_update_1));
+                nextItemLevel.append(getResources().getString(R.string.house_update_2));
+                nextItemBenefit.setText(getResources().getString(R.string.house_update_2_benefit));
+                break;
+        }
+    }
+
+    private void setDynamiteUpdates()
+    {
+        currentLevel.setText(getResources().getString(R.string.current_dynamite));
+        nextItemLevel.setText(getResources().getString(R.string.next_dynamite));
+        switch (shopMemory.getItem(GlobalConstants.DYNAMITEUPGRADE))
+        {
+            case (0):
+                currentLevel.append(getResources().getString(R.string.dynamite_update_0));
+                nextItemLevel.append(getResources().getString(R.string.dynamite_update_1));
+                nextItemBenefit.setText(getResources().getString(R.string.dynamite_update_1_benefit));
+                break;
+            case (1):
+                currentLevel.append(getResources().getString(R.string.dynamite_update_1));
+                nextItemLevel.append(getResources().getString(R.string.dynamite_update_2));
+                nextItemBenefit.setText(getResources().getString(R.string.dynamite_update_2_benefit));
+                break;
         }
     }
 
@@ -167,6 +251,8 @@ public class ShopDetails extends Activity{
                 return getResources().getDrawable(R.drawable.soil);
             case(GlobalConstants.COPPER):
                 return getResources().getDrawable(R.drawable.copper);
+            case(GlobalConstants.TIN):
+                return getResources().getDrawable(R.drawable.tin);
             case(GlobalConstants.IRON):
                 return getResources().getDrawable(R.drawable.iron);
             case(GlobalConstants.EXPLODIUM):
@@ -223,6 +309,9 @@ public class ShopDetails extends Activity{
             case (GlobalConstants.HOUSEUPGRADE):
                 getCostsHouse();
                 break;
+            case (GlobalConstants.DYNAMITEUPGRADE):
+                getCostsDynamite();
+                break;
         }
     }
 
@@ -232,6 +321,20 @@ public class ShopDetails extends Activity{
         {
             case (0):
                 oreTypeNeeded[GlobalConstants.COPPER] = 10;
+                break;
+            case (1):
+                oreTypeNeeded[GlobalConstants.TIN] = 10;
+                break;
+        }
+    }
+
+    private void getCostsDynamite()
+    {
+        switch (shopMemory.getItem(item))
+        {
+            case (0):
+                oreTypeNeeded[GlobalConstants.EXPLODIUM] = 10;
+                oreTypeNeeded[GlobalConstants.GASROCK] = 10;
                 break;
         }
     }

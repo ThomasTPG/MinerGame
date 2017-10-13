@@ -14,7 +14,7 @@ public final class OreHeightTables {
         }
         else if (random < 0.7)
         {
-            return GlobalConstants.CRYSTAL;
+            return GlobalConstants.TIN;
         }
         else
         {
@@ -24,17 +24,17 @@ public final class OreHeightTables {
 
     public static int determineOreTable2(double random)
     {
-        if (random < 0.01)
+        if (random < 0.001)
         {
             return GlobalConstants.COSTUMEGEM;
         }
         else if (random < 0.4)
         {
-            return GlobalConstants.COPPER;
+            return GlobalConstants.TIN;
         }
         else if (random < 0.8)
         {
-            return GlobalConstants.IRON;
+            return GlobalConstants.COPPER;
         }
         else if (random < 0.99)
         {
@@ -48,17 +48,17 @@ public final class OreHeightTables {
 
     public static int determineOreTable3(double random)
     {
-        if (random < 0.01)
+        if (random < 0.001)
         {
             return GlobalConstants.COSTUMEGEM;
         }
         else if (random < 0.2)
         {
-            return GlobalConstants.COPPER;
+            return GlobalConstants.TIN;
         }
         else if (random < 0.4)
         {
-            return GlobalConstants.IRON;
+            return GlobalConstants.COPPER;
         }
         else if (random < 0.5)
         {
@@ -80,11 +80,11 @@ public final class OreHeightTables {
 
     public static int determineOreTable4(double random)
     {
-        if (random < 0.01)
+        if (random < 0.001)
         {
             return GlobalConstants.COSTUMEGEM;
         }
-        else if (random < 0.15)
+        else if (random < 0.1)
         {
             return GlobalConstants.COPPER;
         }
@@ -120,7 +120,7 @@ public final class OreHeightTables {
 
     public static int determineOreTable5(double random)
     {
-        if (random < 0.01)
+        if (random < 0.001)
         {
             return GlobalConstants.COSTUMEGEM;
         }

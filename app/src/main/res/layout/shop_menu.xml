@@ -188,6 +188,85 @@
 
             </LinearLayout>
 
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:weightSum="10"
+                android:id="@+id/shop_dynamite_item">
+
+                <View
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent">
+                </View>
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    </View>
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_weight="3"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/dynamitebutton"
+                        android:adjustViewBounds="true"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    </View>
+
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="4"
+                        android:orientation="vertical"
+                        android:weightSum="10">
+
+                        <TextView
+                            android:layout_weight="4"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:textSize="20sp"
+                            android:gravity="center"
+                            android:text="Dynamite"/>
+
+                        <TextView
+                            android:layout_weight="6"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:textSize="14sp"
+                            android:gravity="center"
+                            android:text="Blow up rocks."/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    </View>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent">
+                </View>
+
+            </LinearLayout>
         </LinearLayout>
 
 

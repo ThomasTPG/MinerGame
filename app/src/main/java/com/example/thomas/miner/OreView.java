@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,28 +17,27 @@ import android.widget.TextView;
  * Created by Thomas on 11/03/2017.
  */
 
-public class OreView extends Activity {
-
+public class OreView extends OnClickFragment {
 
     int screenWidth;
     OreMemory oreMemory;
     EncyclopediaMemory encyclopediaMemory;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.oreview_layout);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.oreview_layout, container, false);
         findScreenWidth();
-        oreMemory = new OreMemory(this);
-        encyclopediaMemory = new EncyclopediaMemory(this);
+        oreMemory = new OreMemory(getActivity());
+        encyclopediaMemory = new EncyclopediaMemory(getActivity());
 
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.oreview_linear_layout);
+        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.oreview_linear_layout);
 
         for (int ii = GlobalConstants.SOIL; ii < GlobalConstants.NUMBEROFTYPES; ii++)
         {
             if (encyclopediaMemory.isOreUnlocked(ii) && ii != GlobalConstants.ICE)
             {
-                LinearLayout newRow = new LinearLayout(this);
+                LinearLayout newRow = new LinearLayout(getActivity());
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
                 newRow.setOrientation(LinearLayout.HORIZONTAL);
                 newRow.setLayoutParams(layoutParams);
@@ -51,16 +52,17 @@ public class OreView extends Activity {
 
             }
         }
+        return view;
     }
 
     private LinearLayout getImageHolder(int ii)
     {
-        LinearLayout imageHolder = new LinearLayout(this);
+        LinearLayout imageHolder = new LinearLayout(getActivity());
         LinearLayout.LayoutParams layoutParamsImage = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 0.4f);
         imageHolder.setOrientation(LinearLayout.HORIZONTAL);
         imageHolder.setLayoutParams(layoutParamsImage);
         imageHolder.setGravity(View.TEXT_ALIGNMENT_CENTER);
-        ImageView imageView = new ImageView(this);
+        ImageView imageView = new ImageView(getActivity());
         imageView.setImageDrawable(getCorrectDrawable(ii));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         imageView.setAdjustViewBounds(true);
@@ -106,7 +108,7 @@ public class OreView extends Activity {
 
     private TextView addCurrentOres(int ii)
     {
-        TextView currentOres = new TextView(this);
+        TextView currentOres = new TextView(getActivity());
         LinearLayout.LayoutParams layoutParamsCurrentOre = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 0.3f);
         currentOres.setGravity(View.TEXT_ALIGNMENT_CENTER);
         currentOres.setLayoutParams(layoutParamsCurrentOre);
@@ -117,7 +119,7 @@ public class OreView extends Activity {
 
     private TextView addTotalOres(int ii)
     {
-        TextView totalOres = new TextView(this);
+        TextView totalOres = new TextView(getActivity());
         LinearLayout.LayoutParams layoutParamsTotalOre = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 0.3f);
         totalOres.setGravity(View.TEXT_ALIGNMENT_CENTER);
         totalOres.setLayoutParams(layoutParamsTotalOre);
@@ -129,7 +131,7 @@ public class OreView extends Activity {
     private void findScreenWidth()
     {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
     }
 

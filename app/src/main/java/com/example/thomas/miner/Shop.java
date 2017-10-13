@@ -40,6 +40,18 @@ public class Shop extends Activity {
         });
         ImageView imageViewHouse = (ImageView) findViewById(R.id.shop_house_image);
         imageViewHouse.setImageDrawable(getHouseDrawable());
+
+        LinearLayout dynamite = (LinearLayout) findViewById(R.id.shop_dynamite_item);
+        final Intent dynamiteDetails = new Intent(this, ShopDetails.class);
+        dynamiteDetails.putExtra("Item", GlobalConstants.DYNAMITEUPGRADE);
+        dynamite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(dynamiteDetails);
+            }
+        });
+        //ImageView imageViewDynamite = (ImageView) findViewById(R.id.shop_house_image);
+        //imageViewHouse.setImageDrawable(getHouseDrawable());
     }
 
     private Drawable getHouseDrawable()
@@ -50,6 +62,8 @@ public class Shop extends Activity {
             case (0):
                 return getResources().getDrawable(R.drawable.house_tent);
             case (1):
+                return getResources().getDrawable(R.drawable.house_shack);
+            case (2):
                 return getResources().getDrawable(R.drawable.house_caravan);
             default:
                 return getResources().getDrawable(R.drawable.house_tent);

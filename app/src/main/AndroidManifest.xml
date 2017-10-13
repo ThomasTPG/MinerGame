@@ -15,26 +15,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameMain"
-            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".OreView"
-            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity android:name=".Shop"
             android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
 
@@ -45,26 +25,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".OreEncyclopedia"
-        android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
-
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-    </activity>
-        <activity android:name=".EncyclopediaData"
-            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        
         <activity android:name=".ShopDetails"
             android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" >
 

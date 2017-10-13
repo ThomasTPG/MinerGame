@@ -55,8 +55,19 @@ public class ActiveBombs {
         bombBlock.setBomb(type);
     }
 
+    public void updateLocation(Block newLocation)
+    {
+        bombBlock.setBomb(NO_BOMB);
+        bombBlock = newLocation;
+        bombBlock.setBomb(type);
+    }
+
     public Block getBombBlock()
     {
         return bombBlock;
+    }
+
+    public boolean isBombActive() {
+        return isBombActive;
     }
 }

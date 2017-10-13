@@ -26,6 +26,17 @@
     <string name="house_update_0">Tent</string>
     <string name="house_update_1">Shack</string>
     <string name="house_update_1_benefit">More copper.</string>
+    <string name="house_update_2">Caravan</string>
+    <string name="house_update_2_benefit">More tin.</string>
+
+    <string name="dynamite_update_name">Dynamite</string>
+    <string name="current_dynamite">Current dynamite level: </string>
+    <string name="next_dynamite">Next dynamite level: </string>
+    <string name="dynamite_update_0">Not yet purchased</string>
+    <string name="dynamite_update_1">1</string>
+    <string name="dynamite_update_1_benefit">Start each attempt with 1 dynamite.</string>
+    <string name="dynamite_update_2">2</string>
+    <string name="dynamite_update_2_benefit">Start each attempt with 2 dynamite.</string>
 
     //Data for the encyclopedia
     <string name="soil_name">Rock</string>
