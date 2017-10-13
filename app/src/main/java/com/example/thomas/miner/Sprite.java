@@ -39,9 +39,8 @@ public class Sprite {
     private boolean dead = false;
 
 
-    public Sprite(Context context, Canvas canvas, int dimension, int blockSize, ArrayOfBlocksOnScreen blocks)
+    public Sprite(Context context, Canvas canvas, int dimension, int blockSize)
     {
-        blocksOnScreen = blocks;
         mBlockSize = blockSize;
         mCanvas = canvas;
         mContext = context;
@@ -52,6 +51,12 @@ public class Sprite {
         sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.miner);
         canvasHeight = canvas.getHeight();
         canvasWidth = canvas.getWidth();
+        oxygenAmount = maxOxygenAmount;
+    }
+
+    public void setBlocksOnScreen(ArrayOfBlocksOnScreen blocks)
+    {
+        blocksOnScreen = blocks;
     }
 
     public boolean isClambering()
@@ -190,17 +195,14 @@ public class Sprite {
         if (oxygenAmount <=0)
         {
             dead = true;
-            System.out.println("Died due to water");
         }
         else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isIce())
         {
-            System.out.println("Died due to ice");
             dead = true;
         }
         else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isFire())
         {
             dead = true;
-            System.out.println("Died due to fire");
         }
         return (dead);
     }
@@ -213,6 +215,16 @@ public class Sprite {
             speed = (int) (3*baseRunningSpeed/4.0);
         }
         return speed;
+    }
+
+    public void setOxygen(int o)
+    {
+        oxygenAmount = o;
+    }
+
+    public int getOxygenAmount()
+    {
+        return oxygenAmount;
     }
 
     public void drawOxygen(Canvas canvas)

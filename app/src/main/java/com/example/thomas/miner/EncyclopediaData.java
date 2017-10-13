@@ -80,6 +80,11 @@ public class EncyclopediaData extends OnClickFragment {
                 oreImage.setImageDrawable(getResources().getDrawable(R.drawable.copper));
                 oreDetails.setText(Html.fromHtml(getResources().getString(R.string.copper_details)));
                 break;
+            case(GlobalConstants.TIN):
+                oreName.setText(getResources().getString(R.string.tin_name));
+                oreImage.setImageDrawable(getResources().getDrawable(R.drawable.tin));
+                oreDetails.setText(Html.fromHtml(getResources().getString(R.string.tin_details)));
+                break;
             case(GlobalConstants.IRON):
                 oreName.setText(getResources().getString(R.string.iron_name));
                 oreImage.setImageDrawable(getResources().getDrawable(R.drawable.iron));

@@ -24,8 +24,9 @@ public class LevelMemory {
     private int mSeed;
     private Camera camera;
     private OreCounter oreCounter;
+    private Sprite mSprite;
 
-    public LevelMemory(Context context, MinedLocations minedLocations, int seed, Camera cam, OreCounter oreCounter)
+    public LevelMemory(Context context, MinedLocations minedLocations, int seed, Camera cam, OreCounter oreCounter, Sprite sprite)
     {
         mMinedLocations = minedLocations;
         mSeed = seed;
@@ -33,6 +34,7 @@ public class LevelMemory {
         File path = context.getFilesDir();
         levelFile = new File(path, context.getResources().getString(R.string.level_data_file_name));
         this.oreCounter = oreCounter;
+        mSprite = sprite;
     }
 
     public boolean canLoadLevel()
@@ -56,6 +58,8 @@ public class LevelMemory {
                 //Read the camera position
                 camera.setCameraY(Integer.parseInt(bufferedReader.readLine()));
                 camera.setCameraX(Integer.parseInt(bufferedReader.readLine()));
+                //Read the oxygen
+                mSprite.setOxygen(Integer.parseInt(bufferedReader.readLine()));
                 //Read the number of ore types
                 for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
                 {
@@ -117,7 +121,9 @@ public class LevelMemory {
                 bufferedWriter.newLine();
                 bufferedWriter.write(Integer.toString(camera.getCameraX()));
                 bufferedWriter.newLine();
-
+                //Write the oxygen
+                bufferedWriter.write(Integer.toString(mSprite.getOxygenAmount()));
+                bufferedWriter.newLine();
                 //Write the ores mined
                 String[] oreOutput = oreCounter.getOre();
                 for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)

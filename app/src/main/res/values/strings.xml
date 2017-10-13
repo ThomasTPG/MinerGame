@@ -51,10 +51,12 @@
     <string name="gas_details"><![CDATA[ &#8226; If you spend too much time in gas you will suffocate<br /> &#8226; Gas will decay blocks above it, causing them to fall<br /> &#8226; Gas can be blown up<br />]]></string>
     <string name="copper_name">Copper</string>
     <string name="copper_details"><![CDATA[ &#8226; Useful for updating your pickaxe and house<br />]]></string>
+    <string name="tin_name">Tin</string>
+    <string name="tin_details"><![CDATA[ &#8226; Useful for updating your pickaxe and house<br />]]></string>
     <string name="iron_name">Iron</string>
     <string name="iron_details"><![CDATA[ &#8226; Useful for updating your pickaxe and house<br />]]></string>
     <string name="explodium_name">Explodium</string>
-    <string name="explodium_details"><![CDATA[ &#8226; If this comes into contact with gas or water it will explode<br /> &#8226; If this block falls, or another block falls onto it then it will explode<br /> &#8226; Useful for creating dynamite<br /> &#8226; doo<br />]]></string>
+    <string name="explodium_details"><![CDATA[ &#8226; If this comes into contact with gas or water it will explode<br /> &#8226; If this block falls, or another block falls onto it then it will explode<br /> &#8226; Useful for creating dynamite<br />]]></string>
     <string name="marble_name">Marble</string>
     <string name="marble_details"><![CDATA[ &#8226; Useful for upgrading your house and garden<br /> ]]></string>
     <string name="spring_name">Underground Spring</string>
