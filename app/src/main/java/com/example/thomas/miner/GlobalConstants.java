@@ -32,7 +32,7 @@ public final class GlobalConstants {
     static final int WATER = 19;
     static final int GAS = 20;
     //Number of types of block
-    public static final int NUMBEROFTYPES = 18;
+    public static final int NUMBEROFTYPES = 19;
     public static final int ENCYCLOPEDIA_NUMBERS = 17;
     public static final int MEMORY_LENGTH_ARRAY_ORE = 40;
 
@@ -60,8 +60,16 @@ public final class GlobalConstants {
     public static final int ENCYCLOPEDIA_PAGES = 4;
     public static final int SHOP_PAGES = 5;
     public static final int MAIN_MENU = 6;
+    public static final int GAME_OVER = 7;
+
 
     public static final int DAY = 0;
     public static final int NIGHT = 1;
     public static final int SUNSET = 2;
+
+    public static final int ESCAPE = 0;
+    public static final int EXPLOSION = 1;
+    public static final int SUFFOCATED = 2;
+    public static final int FROZEN = 3;
+
 }

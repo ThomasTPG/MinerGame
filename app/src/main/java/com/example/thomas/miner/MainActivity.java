@@ -10,6 +10,15 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends FragmentActivity implements OnClickFragment.OnButtonClickedListener{
+    protected OnBackPressedListener onBackPressedListener;
+
+    public interface OnBackPressedListener {
+        void doBack();
+    }
+
+    public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
+        this.onBackPressedListener = onBackPressedListener;
+    }
 
     static String PAGE = "PAGE";
 
@@ -101,7 +110,29 @@ public class MainActivity extends FragmentActivity implements OnClickFragment.On
                 transaction.replace(R.id.fragment_container, newShopPagesFragment);
                 transaction.addToBackStack(null);
                 break;
+            case(GlobalConstants.GAME_OVER):
+                GameOverScreen gameOverScreen = new GameOverScreen();
+                gameOverScreen.setArguments(args);
+                transaction.replace(R.id.fragment_container, gameOverScreen);
+                transaction.addToBackStack(null);
+                break;
         }
         transaction.commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        onBackPressedListener = null;
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (onBackPressedListener != null) {
+            onBackPressedListener.doBack();
+            onBackPressedListener = null;
+        } else {
+            super.onBackPressed();
+        }
     }
 }

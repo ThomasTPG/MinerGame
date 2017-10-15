@@ -37,6 +37,7 @@ public class Sprite {
     private int maxOxygenAmount = 5000;
     private int oxygenAmount;
     private boolean dead = false;
+    int deathReason = GlobalConstants.ESCAPE;
 
 
     public Sprite(Context context, Canvas canvas, int dimension, int blockSize)
@@ -195,16 +196,24 @@ public class Sprite {
         if (oxygenAmount <=0)
         {
             dead = true;
+            deathReason = GlobalConstants.SUFFOCATED;
         }
         else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isIce())
         {
             dead = true;
+            deathReason = GlobalConstants.FROZEN;
         }
         else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isFire())
         {
             dead = true;
+            deathReason = GlobalConstants.EXPLOSION;
         }
         return (dead);
+    }
+
+    public int getDeath()
+    {
+        return deathReason;
     }
 
     public int getRunningSpeed()

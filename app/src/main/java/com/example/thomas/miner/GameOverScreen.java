@@ -1,10 +1,10 @@
 package com.example.thomas.miner;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,37 +13,105 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import java.util.Random;
+
+import javax.microedition.khronos.opengles.GL;
 
 /**
  * Created by Thomas on 11/09/2017.
  */
 
-public class GameOverScreen extends OnClickFragment
+public class GameOverScreen extends OnClickFragment implements MainActivity.OnBackPressedListener
 {
     View myView;
     OnButtonClickedListener mCallback;
     int screenWidth;
-    OreMemory oreMemory;
     int[] oreArray;
+    int [] oresKept;
+    int endReason;
+    OreCounter oreCounter;
+    OreMemory oreMemory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         myView = inflater.inflate(R.layout.game_over_screen_layout, container, false);
-
+        ((MainActivity) getActivity()).setOnBackPressedListener(this);
+        Bundle bundle = getArguments();
+        endReason = bundle.getInt("PAGE",GlobalConstants.ESCAPE);
+        oreCounter = new OreCounter();
         oreMemory = new OreMemory(getActivity());
+
         oreArray = oreMemory.getPreviouslyMinedOre();
+        setOresKept();
+        findScreenWidth();
 
         generateScreen();
 
+        if (endReason == GlobalConstants.ESCAPE)
+        {
+            oreMemory.updateOreStorage();
+        }
         return myView;
+    }
+
+    @Override
+    public void doBack() {
+        mCallback.onButtonClicked(GlobalConstants.MAIN_MENU);
+    }
+
+
+    private void setOresKept()
+    {
+        oresKept = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
+        if (endReason != GlobalConstants.ESCAPE)
+        {
+            for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
+            {
+                oresKept[ii] = 0;
+            }
+        }
+        else
+        {
+            oresKept = oreArray;
+        }
     }
 
     private void generateScreen()
     {
-        TextView title = (TextView) myView.findViewById(R.id.game_over_title);
-        //title.setText();
+        TextView titleView = (TextView) myView.findViewById(R.id.game_over_title);
+        String title;
+        switch(endReason)
+        {
+            case (GlobalConstants.ESCAPE):
+                title = getResources().getString(R.string.escape_title);
+                break;
+            case (GlobalConstants.SUFFOCATED):
+                title = getResources().getString(R.string.suffocated_title);
+                break;
+            case (GlobalConstants.FROZEN):
+                title = getResources().getString(R.string.frozen_title);
+                break;
+            case (GlobalConstants.EXPLOSION):
+                title = getResources().getString(R.string.explosion_title);
+                break;
+            default:
+                title = getResources().getString(R.string.escape_title);
+                break;
+        }
+        titleView.setText(title);
+
+        TextView oreTitleView = (TextView) myView.findViewById(R.id.ore_gained_title);
+        String oreGainedTitle;
+        if (endReason == GlobalConstants.ESCAPE)
+        {
+            oreGainedTitle = getResources().getString(R.string.escaped_wording);
+        }
+        else
+        {
+            oreGainedTitle = getResources().getString(R.string.death_wording);
+        }
+        oreTitleView.setText(oreGainedTitle);
 
         Button start = (Button) myView.findViewById(R.id.gameover_main_menu_button);
         start.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +120,17 @@ public class GameOverScreen extends OnClickFragment
                 mCallback.onButtonClicked(GlobalConstants.MAIN_MENU);
             }
         });
+
+        final Button video = (Button) myView.findViewById(R.id.watch_video);
+        video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                oreMemory.updateOreStorage(oreCounter);
+                video.setVisibility(View.GONE);
+            }
+        });
+
+        setOresGained();
 
     }
 
@@ -84,7 +163,25 @@ public class GameOverScreen extends OnClickFragment
         LinearLayout.LayoutParams layoutParamsCurrentOre = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 0.3f);
         amount.setGravity(View.TEXT_ALIGNMENT_CENTER);
         amount.setLayoutParams(layoutParamsCurrentOre);
-        amount.setText("Current: " + oreArray[ii]);
+        String oreAmount;
+        if (endReason == GlobalConstants.ESCAPE)
+        {
+            oreAmount = "You mined: " + oreArray[ii];
+        }
+        else
+        {
+            Random random = new Random(oreArray[ii] * System.nanoTime());
+            for (int gg = 0; gg < oreArray[ii]; gg++)
+            {
+                if (random.nextInt(3) == 0)
+                {
+                    oresKept[ii] ++;
+                }
+            }
+            oreAmount = "You mined: " + oreArray[ii] + "\n" + "You can keep: " + oresKept[ii];
+            oreCounter.setOre(ii,oresKept[ii]);
+        }
+        amount.setText(oreAmount);
         return amount;
     }
 

@@ -115,7 +115,40 @@ public class OreMemory {
         }
     }
 
-    public void writeFile(OreCounter oreCounter)
+    public void updatePreviouslyMined(OreCounter oreCounter)
+    {
+        readFile();
+        try
+        {
+            FileOutputStream fileOutputStream = new FileOutputStream(oreFile);
+            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
+            try
+            {
+                for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
+                {
+                    int lastMined = oreCounter.getCount(ii);
+                    int totalMined = totalOreArray[ii];
+                    int currentMined = currentOreArray[ii];
+                    previouslyMinedOre[ii] = lastMined;
+                    String toWrite = Integer.toString(totalMined) + "-" + Integer.toString(currentMined) + "-" + Integer.toString(lastMined);
+                    bufferedWriter.write(toWrite);
+                    bufferedWriter.newLine();
+                }
+                bufferedWriter.close();
+                fileOutputStream.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateOreStorage(OreCounter oreCounter)
     {
         readFile();
         try
@@ -131,7 +164,40 @@ public class OreMemory {
                     int totalMined = totalOreArray[ii];
                     currentOreArray[ii] += lastMined;
                     int currentMined = currentOreArray[ii];
-                    previouslyMinedOre[ii] = lastMined;
+                    String toWrite = Integer.toString(totalMined) + "-" + Integer.toString(currentMined) + "-" + Integer.toString(lastMined);
+                    bufferedWriter.write(toWrite);
+                    bufferedWriter.newLine();
+                }
+                bufferedWriter.close();
+                fileOutputStream.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateOreStorage()
+    {
+        readFile();
+        try
+        {
+            FileOutputStream fileOutputStream = new FileOutputStream(oreFile);
+            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
+            try
+            {
+                for (int ii = 0; ii < GlobalConstants.MEMORY_LENGTH_ARRAY_ORE; ii++)
+                {
+                    int lastMined = previouslyMinedOre[ii];
+                    totalOreArray[ii] += lastMined;
+                    int totalMined = totalOreArray[ii];
+                    currentOreArray[ii] += lastMined;
+                    int currentMined = currentOreArray[ii];
                     String toWrite = Integer.toString(totalMined) + "-" + Integer.toString(currentMined) + "-" + Integer.toString(lastMined);
                     bufferedWriter.write(toWrite);
                     bufferedWriter.newLine();

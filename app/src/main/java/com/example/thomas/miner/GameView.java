@@ -49,6 +49,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     boolean initialized = false;
     BlockPhysics blockPhysics;
     BlockDrawing blockDrawing;
+    private int endReason = GlobalConstants.ESCAPE;
 
     public GameView(Context context) {
         super(context);
@@ -80,6 +81,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         mThread = new GameThread(this.getContext());
         mThread.setRunning(true);
         mThread.start();
+    }
+
+    public int getEndReason()
+    {
+        return endReason;
     }
 
 
@@ -304,8 +310,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     if(checkExit.check(c))
                     {
                         //The player has decided to exit. Save the ores and delete the level file.
-                        System.out.println("Game exit");
-                        oreMemory.writeFile(oreCounter);
+                        oreMemory.updatePreviouslyMined(oreCounter);
                         oreCounter.empty();
                         levelMemory.onEndGame();
                         gameOver = true;
@@ -313,7 +318,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     }
                     if (mainCharacter.isDead())
                     {
-                        System.out.println("Game exit");
+                        oreMemory.updatePreviouslyMined(oreCounter);
+                        endReason = mainCharacter.getDeath();
                         gameOver = true;
                         running = false;
                     }

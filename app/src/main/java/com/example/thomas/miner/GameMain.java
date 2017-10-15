@@ -62,8 +62,7 @@ public class GameMain extends OnClickFragment implements View.OnTouchListener{
 
     private void gameExit()
     {
-        final Intent menuIntent = new Intent(getActivity(), MainActivity.class);
-        startActivity(menuIntent);
+        mCallback.onButtonClicked(GlobalConstants.GAME_OVER, gameView.getEndReason());
     }
 
     @Override

@@ -75,4 +75,13 @@
     <string name="costume_details"><![CDATA[ &#8226; Mining this will unlock a random costume<br /> &#8226; Uncommon<br />]]></string>
 
 
+    //Game over screen strings
+    <string name="escape_title">You have escaped!</string>
+    <string name="suffocated_title">You ran out of oxygen!</string>
+    <string name="explosion_title">You died in an explosion!</string>
+    <string name="frozen_title">You froze!</string>
+
+    <string name="escaped_wording">You gained the following ores.</string>
+    <string name="death_wording">You died! Watch a video to keep the following ores.</string>
+
 </resources>
