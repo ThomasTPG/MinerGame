@@ -118,6 +118,10 @@ public class ShopDetails extends OnClickFragment{
                 itemName.setText(getResources().getString(R.string.dynamite_update_name));
                 setDynamiteUpdates();
                 break;
+            case (GlobalConstants.GARDENUPGRADE):
+                itemName.setText(getResources().getString(R.string.garden_update_name));
+                setDynamiteUpdates();
+                break;
         }
         setCosts();
     }
@@ -222,6 +226,24 @@ public class ShopDetails extends OnClickFragment{
         }
     }
 
+    private void setGardenLevel()
+    {
+        currentLevel.setText(getResources().getString(R.string.current_garden));
+        nextItemLevel.setText(getResources().getString(R.string.next_garden));
+        switch (shopMemory.getItem(GlobalConstants.GARDENUPGRADE))
+        {
+            case (0):
+                currentLevel.append(getResources().getString(R.string.garden_update_0));
+                nextItemLevel.append(getResources().getString(R.string.garden_update_1));
+                nextItemBenefit.setText(getResources().getString(R.string.garden_update_1_benefit));
+                break;
+            case (1):
+                currentLevel.append(getResources().getString(R.string.garden_update_1));
+                nextItemLevel.append(getResources().getString(R.string.garden_update_2));
+                nextItemBenefit.setText(getResources().getString(R.string.garden_update_2_benefit));
+                break;
+        }
+    }
 
     private LinearLayout getImageHolder(int ii)
     {
@@ -317,6 +339,9 @@ public class ShopDetails extends OnClickFragment{
             case (GlobalConstants.DYNAMITEUPGRADE):
                 getCostsDynamite();
                 break;
+            case (GlobalConstants.GARDENUPGRADE):
+                getCostsGarden();
+                break;
         }
     }
 
@@ -340,6 +365,16 @@ public class ShopDetails extends OnClickFragment{
             case (0):
                 oreTypeNeeded[GlobalConstants.EXPLODIUM] = 10;
                 oreTypeNeeded[GlobalConstants.GASROCK] = 10;
+                break;
+        }
+    }
+
+    private void getCostsGarden()
+    {
+        switch (shopMemory.getItem(item))
+        {
+            case (0):
+                oreTypeNeeded[GlobalConstants.LIFE] = 1;
                 break;
         }
     }

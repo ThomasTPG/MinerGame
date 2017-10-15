@@ -38,6 +38,15 @@
     <string name="dynamite_update_2">2</string>
     <string name="dynamite_update_2_benefit">Start each attempt with 2 dynamite.</string>
 
+    <string name="garden_update_name">Garden</string>
+    <string name="current_garden">Current garden level: </string>
+    <string name="next_garden">Next garden level: </string>
+    <string name="garden_update_0">Not yet purchased</string>
+    <string name="garden_update_1">1</string>
+    <string name="garden_update_1_benefit">Get more marble.</string>
+    <string name="garden_update_2">2</string>
+    <string name="garden_update_2_benefit">Get more life blocks.</string>
+
     //Data for the encyclopedia
     <string name="soil_name">Rock</string>
     <string name="soil_details"><![CDATA[ &#8226; foo<br /> &#8226; doo<br />]]></string>

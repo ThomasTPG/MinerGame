@@ -35,7 +35,7 @@ public class OreView extends OnClickFragment {
 
         for (int ii = GlobalConstants.SOIL; ii < GlobalConstants.NUMBEROFTYPES; ii++)
         {
-            if (encyclopediaMemory.isOreUnlocked(ii) && ii != GlobalConstants.ICE)
+            if (encyclopediaMemory.isOreUnlocked(ii) && ii != GlobalConstants.ICE && ii != GlobalConstants.COSTUMEGEM)
             {
                 LinearLayout newRow = new LinearLayout(getActivity());
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
@@ -86,6 +86,8 @@ public class OreView extends OnClickFragment {
                 return getResources().getDrawable(R.drawable.copper);
             case(GlobalConstants.IRON):
                 return getResources().getDrawable(R.drawable.iron);
+            case(GlobalConstants.TIN):
+                return getResources().getDrawable(R.drawable.tin);
             case(GlobalConstants.EXPLODIUM):
                 return getResources().getDrawable(R.drawable.explodium);
             case(GlobalConstants.MARBLE):

@@ -45,6 +45,16 @@ public class Shop extends OnClickFragment {
         ImageView imageViewHouse = (ImageView) myView.findViewById(R.id.shop_house_image);
         imageViewHouse.setImageDrawable(getHouseDrawable());
 
+        LinearLayout garden = (LinearLayout) myView.findViewById(R.id.shop_garden_item);
+        garden.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCallback.onButtonClicked(GlobalConstants.SHOP_PAGES, GlobalConstants.GARDENUPGRADE);
+            }
+        });
+        //ImageView imageViewGarden = (ImageView) myView.findViewById(R.id.shop_garden_image);
+        //imageViewGarden.setImageDrawable(getHouseDrawable());
+
         LinearLayout dynamite = (LinearLayout) myView.findViewById(R.id.shop_dynamite_item);
         dynamite.setOnClickListener(new View.OnClickListener() {
             @Override

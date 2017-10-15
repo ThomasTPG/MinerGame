@@ -128,6 +128,12 @@ public class MapArt {
                 gardenForeBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.garden_foreground_1);
                 break;
             case(1):
+                gardenBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.garden1);
+                gardenForeBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.gardenforeground2);
+                break;
+            case(2):
+                gardenBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.garden1);
+                gardenForeBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.gardenforeground3);
                 break;
             default:
                 gardenBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.garden1);
