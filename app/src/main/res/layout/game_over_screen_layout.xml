@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
+    <TextView
+        android:id="@+id/game_over_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:text="TextView" />
 
+    <TextView
+        android:id="@+id/ore_gained_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:text="TextView" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.50">
+
+        <LinearLayout
+            android:id="@+id/oresgained_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:text="Watch video"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.10"
+        android:id="@+id/watch_video" />
+
+    <Button
+        android:text="Main menu"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.10"
+        android:id="@+id/gameover_main_menu_button" />
 
 </LinearLayout>

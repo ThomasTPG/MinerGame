@@ -262,7 +262,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             c = context;
             timeNow = System.nanoTime();
             seed = (int)(timeNow%1000000);
-
         }
 
         @Override

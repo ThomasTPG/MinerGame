@@ -30,8 +30,11 @@ public class SkyObject {
     int screenHeight;
     int screenWidth;
     int blockSize;
+    int setting;
+    int number;
+    Context c;
 
-    public SkyObject(Rect skyBoundaries, int screenHeight, int screenWidth, Context context, int blockSize)
+    public SkyObject(Rect skyBoundaries, int screenHeight, int screenWidth, Context context, int blockSize, int setting, int number)
     {
         LHSSky = skyBoundaries.left;
         RHSSky = skyBoundaries.right;
@@ -40,8 +43,47 @@ public class SkyObject {
         this.screenHeight = screenHeight;
         this.screenWidth = screenWidth;
         this.blockSize = blockSize;
+        c = context;
         getRandomHeight();
-        objectBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.cloud1);
+        this.setting = setting;
+        setBitmap(number);
+    }
+
+    public void setBitmap(int number)
+    {
+        switch (setting)
+        {
+            case (GlobalConstants.SUNSET):
+                objectBitmap = BitmapFactory.decodeResource(c.getResources(), R.drawable.cloud1);
+                getRandomHeight();
+                break;
+            case(GlobalConstants.NIGHT):
+                objectBitmap = BitmapFactory.decodeResource(c.getResources(), R.drawable.cloud1);
+                getRandomHeight();
+                break;
+            case(GlobalConstants.DAY):
+                if (number == 1)
+                {
+                    objectBitmap = BitmapFactory.decodeResource(c.getResources(), R.drawable.balloon1);
+                    getBallonHeight();
+                }
+                else
+                {
+                    objectBitmap = BitmapFactory.decodeResource(c.getResources(), R.drawable.cloudday);
+                    getRandomHeight();
+                }
+                break;
+        }
+    }
+
+    public void getBallonHeight()
+    {
+        LHSObject = RHSSky;
+        RHSObject = RHSSky + blockSize * 3;
+        objectWidth = RHSObject - LHSObject;
+        bottomObject =   (int) Math.ceil((Math.random() * topSky * 0.5) - blockSize);
+        objectHeight = (int) blockSize * 3;
+        topObject = bottomObject - objectHeight;
     }
 
     public void getRandomHeight()

@@ -7,6 +7,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.icu.util.Calendar;
+
+import java.util.Date;
 
 /**
  * Created by Thomas on 21/06/2017.
@@ -41,8 +44,7 @@ public class MapArt {
     private int bottomSky;
     private int topSky;
 
-
-
+    private int setting;
 
     private ShopMemory shopMemory;
 
@@ -59,6 +61,7 @@ public class MapArt {
         blocksAcross = context.getResources().getInteger(R.integer.blocks_across);
         blocksPerScreen = context.getResources().getInteger(R.integer.blocks_per_screen_width);
         blockDimensions = blockSize;
+        setSetting();
         setGardenDimensions();
         setHouseDimensions();
         setSkyDimensions();
@@ -68,8 +71,26 @@ public class MapArt {
         skyObjects = new SkyObject[15];
         for (int ii = 0; ii < 15; ii++)
         {
-            skyObjects[ii] = new SkyObject(new Rect(LHSSky, topSky, RHSSky,bottomSky),screenHeight,screenWidth,context,blockSize);
+            skyObjects[ii] = new SkyObject(new Rect(LHSSky, topSky, RHSSky,bottomSky),screenHeight,screenWidth,context,blockSize, setting,ii);
             skyObjects[ii].setInitialLocation();
+        }
+    }
+
+    private void setSetting()
+    {
+        Date newDate  = new Date(System.currentTimeMillis());
+        int hour = newDate.getHours();
+        if (hour < 6 || hour > 20)
+        {
+            setting = GlobalConstants.NIGHT;
+        }
+        else if (hour < 19)
+        {
+            setting = GlobalConstants.DAY;
+        }
+        else
+        {
+            setting = GlobalConstants.SUNSET;
         }
     }
 
@@ -130,11 +151,22 @@ public class MapArt {
                 houseBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_shack);
                 break;
         }
-    }
+        }
 
     private void loadSkyBitmap()
     {
-        skyBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.daysky);
+        switch (setting)
+        {
+            case(GlobalConstants.SUNSET):
+                skyBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.sunsetsky);
+                break;
+            case(GlobalConstants.DAY):
+                skyBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.daysky);
+                break;
+            case (GlobalConstants.NIGHT):
+                skyBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.nightsky);
+                break;
+        }
     }
 
     public void drawArt(Canvas canvas)

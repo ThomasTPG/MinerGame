@@ -61,4 +61,7 @@ public final class GlobalConstants {
     public static final int SHOP_PAGES = 5;
     public static final int MAIN_MENU = 6;
 
+    public static final int DAY = 0;
+    public static final int NIGHT = 1;
+    public static final int SUNSET = 2;
 }
