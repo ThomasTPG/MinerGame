@@ -62,9 +62,9 @@ public class MapArt {
         blocksPerScreen = context.getResources().getInteger(R.integer.blocks_per_screen_width);
         blockDimensions = blockSize;
         setSetting();
+        setSkyDimensions();
         setGardenDimensions();
         setHouseDimensions();
-        setSkyDimensions();
         loadGardenBitmap();
         loadHouseBitmap();
         loadSkyBitmap();
@@ -153,6 +153,9 @@ public class MapArt {
             case(1):
                 houseBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_shack);
                 break;
+            case(2):
+                houseBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_caravan);
+                break;
             default:
                 houseBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.house_shack);
                 break;
@@ -170,7 +173,7 @@ public class MapArt {
                 skyBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.daysky);
                 break;
             case (GlobalConstants.NIGHT):
-                skyBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.nightsky);
+                skyBmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.nightsky2);
                 break;
         }
     }

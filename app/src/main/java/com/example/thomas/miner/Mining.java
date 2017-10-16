@@ -131,6 +131,11 @@ public class Mining {
         }
     }
 
+    public int getMiningOctant()
+    {
+        return miningOctant;
+    }
+
     public void mine()
     {
         switch (miningOctant)

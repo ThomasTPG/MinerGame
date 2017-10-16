@@ -120,7 +120,7 @@ public class ShopDetails extends OnClickFragment{
                 break;
             case (GlobalConstants.GARDENUPGRADE):
                 itemName.setText(getResources().getString(R.string.garden_update_name));
-                setDynamiteUpdates();
+                setGardenUpdates();
                 break;
         }
         setCosts();
@@ -226,7 +226,7 @@ public class ShopDetails extends OnClickFragment{
         }
     }
 
-    private void setGardenLevel()
+    private void setGardenUpdates()
     {
         currentLevel.setText(getResources().getString(R.string.current_garden));
         nextItemLevel.setText(getResources().getString(R.string.next_garden));

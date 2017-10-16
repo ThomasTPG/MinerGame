@@ -72,4 +72,7 @@ public final class GlobalConstants {
     public static final int SUFFOCATED = 2;
     public static final int FROZEN = 3;
 
+    public static final int LEFT = 0;
+    public static final int RIGHT = 1;
+
 }

@@ -91,7 +91,7 @@ public class OreEncyclopedia extends OnClickFragment
                     currentOre = GlobalConstants.WATER;
                     if (encyclopediaMemory.isOreUnlocked(currentOre))
                     {
-                        imageButton.setImageDrawable(getResources().getDrawable(R.drawable.water));
+                        imageButton.setImageDrawable(getResources().getDrawable(R.drawable.water_test));
                         whichOre = currentOre;
                     }
                     break;
@@ -99,7 +99,7 @@ public class OreEncyclopedia extends OnClickFragment
                     currentOre = GlobalConstants.GAS;
                     if (encyclopediaMemory.isOreUnlocked(currentOre))
                     {
-                        imageButton.setImageDrawable(getResources().getDrawable(R.drawable.gas));
+                        imageButton.setImageDrawable(getResources().getDrawable(R.drawable.gas_background));
                         whichOre = currentOre;
                     }
                     break;

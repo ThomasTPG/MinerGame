@@ -43,6 +43,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private boolean gameOver = false;
     private Bitmap dynamiteButton;
     private Bitmap iceBombButton;
+    private PickaxeManager pickaxeManager;
     Camera camera;
     private ActiveBombs activeBombs;
     ArrayOfBlocksOnScreen blocksOnScreen;
@@ -296,6 +297,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     mainCharacter.draw();
                     mapArt.drawForeGround(c);
                     mainCharacter.drawOxygen(c);
+                    pickaxeManager.onDraw(c);
                     drawDynamiteButton(c);
                     drawIceBombButton(c);
                     if (activeBombs.hasBombExploded())
@@ -367,6 +369,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             blockDrawing = new BlockDrawing(blocksOnScreen,mContext,blockSize, camera, gameWidth, gameHeight, encyclopediaMemory);
             mapArt = new MapArt(c,mContext,blockSize, shopMemory,camera);
             miningClass = new Mining(gameHeight, gameWidth, blocksOnScreen, blockSize, oreCounter);
+            pickaxeManager = new PickaxeManager(miningClass, c, mContext, blockSize, mainCharacter);
             checkExit = new CheckExit(camera, blockSize,mContext, gameHeight, gameWidth);
         }
 
@@ -454,6 +457,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                 //Check movement
                 if (moveLeft)
                 {
+                    mainCharacter.setDirection(GlobalConstants.LEFT);
                     Block leftTop = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - spriteDimension/2 - speed, gameHeight/2-spriteDimension/2 + TOL);
                     Block leftBottom = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - spriteDimension/2 - speed, gameHeight/2+spriteDimension/2 - TOL);
                     if (!leftBottom.isSolid() && !leftTop.isSolid())
@@ -516,6 +520,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                 }
                 if (moveRight)
                 {
+                    mainCharacter.setDirection(GlobalConstants.RIGHT);
                     Block rightTop = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + spriteDimension/2 + speed, gameHeight/2 - spriteDimension/2 + TOL);
                     Block rightBottom = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + spriteDimension/2 + speed, gameHeight/2 + spriteDimension/2 - TOL);
                     if (!rightBottom.isSolid() && !rightTop.isSolid())

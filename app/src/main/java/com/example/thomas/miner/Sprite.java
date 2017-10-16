@@ -38,6 +38,7 @@ public class Sprite {
     private int oxygenAmount;
     private boolean dead = false;
     int deathReason = GlobalConstants.ESCAPE;
+    private int direction = GlobalConstants.LEFT;
 
 
     public Sprite(Context context, Canvas canvas, int dimension, int blockSize)
@@ -95,6 +96,16 @@ public class Sprite {
             heightToClamber = 0;
         }
         return yMovement;
+    }
+
+    public void setDirection(int d)
+    {
+        direction = d;
+    }
+
+    public int getDirection()
+    {
+        return direction;
     }
 
     public int clamberX()
