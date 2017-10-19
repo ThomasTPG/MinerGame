@@ -9,11 +9,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends FragmentActivity implements OnClickFragment.OnButtonClickedListener{
+import com.google.example.games.basegameutils.BaseGameActivity;
+
+public class MainActivity extends BaseGameActivity implements OnClickFragment.OnButtonClickedListener{
     protected OnBackPressedListener onBackPressedListener;
 
     public interface OnBackPressedListener {
         void doBack();
+    }
+
+    @Override
+    public void onSignInFailed() {
+
+    }
+
+    @Override
+    public void onSignInSucceeded() {
+
     }
 
     public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {

@@ -17,6 +17,7 @@ public class Mining {
     private double softness;
     private int pickaxeHardness = 1;
     private OreCounter oreCounter;
+    private boolean miningInProcess = false;
 
 
     public Mining(int height, int width, ArrayOfBlocksOnScreen blocks, int blockSize, OreCounter oreCounter)
@@ -30,15 +31,15 @@ public class Mining {
 
     public boolean isCurrentlyMining()
     {
-        return (miningOctant != 0);
+        return (miningInProcess);
     }
 
     public void stopMining()
     {
-        if (currentlyMining!= null)
+        if (miningInProcess)
         {
             currentlyMining.resetMiningProgress();
-            currentlyMining = null;
+            miningInProcess = false;
             miningOctant = 0;
         }
     }
@@ -47,6 +48,8 @@ public class Mining {
     {
         if (!b.isSolid())
         {
+            miningInProcess = false;
+            miningOctant = 0;
             return;
         }
         if (currentlyMining != null)
@@ -54,12 +57,14 @@ public class Mining {
             if (currentlyMining.getX() == b.getX() && currentlyMining.getY() == b.getY())
             {
                 //We are still mining the same block
+                miningInProcess = true;
             }
             else
             {
                 //The block has changed
                 currentlyMining.resetMiningProgress();
                 currentlyMining = b;
+                miningInProcess = true;
                 softness = b.getSoftness();
             }
         }
@@ -67,6 +72,7 @@ public class Mining {
         {
             //We are mining a block for the first time
             currentlyMining = b;
+            miningInProcess = true;
             softness = b.getSoftness();
         }
     }
@@ -141,23 +147,20 @@ public class Mining {
         switch (miningOctant)
         {
             case (0):
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2));
                 break;
             case (1):
-                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2).isSolid()
-                        || !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 - blockSize).isSolid())
-                {
-                    setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2 - blockSize));
-                }
+                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2).isSolid() ||
+                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 - blockSize).isSolid())
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2 - blockSize));
                 break;
             case (2):
                 setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2));
                 break;
             case (3):
-                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2).isSolid()
-                        || !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + blockSize).isSolid())
-                {
-                    setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2 + blockSize));
-                }
+                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2).isSolid() ||
+                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + blockSize).isSolid())
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2 + blockSize));
                 break;
             case (4):
                 setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 - blockSize));
@@ -166,21 +169,17 @@ public class Mining {
                 setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + blockSize));
                 break;
             case (6):
-                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2).isSolid()
-                        || !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 - blockSize).isSolid())
-                {
-                    setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2 - blockSize));
-                }
+                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2).isSolid() ||
+                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 - blockSize).isSolid())
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2 - blockSize));
                 break;
             case (7):
                 setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2));
                 break;
             case (8):
-                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2).isSolid()
-                        || !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + blockSize).isSolid())
-                {
-                    setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2 + blockSize));
-                }
+                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2).isSolid() ||
+                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + blockSize).isSolid())
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2 + blockSize));
                 break;
         }
         updateMiningProgress();
@@ -191,9 +190,10 @@ public class Mining {
         Random miningRandom = new Random(System.nanoTime());
         if (miningRandom.nextDouble() * softness * pickaxeHardness > 0.1)
         {
-            if (currentlyMining != null && currentlyMining.mineFurther(oreCounter))
+            if (miningInProcess && currentlyMining.mineFurther(oreCounter))
             {
-                currentlyMining = null;
+                miningInProcess = false;
+                miningOctant = 0;
             }
         }
     }

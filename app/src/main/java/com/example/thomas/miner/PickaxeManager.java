@@ -23,6 +23,10 @@ public class PickaxeManager {
     private int restLength;
     private int restHeight;
     private int angle = 0;
+    private int angleOscillation = 0;
+    private boolean oscillationUp = false;
+    private int pickaxeSpeed = 3;
+    private int pickaxeAmp = 40;
 
     public PickaxeManager(Mining mining, Canvas c, Context context, int blockSize, Sprite sprite)
     {
@@ -44,6 +48,28 @@ public class PickaxeManager {
 
     private void getAngle()
     {
+        if (oscillationUp)
+        {
+            if (angleOscillation < pickaxeAmp)
+            {
+                angleOscillation += pickaxeSpeed;
+            }
+            else
+            {
+                oscillationUp = false;
+            }
+        }
+        else
+        {
+            if (angleOscillation > -pickaxeAmp)
+            {
+                angleOscillation -= pickaxeSpeed;
+            }
+            else
+            {
+                oscillationUp = true;
+            }
+        }
         //146
         //207
         //358
@@ -83,6 +109,10 @@ public class PickaxeManager {
             case (8):
                 angle = 45;
                 break;
+        }
+        if (miningClass.getMiningOctant() != 0 && miningClass.isCurrentlyMining())
+        {
+            angle = angle + angleOscillation;
         }
     }
 

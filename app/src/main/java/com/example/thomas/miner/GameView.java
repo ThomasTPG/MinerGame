@@ -304,10 +304,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     {
                         blocksOnScreen.explodeBlock(activeBombs.getBombBlock());
                     }
-                    if (miningClass.isCurrentlyMining())
-                    {
-                        miningClass.mine();
-                    }
+                    miningClass.mine();
                     updateCamera();
                     if(checkExit.check(c))
                     {
