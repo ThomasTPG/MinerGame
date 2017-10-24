@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.example.thomas.miner.GameView
+    <com.alienpg.release.aflatminer.GameView
         android:id="@+id/gameviewsurface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

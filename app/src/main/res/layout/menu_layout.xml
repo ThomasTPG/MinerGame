@@ -8,15 +8,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.thomas.miner.MainActivity">
+    tools:context="com.alienpg.release.aflatminer.MainActivity">
 
     <Button
         android:text="Start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
         android:layout_marginTop="62dp"
         android:id="@+id/buttonStart" />
 
@@ -46,6 +43,35 @@
         android:id="@+id/buttonEncyclopedia"
         android:layout_marginTop="29dp"
         android:layout_below="@id/buttonShop"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Achievements"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonAchievements"
+        android:layout_marginTop="29dp"
+        android:layout_below="@id/buttonEncyclopedia"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Sign In"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonSignIn"
+        android:layout_marginTop="29dp"
+        android:layout_below="@id/buttonAchievements"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <Button
+        android:text="Sign Out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonSignOut"
+        android:layout_marginTop="29dp"
+        android:layout_below="@id/buttonSignIn"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 </RelativeLayout>

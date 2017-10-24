@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "855629437817",
+    "project_id": "a-flat-miner-26024774"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855629437817:android:2f1ba6d73e56f1e4",
+        "android_client_info": {
+          "package_name": "com.alienpg.release.aflatminer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855629437817-k6ilon35ibd6rn7eqaog5rhaj97sr9a4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alienpg.release.aflatminer",
+            "certificate_hash": "2cca83eee3303683cdb14ae1323e6a9c64eb55a9"
+          }
+        },
+        {
+          "client_id": "855629437817-ce4u7qdtclbjsioopbarq5uk8hj63iti.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "855629437817-cic4vqn6or7dqoaocvt3df6gqifg9rep.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alienpg.release.aflatminer",
+            "certificate_hash": "4b4ffe081125606df6b3a6cedce2e96f74cf4ed9"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVRSCW3IFH3Hl3LdCONoPPsSWwbdOUmtI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

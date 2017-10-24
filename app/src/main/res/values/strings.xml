@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Miner</string>
+    <string name="app_name">A Flat Miner</string>
     <string name="level_data_file_name">saved_level.txt</string>
     <string name="ore_data_file_name">saved_ore.txt</string>
     <string name="shop_data_file_name">shop.txt</string>
@@ -10,8 +10,12 @@
     <string name="current_pickaxe">Current pickaxe: </string>
     <string name="next_pickaxe">Next pickaxe: </string>
     <string name="pickaxe_update_0">Wood</string>
-    <string name="pickaxe_update_1">Copper</string>
-    <string name="pickaxe_update_1_benefit">Allows you to mine iron ore.</string>
+    <string name="pickaxe_update_1">Tin</string>
+    <string name="pickaxe_update_2">Copper</string>
+    <string name="pickaxe_update_3">Iron</string>
+    <string name="pickaxe_update_1_benefit">Allows you to mine new ore.</string>
+    <string name="pickaxe_update_2_benefit">Allows you to mine new ore.</string>
+    <string name="pickaxe_update_3_benefit">Allows you to mine new ore.</string>
 
     <string name="airtank_update_name">Air Tank</string>
     <string name="current_air_tank">Current air tank: </string>
@@ -92,5 +96,17 @@
 
     <string name="escaped_wording">You gained the following ores.</string>
     <string name="death_wording">You died! Watch a video to keep the following ores.</string>
+
+    <string name="app_id">855629437817</string>
+
+
+    <string name="day_man">CgkI-bb0u_MYEAIQAQ</string>
+    <string name="night_man">CgkI-bb0u_MYEAIQAg</string>
+    <string name="champion_of_the_sun">CgkI-bb0u_MYEAIQAw</string>
+    <string name="naturism">CgkI-bb0u_MYEAIQBA</string>
+    <string name="blast_miner">CgkI-bb0u_MYEAIQBQ</string>
+    <string name="freeze_thaw">CgkI-bb0u_MYEAIQBg</string>
+    <string name="chain_reaction_i">CgkI-bb0u_MYEAIQBw</string>
+    <string name="poisoning_the_well">CgkI-bb0u_MYEAIQCA</string>
 
 </resources>
