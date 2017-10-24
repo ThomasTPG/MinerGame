@@ -18,6 +18,8 @@ public class BlockPhysics {
     Achievements achievementManager;
     Context mContext;
 
+    public static final int GAS_THRESHOLD = 0;
+
     public BlockPhysics(ArrayOfBlocksOnScreen arrayOfBlocksOnScreen, ActiveBombs activeBombs, Context context, Achievements achievements)
     {
         this.activeBombs = activeBombs;
@@ -54,7 +56,7 @@ public class BlockPhysics {
                 updateFallingBlocks(ii,jj);
                 createGas(ii,jj);
                 decayGas(ii,jj);
-                blowUpGas(ii,jj);
+                checkBlowingUpGas(ii,jj);
                 blowUpExplodium(ii,jj);
                 checkDynamiteFall(ii,jj);
             }
@@ -62,39 +64,41 @@ public class BlockPhysics {
         blocksOnScreen.setBlockArray(blockArray);
     }
 
-
-    private void blowUpGas(int ii, int jj)
+    private boolean blowUpGas(int ii, int jj)
     {
+        if (blockArray[ii][jj].getGasPercentage() > GAS_THRESHOLD)
+        {
+            blockArray[ii][jj].blowUp();
+            return true;
+        }
+        return false;
+    }
+
+    private void checkBlowingUpGas(int ii, int jj)
+    {
+        boolean detonated = false;
         if (blockArray[ii][jj].isFire())
         {
             if (ii > 0)
             {
-                if (blockArray[ii-1][jj].getGasPercentage() > 0)
-                {
-                    blockArray[ii-1][jj].blowUp();
-                }
+                detonated = blowUpGas(ii-1,jj);
             }
             if (ii < horizontalBlockLimit-1)
             {
-                if (blockArray[ii+1][jj].getGasPercentage() > 0)
-                {
-                    blockArray[ii+1][jj].blowUp();
-                }
+                detonated = blowUpGas(ii+1,jj);
             }
             if (jj < verticalBlockLimit - 1)
             {
-                if (blockArray[ii][jj+1].getGasPercentage() > 0)
-                {
-                    blockArray[ii][jj+1].blowUp();
-                }
+                detonated = blowUpGas(ii,jj+1);
             }
             if (jj > 0)
             {
-                if (blockArray[ii][jj-1].getGasPercentage() > 0)
-                {
-                    blockArray[ii][jj-1].blowUp();
-                }
+                detonated = blowUpGas(ii,jj-1);
             }
+        }
+        if (blockArray[ii][jj].getAchievementChainReactionII() && detonated)
+        {
+            achievementManager.unlockAchievement(mContext.getResources().getString(R.string.chain_reaction_ii));
         }
     }
 
@@ -312,14 +316,12 @@ public class BlockPhysics {
                         //Check explodium
                         if (blockArray[ii][jj+2].isSolid() && blockArray[ii][jj+1].getType() ==GlobalConstants.EXPLODIUM)
                         {
+                            achievementManager.checkOops(blockArray[ii][jj+1]);
                             blocksOnScreen.explodeBlock(blockArray[ii][jj+1]);
                         }
                         if (blockArray[ii][jj+2].getType() == GlobalConstants.EXPLODIUM)
                         {
-                            if (blockArray[ii][jj+1].getHeightFallen() >= 7)
-                            {
-                                achievementManager.unlockAchievement(mContext.getResources().getString(R.string.chain_reaction_i));
-                            }
+                            achievementManager.checkChainReactionI(blockArray[ii][jj+1]);
                             blocksOnScreen.explodeBlock(blockArray[ii][jj+2]);
                         }
 

@@ -195,6 +195,7 @@ public class ArrayOfBlocksOnScreen {
                     {
                         if (x + aa < horizontalBlockLimit && x + aa >= 0 && y + bb >=0 && y + bb < verticalBlockLimit)
                         {
+                            achievementManager.checkChainReactionII(block, blockArray[x + aa][y + bb]);
                             blockArray[x + aa][y + bb].blowUp();
                         }
                     }

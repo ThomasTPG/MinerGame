@@ -111,7 +111,7 @@ public class Sprite {
         else
         {
             yMovement = -heightToClamber;
-            isAir = false;
+            setInAir(false);
             heightToClamber = 0;
         }
         return yMovement;
@@ -160,7 +160,7 @@ public class Sprite {
 
     public int getGravitySpeed(int gap)
     {
-        isAir = !(gap % mBlockSize == 0);
+        setInAir(!(gap % mBlockSize == 0));
         if (gap == baseGravitySpeed)
         {
             return baseGravitySpeed;
@@ -193,7 +193,7 @@ public class Sprite {
     {
         heightLeftToJump = heightToJump;
         jumping = true;
-        isAir = true;
+        setInAir(true);
     }
 
     public boolean isInAir()
@@ -210,7 +210,7 @@ public class Sprite {
         }
         else
         {
-            isAir = false;
+            setInAir(false);
             jumping = false;
             return heightLeftToJump;
         }

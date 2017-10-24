@@ -13,6 +13,9 @@ public class Achievements {
 
     GoogleApiClient mGoogleApiClient = null;
     Context mContext;
+    private int screenWidth;
+    private int screenHeight;
+    ArrayOfBlocksOnScreen blocksOnScreen;
 
     public Achievements(Context context) {
         mContext = context;
@@ -22,6 +25,14 @@ public class Achievements {
     {
         mGoogleApiClient = googleApiClient;
     }
+
+    public void initialize(int screenWidth, int screenHeight, ArrayOfBlocksOnScreen arrayOfBlocksOnScreen)
+    {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        blocksOnScreen = arrayOfBlocksOnScreen;
+    }
+
 
     public void unlockAchievement(String my_achievement_id)
     {
@@ -46,4 +57,37 @@ public class Achievements {
             unlockAchievement(mContext.getResources().getString(R.string.champion_of_the_sun));
         }
     }
+
+    public void checkOops(Block explodium)
+    {
+        if (explodium.getIndex() == blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(screenWidth/2, screenHeight/2).getIndex())
+        {
+            unlockAchievement(mContext.getResources().getString(R.string.oops));
+        }
+    }
+
+
+    public void checkChainReactionI(Block fallen)
+    {
+        if (fallen.getHeightFallen() >= 7)
+        {
+            unlockAchievement(mContext.getResources().getString(R.string.chain_reaction_i));
+        }
+    }
+
+    public void checkChainReactionII(Block explodium, Block exploding)
+    {
+        if (explodium.getHeightFallen() >= 5)
+        {
+            if (exploding.getGasPercentage() > BlockPhysics.GAS_THRESHOLD)
+            {
+                unlockAchievement(mContext.getResources().getString(R.string.chain_reaction_ii));
+            }
+            else
+            {
+                exploding.setAchievementChainReactionII();
+            }
+        }
+    }
+
 }

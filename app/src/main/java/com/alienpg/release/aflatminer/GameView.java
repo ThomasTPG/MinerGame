@@ -377,6 +377,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             blocksOnScreen = new ArrayOfBlocksOnScreen(gameWidth, gameHeight, blockSize, mContext, seed, camera, minedLocations, achievementsManager);
             blocksOnScreen.updateCurrentScreenDimensions();
             blocksOnScreen.updatePreviousScreenDimensions();
+            achievementsManager.initialize(gameWidth,gameHeight,blocksOnScreen );
             mainCharacter.setBlocksOnScreen(blocksOnScreen);
             blockPhysics = new BlockPhysics(blocksOnScreen, activeBombs, mContext, achievementsManager);
             inGameNotifications = new InGameNotifications(gameWidth, gameHeight, blockSize, mContext);

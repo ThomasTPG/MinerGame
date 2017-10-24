@@ -29,6 +29,7 @@ public class Block {
     private boolean currentlyBeingMined = false;
     private int surroundingIce = 0;
     private int heightFallen = 0;
+    private boolean achievementChainReactionII = false;
 
     //If this is a crystal block, we need to record the maximum ice that has surrounded it.
     private boolean frozen = false;
@@ -292,6 +293,7 @@ public class Block {
                 {
                     setWaterPercentage(waterProducedFromIce);
                 }
+                achievementChainReactionII =false;
                 saveToMemory();
             }
         };
@@ -572,6 +574,16 @@ public class Block {
     public void resetHeightFallen()
     {
         heightFallen = 0;
+    }
+
+    public void setAchievementChainReactionII()
+    {
+        achievementChainReactionII = true;
+    }
+
+    public boolean getAchievementChainReactionII()
+    {
+        return achievementChainReactionII;
     }
 
 }
