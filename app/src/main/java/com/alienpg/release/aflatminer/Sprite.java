@@ -40,9 +40,13 @@ public class Sprite {
     private Bitmap airOuter;
     private Bitmap airInner;
     private ShopMemory shopMemory;
+    private int takeOffDepth = 0;
+    private int landingDepth = 0;
+    private int takeOffX = 0;
+    private int landingX = 0;
+    private Achievements achievementManager;
 
-
-    public Sprite(Context context, Canvas canvas, int dimension, int blockSize)
+    public Sprite(Context context, Canvas canvas, int dimension, int blockSize, Achievements achievements)
     {
         mBlockSize = blockSize;
         mCanvas = canvas;
@@ -59,6 +63,7 @@ public class Sprite {
         shopMemory = new ShopMemory(context);
         setMaxOxygenAmount();
         oxygenAmount = maxOxygenAmount;
+        achievementManager = achievements;
     }
 
     private void setMaxOxygenAmount()
@@ -183,6 +188,25 @@ public class Sprite {
 
     public void setInAir(boolean air)
     {
+        if (!isAir && air)
+        {
+            takeOffDepth = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getY();
+            takeOffX = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getX();
+            landingDepth = takeOffDepth;
+        }
+        else if (isAir && ! air)
+        {
+            landingDepth = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getY();
+            landingX = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getX();
+            if (landingDepth - takeOffDepth > 20)
+            {
+                achievementManager.unlockAchievement(mContext.getResources().getString(R.string.falling_with_style_i));
+            }
+            if (Math.abs(landingX - takeOffX) > 19)
+            {
+                achievementManager.unlockAchievement(mContext.getResources().getString(R.string.falling_with_style_ii));
+            }
+        }
         isAir = air;
     }
 
