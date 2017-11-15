@@ -1,6 +1,7 @@
 package com.alienpg.release.aflatminer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import java.util.Random;
 
@@ -30,6 +31,7 @@ public class Block {
     private int surroundingIce = 0;
     private int heightFallen = 0;
     private boolean achievementChainReactionII = false;
+    private Bitmap mBitmap;
 
     //If this is a crystal block, we need to record the maximum ice that has surrounded it.
     private boolean frozen = false;
@@ -573,6 +575,11 @@ public class Block {
     public boolean getAchievementChainReactionII()
     {
         return achievementChainReactionII;
+    }
+
+    protected void setBitmap(Bitmap b)
+    {
+        mBitmap = b;
     }
 
 }
