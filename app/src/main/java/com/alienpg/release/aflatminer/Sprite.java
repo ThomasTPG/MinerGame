@@ -198,11 +198,11 @@ public class Sprite {
         {
             landingDepth = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getY();
             landingX = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getX();
-            if (landingDepth - takeOffDepth > 20)
+            if (landingDepth - takeOffDepth > 19)
             {
                 achievementManager.unlockAchievement(mContext.getResources().getString(R.string.falling_with_style_i));
             }
-            if (Math.abs(landingX - takeOffX) > 19)
+            if (Math.abs(landingX - takeOffX) > 14)
             {
                 achievementManager.unlockAchievement(mContext.getResources().getString(R.string.falling_with_style_ii));
             }

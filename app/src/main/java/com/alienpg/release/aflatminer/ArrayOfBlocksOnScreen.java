@@ -232,12 +232,30 @@ public class ArrayOfBlocksOnScreen {
                         }
                         break;
                     case(ActiveBombs.ICEBOMB):
+                        int numberConverted = 0;
+                        int numberGas = 0;
                         for (int aa = -1; aa <=1; aa++)
                         {
                             for (int bb = -1; bb<=1; bb++)
                             {
+                                if (blockArray[x+aa][y+bb].getType() == GlobalConstants.CAVERN)
+                                {
+                                    numberConverted ++;
+                                }
+                                if (blockArray[x+aa][y+bb].getGasPercentage() > 0)
+                                {
+                                    numberGas ++;
+                                }
                                 blockArray[x + aa][y + bb].detonateIceBomb();
                             }
+                        }
+                        if (numberConverted == 0)
+                        {
+                            achievementManager.unlockAchievement(context.getResources().getString(R.string.what_a_waste));
+                        }
+                        if (numberGas == 8)
+                        {
+                            achievementManager.unlockAchievement(context.getResources().getString(R.string.states_of_matter));
                         }
                         break;
                     default:

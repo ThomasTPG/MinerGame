@@ -8,6 +8,7 @@ public class BlockStatusData {
 
     int type;
     int minedPercentage = 0;
+    int heightFallen = 0;
 
     public BlockStatusData()
     {
@@ -45,5 +46,20 @@ public class BlockStatusData {
     {
         type = Integer.parseInt(dataString.split("!")[0]);
         minedPercentage = Integer.parseInt(dataString.split("!")[1]);
+    }
+
+    public void increaseFallenDistance()
+    {
+        heightFallen ++;
+    }
+
+    public int getHeightFallen()
+    {
+        return heightFallen;
+    }
+
+    public void resetHeightFallen()
+    {
+        heightFallen = 0;
     }
 }

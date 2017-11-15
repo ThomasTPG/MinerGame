@@ -310,6 +310,7 @@ public class BlockPhysics {
                     blockArray[ii][jj].saveToMemory();
                     blockArray[ii][jj+1].saveToMemory();
                     blockArray[ii][jj+1].increaseFallenDistance();
+                    System.out.println("DISTANCE FALLEN" + blockArray[ii][jj+1].getHeightFallen());
 
                     if (jj < verticalBlockLimit - 2)
                     {

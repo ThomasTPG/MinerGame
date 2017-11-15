@@ -365,7 +365,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             camera.setCameraX(pixelsAcross/2);
             camera.setCameraY( - spriteDimension);
             minedLocations = new MinedLocations();
-            mainCharacter = new Sprite(mContext, c, spriteDimension, blockSize);
+            mainCharacter = new Sprite(mContext, c, spriteDimension, blockSize, achievementsManager);
             levelMemory = new LevelMemory(mContext,minedLocations, seed, camera, oreCounter, mainCharacter);
             oreMemory = new OreMemory(mContext);
             shopMemory = new ShopMemory(mContext);
@@ -381,7 +381,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             mainCharacter.setBlocksOnScreen(blocksOnScreen);
             blockPhysics = new BlockPhysics(blocksOnScreen, activeBombs, mContext, achievementsManager);
             inGameNotifications = new InGameNotifications(gameWidth, gameHeight, blockSize, mContext);
-            blockDrawing = new BlockDrawing(blocksOnScreen,mContext,blockSize, camera, gameWidth, gameHeight, encyclopediaMemory, inGameNotifications);
+            blockDrawing = new BlockDrawing(blocksOnScreen,mContext,blockSize, camera, gameWidth, gameHeight, encyclopediaMemory, inGameNotifications, achievementsManager);
             mapArt = new MapArt(c,mContext,blockSize, shopMemory,camera);
             miningClass = new Mining(gameHeight, gameWidth, blocksOnScreen, blockSize, oreCounter, shopMemory, inGameNotifications);
             pickaxeManager = new PickaxeManager(miningClass, c, mContext, blockSize, mainCharacter,shopMemory);

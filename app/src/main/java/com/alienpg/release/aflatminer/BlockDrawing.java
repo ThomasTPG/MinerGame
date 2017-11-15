@@ -77,8 +77,9 @@ public class BlockDrawing {
     private Bitmap leftSurroundBorder;
     private Bitmap allBorders;
     private InGameNotifications inGameNotifications;
+    private Achievements achievementManager;
 
-    public BlockDrawing(ArrayOfBlocksOnScreen arrayOfBlocksOnScreen, Context context, int blockDimensions, Camera camera, int gameWidth, int gameHeight, EncyclopediaMemory encyclopediaMemory, InGameNotifications inGameNotifications)
+    public BlockDrawing(ArrayOfBlocksOnScreen arrayOfBlocksOnScreen, Context context, int blockDimensions, Camera camera, int gameWidth, int gameHeight, EncyclopediaMemory encyclopediaMemory, InGameNotifications inGameNotifications, Achievements achievements)
     {
         blocksOnScreen = arrayOfBlocksOnScreen;
         blocksHorizontalScreen = blocksOnScreen.getBlocksHorizontalScreen();
@@ -91,6 +92,8 @@ public class BlockDrawing {
         mGameHeight = gameHeight;
         mGameWidth = gameWidth;
         this.inGameNotifications = inGameNotifications;
+        achievementManager = achievements;
+        achievementManager.checkEncyclopediaUnlock(encyclopediaMemory.getNumberUnlocked());
         loadBitmaps();
     }
 
@@ -153,6 +156,7 @@ public class BlockDrawing {
 
     private void checkEncyclopedia(Block block)
     {
+        boolean newUnlock = false;
         int type = block.getType();
         if (!encyclopediaMemory.isOreUnlocked(GlobalConstants.WATER))
         {
@@ -163,6 +167,7 @@ public class BlockDrawing {
                     encyclopediaMemory.writeFile(GlobalConstants.WATER);
                     inGameNotifications.setCurrentNotification(InGameNotifications.NEW_ENCYCLOPEDIA_ENTRY);
                     inGameNotifications.setBitmap(waterBitmap);
+                    newUnlock = true;
                 }
             }
         }
@@ -175,6 +180,7 @@ public class BlockDrawing {
                     encyclopediaMemory.writeFile(GlobalConstants.GAS);
                     inGameNotifications.setCurrentNotification(InGameNotifications.NEW_ENCYCLOPEDIA_ENTRY);
                     inGameNotifications.setBitmap(gasBitmap);
+                    newUnlock = true;
                 }
             }
         }
@@ -182,11 +188,16 @@ public class BlockDrawing {
         {
             encyclopediaMemory.writeFile(type);
             Bitmap b = workOutBitmap(block);
-            if ((b != null))
+            if ((b != null && block.getType() != GlobalConstants.FIREBALL))
             {
                 inGameNotifications.setCurrentNotification(InGameNotifications.NEW_ENCYCLOPEDIA_ENTRY);
                 inGameNotifications.setBitmap(b);
+                newUnlock = true;
             }
+        }
+        if (newUnlock)
+        {
+            achievementManager.checkEncyclopediaUnlock(encyclopediaMemory.getNumberUnlocked());
         }
     }
 

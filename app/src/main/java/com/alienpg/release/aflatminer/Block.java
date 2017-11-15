@@ -563,17 +563,17 @@ public class Block {
 
     public void increaseFallenDistance()
     {
-        heightFallen ++;
+        blockStatusData.increaseFallenDistance();
     }
 
     public int getHeightFallen()
     {
-        return heightFallen;
+        return blockStatusData.getHeightFallen();
     }
 
     public void resetHeightFallen()
     {
-        heightFallen = 0;
+        blockStatusData.resetHeightFallen();
     }
 
     public void setAchievementChainReactionII()

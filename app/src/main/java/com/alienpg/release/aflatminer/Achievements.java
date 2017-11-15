@@ -90,4 +90,16 @@ public class Achievements {
         }
     }
 
+    public void checkEncyclopediaUnlock(int numberUnlocked)
+    {
+        if (numberUnlocked >= 15)
+        {
+            unlockAchievement(mContext.getResources().getString(R.string.page_turner_ii));
+        }
+        if (numberUnlocked >= 10)
+        {
+            unlockAchievement(mContext.getResources().getString(R.string.page_turner_i));
+        }
+    }
+
 }

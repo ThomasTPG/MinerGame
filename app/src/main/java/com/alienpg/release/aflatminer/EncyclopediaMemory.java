@@ -21,6 +21,7 @@ public class EncyclopediaMemory {
 
     private File oreFile;
     private int[] oreArray;
+    private int unlocked = 0;
 
     public EncyclopediaMemory(Context context)
     {
@@ -29,6 +30,7 @@ public class EncyclopediaMemory {
         oreArray = new int[GlobalConstants.MEMORY_LENGTH_ARRAY_ORE];
         checkFileExists();
         readFile();
+        countUnlocked();
     }
 
     public void checkFileExists()
@@ -131,6 +133,7 @@ public class EncyclopediaMemory {
         {
             e.printStackTrace();
         }
+        countUnlocked();
     }
 
     public boolean isOreUnlocked(int ore)
@@ -140,6 +143,24 @@ public class EncyclopediaMemory {
             return true;
         }
         return false;
+    }
+
+    private void countUnlocked()
+    {
+        int count = 0;
+        for (int ii = GlobalConstants.BOULDER; ii <= GlobalConstants. GAS; ii ++)
+        {
+            if (ii != GlobalConstants.FIREBALL)
+            {
+                count = count + oreArray[ii];
+            }
+        }
+        unlocked = count;
+    }
+
+    public int getNumberUnlocked()
+    {
+        return unlocked;
     }
 
 }
