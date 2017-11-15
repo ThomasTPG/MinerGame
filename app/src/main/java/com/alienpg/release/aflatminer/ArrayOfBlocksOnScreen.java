@@ -82,6 +82,12 @@ public class ArrayOfBlocksOnScreen {
         return blockArray[coords[0]][coords[1]];
     }
 
+    public void setBlockUsingScreenCoordinates(int x, int y, Block b)
+    {
+        int[] coords = getBlockArrayIndicesFromScreenCoordinates(x, y);
+        blockArray[coords[0]][coords[1]] = b;
+    }
+
     public void calculateCurrentBlocks()
     {
         int screenTopLeftX = (int)Math.floor((mCamera.getCameraX() - mGameWidth/2));

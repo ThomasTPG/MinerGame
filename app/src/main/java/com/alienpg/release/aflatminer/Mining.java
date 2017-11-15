@@ -226,9 +226,46 @@ public class Mining {
         {
             if (miningInProcess && currentlyMining.mineFurther(oreCounter))
             {
+                getRidOfBlock();
                 miningInProcess = false;
                 miningOctant = 0;
             }
         }
+    }
+
+    public void getRidOfBlock() {
+        Coordinates coordinates = new Coordinates();
+        switch (miningOctant) {
+            case (0):
+                coordinates.setCoordinates(gameWidth / 2, gameHeight / 2);
+                break;
+            case (1):
+                coordinates.setCoordinates(gameWidth / 2 - blockSize, gameHeight / 2 - blockSize);
+                break;
+            case (2):
+                coordinates.setCoordinates(gameWidth / 2 - blockSize, gameHeight / 2);
+                break;
+            case (3):
+                coordinates.setCoordinates(gameWidth / 2 - blockSize, gameHeight / 2 + blockSize);
+                break;
+            case (4):
+                coordinates.setCoordinates(gameWidth / 2, gameHeight / 2 - blockSize);
+                break;
+            case (5):
+                coordinates.setCoordinates(gameWidth / 2, gameHeight / 2 + blockSize);
+                break;
+            case (6):
+                coordinates.setCoordinates(gameWidth / 2 + blockSize, gameHeight / 2 - blockSize);
+                break;
+            case (7):
+                coordinates.setCoordinates(gameWidth / 2 + blockSize, gameHeight / 2);
+                break;
+            case (8):
+                coordinates.setCoordinates(gameWidth / 2 + blockSize, gameHeight / 2 + blockSize);
+                break;
+        }
+        Block oldBlock = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(coordinates.getX(), coordinates.getY());
+        CavernBlock newBlock = new CavernBlock(oldBlock);
+        blocksOnScreen.setBlockUsingScreenCoordinates(coordinates.getX(), coordinates.getY(), newBlock);
     }
 }

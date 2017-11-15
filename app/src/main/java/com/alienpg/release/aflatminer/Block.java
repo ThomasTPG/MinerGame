@@ -51,6 +51,37 @@ public class Block {
         determineType();
     }
 
+    public Block(Block oldBlock)
+    {
+        index = oldBlock.getIndex();
+        xCoord = oldBlock.getX();
+        yCoord = oldBlock.getY();
+        context = oldBlock.getContext();
+        blocksAcross = context.getResources().getInteger(R.integer.blocks_across);
+        blocksPerScreen = context.getResources().getInteger(R.integer.blocks_per_screen_width);
+        seed = oldBlock.getSeed();
+        blockLiquidData = oldBlock.getBlockLiquidData();
+        blockStatusData = oldBlock.getBlockStatusData();
+        mMinedLocations = oldBlock.getmMinedLocations();
+        saveToMemory();
+        determineType();
+    }
+
+    public MinedLocations getmMinedLocations()
+    {
+        return mMinedLocations;
+    }
+
+    int getSeed()
+    {
+        return seed;
+    }
+
+    public Context getContext()
+    {
+        return context;
+    }
+
     private void determineType()
     {
         if (mMinedLocations.isItemContained(index))
@@ -237,7 +268,7 @@ public class Block {
             {
                 blockLiquidData.setWaterPercentage(0);
             }
-            setType(GlobalConstants.CAVERN);
+            //setType(GlobalConstants.CAVERN);
             saveToMemory();
             blockStatusData.setMinedPercentage(0);
             currentlyBeingMined = false;
@@ -310,7 +341,7 @@ public class Block {
         explode();
     }
 
-    private void setType(int newType)
+    protected void setType(int newType)
     {
         blockStatusData.setType(newType);
         setSoftness();
@@ -404,7 +435,10 @@ public class Block {
         }
     }
 
-
+    protected void setSoftness(int pickaxeType)
+    {
+        pickaxeRequired = pickaxeType;
+    }
     private void setSoftness()
     {
         switch (blockStatusData.getType())
