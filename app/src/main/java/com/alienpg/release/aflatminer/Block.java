@@ -244,7 +244,6 @@ public class Block {
         return false;
     }
 
-
     public void detonateIceBomb()
     {
         setBomb(ActiveBombs.NO_BOMB);
@@ -510,17 +509,7 @@ public class Block {
             }
         }
     }
-
-    public boolean getFrozen()
-    {
-        return frozen;
-    }
-
-    public boolean setFrozen(boolean currentIce)
-    {
-        return frozen = frozen || currentIce;
-    }
-
+    
     public void setBomb(int type)
     {
         bombType = type;
