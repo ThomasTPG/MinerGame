@@ -195,6 +195,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             {
                 int midX = gameWidth/2;
                 int midY = gameHeight/2;
+                Coordinates myCoords = new Coordinates(gameWidth/2, gameHeight/2);
                 if (Math.abs(e.getX() - midX) < blockSize * 3/2)
                 {
                     if (Math.abs(e.getY() - midY) < blockSize * 3/2)
@@ -210,7 +211,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     //Player has pressed dynamite button
                     if (activeBombs.newBomb(ActiveBombs.DYNAMITE, camera.getCameraX(),camera.getCameraY()))
                     {
-                        Block current = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2);
+                        Block current = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords);
                         activeBombs.setBlock(current);
                     }
                 }
@@ -219,7 +220,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     //Player has pressed icebomb button
                     if (activeBombs.newBomb(ActiveBombs.ICEBOMB, camera.getCameraX(),camera.getCameraY()))
                     {
-                        Block current = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2);
+                        Block current = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords);
                         activeBombs.setBlock(current);
                     }
                 }
@@ -429,7 +430,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
         {
             int newCameraX = camera.getCameraX();
             int newCameraY = camera.getCameraY();
-            Block bottom = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + spriteDimension/2);
+            Block bottom = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 + spriteDimension/2));
             if (mainCharacter.isClambering())
             {
                 newCameraY = newCameraY + mainCharacter.clamberY();
@@ -445,8 +446,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
 
                 //Check gravity - if there is an entire empty block beneath us, fall down
-                Block bottomLeft = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - spriteDimension/2 + TOL, gameHeight/2 + spriteDimension/2 + baseGravitySpeed);
-                Block bottomRight = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + spriteDimension/2 - TOL, gameHeight/2 + spriteDimension/2 + baseGravitySpeed);
+                Block bottomLeft = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 - spriteDimension/2 + TOL, gameHeight/2 + spriteDimension/2 + baseGravitySpeed));
+                Block bottomRight = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 + spriteDimension/2 - TOL, gameHeight/2 + spriteDimension/2 + baseGravitySpeed));
                 //System.out.println("Y = " + bottomLeft.getY() + " " + bottomRight.getY());
                 if (!mainCharacter.isJumping())
                 {
@@ -469,12 +470,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                 if (moveLeft)
                 {
                     mainCharacter.setDirection(GlobalConstants.LEFT);
-                    Block leftTop = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - spriteDimension/2 - speed, gameHeight/2-spriteDimension/2 + TOL);
-                    Block leftBottom = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - spriteDimension/2 - speed, gameHeight/2+spriteDimension/2 - TOL);
+                    Block leftTop = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 - spriteDimension/2 - speed, gameHeight/2-spriteDimension/2 + TOL));
+                    Block leftBottom = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 - spriteDimension/2 - speed, gameHeight/2+spriteDimension/2 - TOL));
                     if (!leftBottom.isSolid() && !leftTop.isSolid())
                     {
                         newCameraX = newCameraX - speed;
-                        Block below = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + blockSize);
+                        Block below = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 + blockSize));
                         if (mainCharacter.isInWater() || below.getWaterPercentage() == 100)
                         {
                             blocksOnScreen.moveWaterLeft();
@@ -508,9 +509,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                         if (gap%blockSize == 0 && mainCharacter.isInAir())
                         {
                             //See if we should clamber up
-                            Block above = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 - blockSize + spriteDimension/2);
-                            Block aboveLeft = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2 - blockSize + spriteDimension/2);
-                            Block below = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + spriteDimension/2 + blockSize);
+                            Block above = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 - blockSize + spriteDimension/2));
+                            Block aboveLeft = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 - blockSize, gameHeight/2 - blockSize + spriteDimension/2));
+                            Block below = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 + spriteDimension/2 + blockSize));
                             if (!above.isSolid() && !aboveLeft.isSolid() && !below.isSolid())
                             {
                                 //Start clambering
@@ -532,12 +533,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                 if (moveRight)
                 {
                     mainCharacter.setDirection(GlobalConstants.RIGHT);
-                    Block rightTop = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + spriteDimension/2 + speed, gameHeight/2 - spriteDimension/2 + TOL);
-                    Block rightBottom = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + spriteDimension/2 + speed, gameHeight/2 + spriteDimension/2 - TOL);
+                    Block rightTop = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 + spriteDimension/2 + speed, gameHeight/2 - spriteDimension/2 + TOL));
+                    Block rightBottom = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 + spriteDimension/2 + speed, gameHeight/2 + spriteDimension/2 - TOL));
                     if (!rightBottom.isSolid() && !rightTop.isSolid())
                     {
                         newCameraX = newCameraX + speed;
-                        Block below = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + blockSize);
+                        Block below = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 + blockSize));
                         if (mainCharacter.isInWater() || below.getWaterPercentage() == 100)
                         {
                             blocksOnScreen.moveWaterRight();
@@ -562,9 +563,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                         if (gap%blockSize == 0 && mainCharacter.isInAir())
                         {
                             //See if we should clamber up
-                            Block above = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 - blockSize + spriteDimension/2);
-                            Block aboveRight = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2 - blockSize + spriteDimension/2);
-                            Block below = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + spriteDimension/2 + blockSize);
+                            Block above = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 - blockSize + spriteDimension/2));
+                            Block aboveRight = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 + blockSize, gameHeight/2 - blockSize + spriteDimension/2));
+                            Block below = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 + spriteDimension/2 + blockSize));
                             if (!above.isSolid() && !aboveRight.isSolid() && !below.isSolid())
                             {
                                 //Start clambering
@@ -581,8 +582,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                 }
                 if (jumpQueued && !mainCharacter.isInAir())
                 {
-                    Block topRight = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - spriteDimension/2 + TOL, gameHeight/2 - blockSize);
-                    Block topLeft = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + spriteDimension/2 - TOL, gameHeight/2 - blockSize);
+                    Block topRight = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 - spriteDimension/2 + TOL, gameHeight/2 - blockSize));
+                    Block topLeft = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 + spriteDimension/2 - TOL, gameHeight/2 - blockSize));
                     int jumpHeight = blockSize - spriteDimension;
                     if (!topLeft.isSolid() && !topRight.isSolid())
                     {

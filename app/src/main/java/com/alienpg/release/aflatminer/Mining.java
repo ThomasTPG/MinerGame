@@ -149,39 +149,39 @@ public class Mining {
         switch (miningOctant)
         {
             case (0):
-                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2));
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2)));
                 break;
             case (1):
-                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2).isSolid() ||
-                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 - blockSize).isSolid())
-                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2 - blockSize));
+                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 - blockSize, gameHeight/2)).isSolid() ||
+                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 - blockSize)).isSolid())
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 - blockSize, gameHeight/2 - blockSize)));
                 break;
             case (2):
-                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2));
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 - blockSize, gameHeight/2)));
                 break;
             case (3):
-                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2).isSolid() ||
-                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + blockSize).isSolid())
-                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 - blockSize, gameHeight/2 + blockSize));
+                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 - blockSize, gameHeight/2)).isSolid() ||
+                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 + blockSize)).isSolid())
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 - blockSize, gameHeight/2 + blockSize)));
                 break;
             case (4):
-                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 - blockSize));
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 - blockSize)));
                 break;
             case (5):
-                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + blockSize));
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 + blockSize)));
                 break;
             case (6):
-                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2).isSolid() ||
-                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 - blockSize).isSolid())
-                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2 - blockSize));
+                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 + blockSize, gameHeight/2)).isSolid() ||
+                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 - blockSize)).isSolid())
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 + blockSize, gameHeight/2 - blockSize)));
                 break;
             case (7):
-                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2));
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 + blockSize, gameHeight/2)));
                 break;
             case (8):
-                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2).isSolid() ||
-                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2, gameHeight/2 + blockSize).isSolid())
-                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(gameWidth/2 + blockSize, gameHeight/2 + blockSize));
+                if (!blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 + blockSize, gameHeight/2)).isSolid() ||
+                        !blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2, gameHeight/2 + blockSize)).isSolid())
+                setCurrentlyMining(blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(gameWidth/2 + blockSize, gameHeight/2 + blockSize)));
                 break;
         }
         if (miningInProcess)
@@ -264,8 +264,8 @@ public class Mining {
                 coordinates.setCoordinates(gameWidth / 2 + blockSize, gameHeight / 2 + blockSize);
                 break;
         }
-        Block oldBlock = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(coordinates.getX(), coordinates.getY());
+        Block oldBlock = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(coordinates);
         CavernBlock newBlock = new CavernBlock(oldBlock);
-        blocksOnScreen.setBlockUsingScreenCoordinates(coordinates.getX(), coordinates.getY(), newBlock);
+        blocksOnScreen.setBlockUsingScreenCoordinates(coordinates, newBlock);
     }
 }

@@ -60,7 +60,7 @@ public class Achievements {
 
     public void checkOops(Block explodium)
     {
-        if (explodium.getIndex() == blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(screenWidth/2, screenHeight/2).getIndex())
+        if (explodium.getIndex() == blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(screenWidth/2, screenHeight/2)).getIndex())
         {
             unlockAchievement(mContext.getResources().getString(R.string.oops));
         }

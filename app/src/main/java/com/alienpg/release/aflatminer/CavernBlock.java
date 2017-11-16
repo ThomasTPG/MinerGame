@@ -9,9 +9,9 @@ import android.graphics.BitmapFactory;
 
 public class CavernBlock extends Block{
 
-    public CavernBlock (int seed, int xCoord, int yCoord, Context context, int blocksAcross, MinedLocations minedLocations)
+    public CavernBlock (Coordinates coords, int seed, Context context, int blocksAcross, MinedLocations minedLocations)
     {
-        super(seed, xCoord, yCoord, context, blocksAcross, minedLocations);
+        super(coords,seed,context, blocksAcross, minedLocations);
         setData();
     }
 

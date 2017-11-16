@@ -36,11 +36,11 @@ public class Block {
     //If this is a crystal block, we need to record the maximum ice that has surrounded it.
     private boolean frozen = false;
 
-    public Block (int seed, int xCoord, int yCoord, Context context, int blocksAcross, MinedLocations minedLocations)
+    public Block (Coordinates coordinates,int seed, Context context, int blocksAcross, MinedLocations minedLocations)
     {
         index = yCoord * blocksAcross + xCoord;
-        this.xCoord = xCoord;
-        this.yCoord = yCoord;
+        this.xCoord = coordinates.getX();
+        this.yCoord = coordinates.getY();
         this.context = context;
         this.blocksAcross = context.getResources().getInteger(R.integer.blocks_across);
         this.blocksPerScreen = context.getResources().getInteger(R.integer.blocks_per_screen_width);
