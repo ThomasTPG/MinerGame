@@ -2,6 +2,8 @@ package com.alienpg.release.aflatminer;
 
 import android.content.Context;
 
+import java.util.Random;
+
 /**
  * Created by Thomas on 15/11/2017.
  */
@@ -21,10 +23,11 @@ public class BlockCreator {
         this.minedLocations = minedLocations;
     }
 
-    public Block getNewBlock(Coordinates coordinates)
+    public Block[][] setNewBlock(Coordinates coordinates, int ii, int jj, Block[][] blockArray)
     {
         Block newBlock = new Block(coordinates, mSeed, mContext, blocksAcross,minedLocations);
-        return newBlock;
+        blockArray[ii][jj] = newBlock;
+        return blockArray;
     }
 
 
