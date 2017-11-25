@@ -62,20 +62,7 @@ public class BlockDrawing {
     private Bitmap dynamite;
     private Bitmap iceBomb;
     private Bitmap background1;
-    // Bitmaps for borders
-    private Bitmap leftBorder;
-    private Bitmap bottomBorder;
-    private Bitmap topBorder;
-    private Bitmap rightBorder;
-    private Bitmap topLeftBorder;
-    private Bitmap topRightBorder;
-    private Bitmap bottomRightBorder;
-    private Bitmap bottomLeftBorder;
-    private Bitmap bottomSurroundBorder;
-    private Bitmap topSurroundBorder;
-    private Bitmap rightSurroundBorder;
-    private Bitmap leftSurroundBorder;
-    private Bitmap allBorders;
+    BorderBitmapManager borderBitmapManager;
     private InGameNotifications inGameNotifications;
     private Achievements achievementManager;
 
@@ -94,6 +81,7 @@ public class BlockDrawing {
         this.inGameNotifications = inGameNotifications;
         achievementManager = achievements;
         achievementManager.checkEncyclopediaUnlock(encyclopediaMemory.getNumberUnlocked());
+        borderBitmapManager = new BorderBitmapManager(context, borderSize);
         loadBitmaps();
     }
 
@@ -136,22 +124,6 @@ public class BlockDrawing {
         dynamite = BitmapFactory.decodeResource(context.getResources(), R.drawable.dynamitesquare);
         iceBomb = BitmapFactory.decodeResource(context.getResources(), R.drawable.icedynamitesquare);
         background1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_cave_1);
-
-        leftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_left);
-        rightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_right);
-        bottomBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom);
-        topBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top);
-        topLeftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top_left);
-        topRightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top_right);
-        bottomRightBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom_right);
-        bottomLeftBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom_left);
-        bottomSurroundBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_bottom_surround);
-        topSurroundBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_top_surround);
-        leftSurroundBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_left_surround);
-        rightSurroundBorder = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_right_surround);
-        allBorders = BitmapFactory.decodeResource(context.getResources(), R.drawable.soil_all_borders);
-
-
     }
 
     private void checkEncyclopedia(Block block)
@@ -229,7 +201,7 @@ public class BlockDrawing {
                     if (currentBlock.getType() == GlobalConstants.ICE)
                     {
                         c.drawBitmap(blockBitmap,source,location,null);
-                        drawBorders(ii,jj,source,location,c);
+                        borderBitmapManager.drawBorders(blockArray, ii, jj, c,source,location);
                     }
                     else
                     {
@@ -261,7 +233,7 @@ public class BlockDrawing {
                         drawFluidBlock(currentBlock.getBlockLiquidData(),c,location, ii ,jj);
                     }
                     //Draw borders
-                    drawBorders(ii,jj,source,location,c);
+                    borderBitmapManager.drawBorders(blockArray, ii, jj, c,source,location);
                 }
                 //Overlay any bombs
                 if (currentBlock.getBomb() != ActiveBombs.NO_BOMB)
@@ -277,83 +249,6 @@ public class BlockDrawing {
                     }
                 }
             }
-        }
-    }
-
-
-    private void drawBorders(int ii, int jj, Rect source, Rect location, Canvas canvas)
-    {
-        int whichBitmapCode = 1;
-        //Draw any borders
-        if (blockArray.getBlock(ii +borderSize - 1,jj+ borderSize).canNeedBorder())
-        {
-            whichBitmapCode *=7;
-        }
-        if (blockArray.getBlock(ii +borderSize + 1,jj+ borderSize).canNeedBorder())
-        {
-            whichBitmapCode *=3;
-        }
-        if (blockArray.getBlock(ii +borderSize,jj+ borderSize - 1).canNeedBorder())
-        {
-            whichBitmapCode *=2;
-        }
-        if (blockArray.getBlock(ii +borderSize,jj+ borderSize + 1).canNeedBorder())
-        {
-            whichBitmapCode *=5;
-        }
-        //Code is given by
-        //   2
-        //  7 3
-        //   5
-        switch (whichBitmapCode)
-        {
-            case (2):
-                canvas.drawBitmap(topBorder,source,location,null);
-                break;
-            case (3):
-                canvas.drawBitmap(rightBorder,source,location,null);
-                break;
-            case (5):
-                canvas.drawBitmap(bottomBorder,source,location,null);
-                break;
-            case (7):
-                canvas.drawBitmap(leftBorder,source,location,null);
-                break;
-            case (6):
-                canvas.drawBitmap(topRightBorder,source,location,null);
-                break;
-            case (14):
-                canvas.drawBitmap(topLeftBorder,source,location,null);
-                break;
-            case (15):
-                canvas.drawBitmap(bottomRightBorder,source,location,null);
-                break;
-            case (35):
-                canvas.drawBitmap(bottomLeftBorder,source,location,null);
-                break;
-            case (21):
-                canvas.drawBitmap(leftBorder,source,location,null);
-                canvas.drawBitmap(rightBorder,source,location,null);
-                break;
-            case (10):
-                canvas.drawBitmap(topBorder,source,location,null);
-                canvas.drawBitmap(bottomBorder,source,location,null);
-                break;
-            case (30):
-                canvas.drawBitmap(rightSurroundBorder,source,location,null);
-                break;
-            case (42):
-                canvas.drawBitmap(topSurroundBorder,source,location,null);
-                break;
-            case (70):
-                canvas.drawBitmap(leftSurroundBorder,source,location,null);
-                break;
-            case (105):
-                canvas.drawBitmap(bottomSurroundBorder,source,location,null);
-                break;
-            case (210):
-                canvas.drawBitmap(allBorders,source,location,null);
-                break;
         }
     }
 
