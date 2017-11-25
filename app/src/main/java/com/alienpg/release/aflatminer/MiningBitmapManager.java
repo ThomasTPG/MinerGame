@@ -31,20 +31,16 @@ public class MiningBitmapManager {
         miningborder = BitmapFactory.decodeResource(context.getResources(), R.drawable.whichmined);
     }
 
-    public void draw(Block currentBlock, Rect source, Rect location, Canvas c)
+    public Bitmap getMiningborder()
     {
-        if (currentBlock.isCurrentlyBeingMined())
-        {
-            c.drawBitmap(miningborder,source,location,null);
-        }
-        if (currentBlock.getMiningProgress() >= 70)
-        {
-            c.drawBitmap(mining2,source,location,null);
-        }
-        else if (currentBlock.getMiningProgress() >= 40)
-        {
-            c.drawBitmap(mining1,source,location,null);
-        }
+        return miningborder;
     }
 
+    public Bitmap getMining1() {
+        return mining1;
+    }
+
+    public Bitmap getMining2() {
+        return mining2;
+    }
 }

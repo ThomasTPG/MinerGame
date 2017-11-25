@@ -15,6 +15,9 @@ public class BlockCreator {
     int blocksAcross;
     MinedLocations minedLocations;
     private BlockArray blockArray;
+    private BlockBitmapManager blockBitmapManager;
+    private MiningBitmapManager miningBitmapManager;
+    private BitmapStore bitmapStore;
 
     public BlockCreator(int seed, Context context, int blocksAcross, MinedLocations minedLocations, BlockArray blockArray)
     {
@@ -23,11 +26,12 @@ public class BlockCreator {
         this.blocksAcross = blocksAcross;
         this.minedLocations = minedLocations;
         this.blockArray = blockArray;
+        bitmapStore = new BitmapStore(context);
     }
 
     public void setNewBlock(Coordinates coordinates, int ii, int jj)
     {
-        Block newBlock = new Block(coordinates, mSeed, mContext, blocksAcross,minedLocations);
+        Block newBlock = new Block(coordinates, mSeed, mContext, blocksAcross,minedLocations, bitmapStore);
         blockArray.setBlock(ii,jj,newBlock);
     }
 

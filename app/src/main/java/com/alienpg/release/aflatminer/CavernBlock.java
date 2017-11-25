@@ -9,9 +9,9 @@ import android.graphics.BitmapFactory;
 
 public class CavernBlock extends Block{
 
-    public CavernBlock (Coordinates coords, int seed, Context context, int blocksAcross, MinedLocations minedLocations)
+    public CavernBlock (Coordinates coords, int seed, Context context, int blocksAcross, MinedLocations minedLocations, BitmapStore bitmapStore)
     {
-        super(coords,seed,context, blocksAcross, minedLocations);
+        super(coords,seed,context, blocksAcross, minedLocations, bitmapStore);
         setData();
     }
 
@@ -23,8 +23,8 @@ public class CavernBlock extends Block{
 
     private void setData()
     {
-        super.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.background_cave_1));
-        super.setSoftness(PickaxeTypes.CANNOT_BE_MINED);
-        super.setType(GlobalConstants.CAVERN);
+        setBitmap(blockBitmapManager.getBackground1());
+        setSoftness(PickaxeTypes.CANNOT_BE_MINED);
+        setType(GlobalConstants.CAVERN);
     }
 }

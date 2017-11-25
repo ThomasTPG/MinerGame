@@ -2,6 +2,8 @@ package com.alienpg.release.aflatminer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 
 import java.util.Random;
 
@@ -32,11 +34,16 @@ public class Block {
     private int heightFallen = 0;
     private boolean achievementChainReactionII = false;
     private Bitmap mBitmap;
+    private BitmapStore bitmapStore;
+    protected BlockBitmapManager blockBitmapManager;
+    protected MiningBitmapManager miningBitmapManager;
+    private int MINING_STAGE_1 = 40;
+    private int MINING_STAGE_2 = 70;
 
     //If this is a crystal block, we need to record the maximum ice that has surrounded it.
     private boolean frozen = false;
 
-    public Block (Coordinates coordinates,int seed, Context context, int blocksAcross, MinedLocations minedLocations)
+    public Block (Coordinates coordinates,int seed, Context context, int blocksAcross, MinedLocations minedLocations, BitmapStore bitmapStore)
     {
         xCoord = coordinates.getX();
         yCoord = coordinates.getY();
@@ -48,6 +55,9 @@ public class Block {
         blockLiquidData = new NonSolidBlocks();
         blockStatusData = new BlockStatusData();
         mMinedLocations = minedLocations;
+        this.bitmapStore = bitmapStore;
+        miningBitmapManager = bitmapStore.getMiningBitmapManager();
+        blockBitmapManager = bitmapStore.getBlockBitmapManager();
         determineType();
     }
 
@@ -63,6 +73,9 @@ public class Block {
         blockLiquidData = oldBlock.getBlockLiquidData();
         blockStatusData = oldBlock.getBlockStatusData();
         mMinedLocations = oldBlock.getmMinedLocations();
+        bitmapStore = oldBlock.getBitmapStore();
+        miningBitmapManager = bitmapStore.getMiningBitmapManager();
+        blockBitmapManager = bitmapStore.getBlockBitmapManager();
         saveToMemory();
         determineType();
     }
@@ -546,6 +559,11 @@ public class Block {
             }
         }
     }
+
+    public void draw()
+    {
+
+    }
     
     public void setBomb(int type)
     {
@@ -612,9 +630,33 @@ public class Block {
         return achievementChainReactionII;
     }
 
+    public  BitmapStore getBitmapStore()
+    {
+        return bitmapStore;
+    }
+
     protected void setBitmap(Bitmap b)
     {
         mBitmap = b;
+    }
+
+    public void drawMining(Canvas canvas, Rect src, Rect location)
+    {
+        if (isCurrentlyBeingMined())
+        {
+            Bitmap border = miningBitmapManager.getMiningborder();
+            canvas.drawBitmap(border,src,location,null);
+        }
+        if (getMiningProgress() >= MINING_STAGE_2)
+        {
+            Bitmap mining2 = miningBitmapManager.getMining2();
+            canvas.drawBitmap(mining2,src,location,null);
+        }
+        else if (getMiningProgress() >= MINING_STAGE_1)
+        {
+            Bitmap mining1 = miningBitmapManager.getMining1();
+            canvas.drawBitmap(mining1,src,location,null);
+        }
     }
 
 }

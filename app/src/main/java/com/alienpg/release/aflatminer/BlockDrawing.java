@@ -60,7 +60,6 @@ public class BlockDrawing {
     private Bitmap iceBomb;
     private Bitmap background1;
     private BorderBitmapManager borderBitmapManager;
-    private MiningBitmapManager miningBitmapManager;
     private InGameNotifications inGameNotifications;
     private Achievements achievementManager;
 
@@ -80,7 +79,6 @@ public class BlockDrawing {
         achievementManager = achievements;
         achievementManager.checkEncyclopediaUnlock(encyclopediaMemory.getNumberUnlocked());
         borderBitmapManager = new BorderBitmapManager(context, borderSize);
-        miningBitmapManager = new MiningBitmapManager(context);
         loadBitmaps();
     }
 
@@ -204,8 +202,7 @@ public class BlockDrawing {
                         c.drawBitmap(blockBitmap,source,location,null);
                     }
 
-                    miningBitmapManager.draw(currentBlock, source, location, c);
-
+                    currentBlock.drawMining(c,source,location);
                 }
                 else
                 {

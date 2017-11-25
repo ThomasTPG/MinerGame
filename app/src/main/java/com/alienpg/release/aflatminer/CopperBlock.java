@@ -9,9 +9,9 @@ import android.graphics.BitmapFactory;
 
 public class CopperBlock extends Block {
 
-    public CopperBlock (Coordinates coords, int seed, Context context, int blocksAcross, MinedLocations minedLocations)
+    public CopperBlock (Coordinates coords, int seed, Context context, int blocksAcross, MinedLocations minedLocations, BitmapStore bitmapStore)
     {
-        super(coords,seed,context, blocksAcross, minedLocations);
+        super(coords,seed,context, blocksAcross, minedLocations, bitmapStore);
         setData();
     }
 
@@ -23,8 +23,8 @@ public class CopperBlock extends Block {
 
     private void setData()
     {
-        super.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.copper));
-        super.setSoftness(PickaxeTypes.TIN_PICKAXE);
-        super.setType(GlobalConstants.COPPER);
+        setBitmap(blockBitmapManager.getCopperBitmap());
+        setSoftness(PickaxeTypes.TIN_PICKAXE);
+        setType(GlobalConstants.COPPER);
     }
 }
