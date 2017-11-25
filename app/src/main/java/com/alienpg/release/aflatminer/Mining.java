@@ -265,7 +265,7 @@ public class Mining {
                 break;
         }
         Block oldBlock = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(coordinates);
-        CavernBlock newBlock = new CavernBlock(oldBlock);
+        Block_Cavern newBlock = new Block_Cavern(oldBlock);
         blocksOnScreen.setBlockUsingScreenCoordinates(coordinates, newBlock);
     }
 }

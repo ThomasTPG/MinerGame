@@ -7,15 +7,15 @@ import android.graphics.BitmapFactory;
  * Created by Thomas on 15/11/2017.
  */
 
-public class CopperBlock extends Block {
+public class Block_Copper extends Block {
 
-    public CopperBlock (Coordinates coords, int seed, Context context, int blocksAcross, MinedLocations minedLocations, BitmapStore bitmapStore)
+    public Block_Copper(Coordinates coords, int seed, Context context, int blocksAcross, MinedLocations minedLocations, BitmapStore bitmapStore)
     {
         super(coords,seed,context, blocksAcross, minedLocations, bitmapStore);
         setData();
     }
 
-    public CopperBlock(Block oldBlock)
+    public Block_Copper(Block oldBlock)
     {
         super(oldBlock);
         setData();

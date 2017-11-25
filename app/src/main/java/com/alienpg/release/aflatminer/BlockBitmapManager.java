@@ -220,4 +220,128 @@ public class BlockBitmapManager {
     {
         return copperBitmap;
     }
+
+    public Bitmap getSoil1Bitmap() {
+        return soil1Bitmap;
+    }
+
+    public Bitmap getSoil2Bitmap() {
+        return soil2Bitmap;
+    }
+
+    public Bitmap getBoulderBitmap() {
+        return boulderBitmap;
+    }
+
+    public Bitmap getHardBoulderBitmap() {
+        return hardBoulderBitmap;
+    }
+
+    public Bitmap getFireBallBitmap() {
+        return fireBallBitmap;
+    }
+
+    public Bitmap getIronBitmap() {
+        return ironBitmap;
+    }
+
+    public Bitmap getExplodiumBitmap() {
+        return explodiumBitmap;
+    }
+
+    public Bitmap getMarbleBitmap() {
+        return marbleBitmap;
+    }
+
+    public Bitmap getSpringBitmap() {
+        return springBitmap;
+    }
+
+    public Bitmap getWaterBitmap() {
+        return waterBitmap;
+    }
+
+    public Bitmap getGasBitmap() {
+        return gasBitmap;
+    }
+
+    public Bitmap getGasWaterBitmap() {
+        return gasWaterBitmap;
+    }
+
+    public Bitmap getLife1() {
+        return life1;
+    }
+
+    public Bitmap getLife2() {
+        return life2;
+    }
+
+    public Bitmap getLife3() {
+        return life3;
+    }
+
+    public Bitmap getLife4() {
+        return life4;
+    }
+
+    public Bitmap getLife5() {
+        return life5;
+    }
+
+    public Bitmap getLife6() {
+        return life6;
+    }
+
+    public Bitmap getIceBitmap() {
+        return iceBitmap;
+    }
+
+    public Bitmap getGoldBitmap() {
+        return goldBitmap;
+    }
+
+    public Bitmap getCrystalBase() {
+        return crystalBase;
+    }
+
+    public Bitmap getGasRockBitmap() {
+        return gasRockBitmap;
+    }
+
+    public Bitmap getCostumeGemBitmap() {
+        return costumeGemBitmap;
+    }
+
+    public Bitmap getTinBitmap() {
+        return tinBitmap;
+    }
+
+    public Bitmap getCrystal1() {
+        return crystal1;
+    }
+
+    public Bitmap getCrystal2() {
+        return crystal2;
+    }
+
+    public Bitmap getCrystal3() {
+        return crystal3;
+    }
+
+    public Bitmap getCrystal4() {
+        return crystal4;
+    }
+
+    public Bitmap getCrystal5() {
+        return crystal5;
+    }
+
+    public Bitmap getDynamite() {
+        return dynamite;
+    }
+
+    public Bitmap getIceBomb() {
+        return iceBomb;
+    }
 }
