@@ -26,9 +26,6 @@ public class BlockDrawing {
     int crystalCount = 0;
 
     //Bitmaps
-    private Bitmap mining1;
-    private Bitmap mining2;
-    private Bitmap miningborder;
     private Bitmap soil1Bitmap;
     private Bitmap soil2Bitmap;
     private Bitmap boulderBitmap;
@@ -62,7 +59,8 @@ public class BlockDrawing {
     private Bitmap dynamite;
     private Bitmap iceBomb;
     private Bitmap background1;
-    BorderBitmapManager borderBitmapManager;
+    private BorderBitmapManager borderBitmapManager;
+    private MiningBitmapManager miningBitmapManager;
     private InGameNotifications inGameNotifications;
     private Achievements achievementManager;
 
@@ -82,15 +80,13 @@ public class BlockDrawing {
         achievementManager = achievements;
         achievementManager.checkEncyclopediaUnlock(encyclopediaMemory.getNumberUnlocked());
         borderBitmapManager = new BorderBitmapManager(context, borderSize);
+        miningBitmapManager = new MiningBitmapManager(context);
         loadBitmaps();
     }
 
 
     private void loadBitmaps()
     {
-        mining1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.miningprogress1);
-        mining2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.miningprogress2);
-        miningborder = BitmapFactory.decodeResource(context.getResources(), R.drawable.whichmined);
         waterBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.water_test);
         gasBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gas_background);
         gasWaterBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gaswater);
@@ -208,20 +204,8 @@ public class BlockDrawing {
                         c.drawBitmap(blockBitmap,source,location,null);
                     }
 
+                    miningBitmapManager.draw(currentBlock, source, location, c);
 
-                    //Finally overlay any mining
-                    if (currentBlock.isCurrentlyBeingMined())
-                    {
-                        c.drawBitmap(miningborder,source,location,null);
-                    }
-                    if (currentBlock.getMiningProgress() >= 70)
-                    {
-                        c.drawBitmap(mining2,source,location,null);
-                    }
-                    else if (currentBlock.getMiningProgress() >= 40)
-                    {
-                        c.drawBitmap(mining1,source,location,null);
-                    }
                 }
                 else
                 {
