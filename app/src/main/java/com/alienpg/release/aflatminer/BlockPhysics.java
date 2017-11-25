@@ -1,5 +1,6 @@
 package com.alienpg.release.aflatminer;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 
 /**
@@ -8,7 +9,6 @@ import android.content.Context;
 
 public class BlockPhysics {
 
-    BlockManager blocksOnScreen;
     private int horizontalBlockLimit;
     private int verticalBlockLimit;
     private int delay = 0;
@@ -108,7 +108,7 @@ public class BlockPhysics {
             {
                 if (shouldExplodeExplodium(ii-1,jj))
                 {
-                    blocksOnScreen.explodeBlock(blockArray.getBlock(ii, jj));
+                    explodeBlock(ii,jj);
                     return;
                 }
             }
@@ -116,7 +116,7 @@ public class BlockPhysics {
             {
                 if (shouldExplodeExplodium(ii+1,jj))
                 {
-                    blocksOnScreen.explodeBlock(blockArray.getBlock(ii, jj));
+                    explodeBlock(ii,jj);
                     return;
                 }
             }
@@ -124,7 +124,7 @@ public class BlockPhysics {
             {
                 if (shouldExplodeExplodium(ii,jj-1))
                 {
-                    blocksOnScreen.explodeBlock(blockArray.getBlock(ii, jj));
+                    explodeBlock(ii,jj);
                     return;
                 }
             }
@@ -132,12 +132,91 @@ public class BlockPhysics {
             {
                 if (shouldExplodeExplodiumBelow(ii,jj+1))
                 {
-                    blocksOnScreen.explodeBlock(blockArray.getBlock(ii, jj));
+                    explodeBlock(ii,jj);
                     return;
                 }
             }
         }
+    }
 
+    public void explodeBlock(int x,int y)
+    {
+        Block block = blockArray.getBlock(x,y);
+        if (block.getType() == GlobalConstants.EXPLODIUM)
+        {
+            for (int aa = -2; aa <=2; aa++)
+            {
+                for (int bb = -2; bb<=2; bb++)
+                {
+                    if (x + aa < horizontalBlockLimit && x + aa >= 0 && y + bb >=0 && y + bb < verticalBlockLimit)
+                    {
+                        achievementManager.checkChainReactionII(block, blockArray.getBlock(x + aa, y + bb));
+                        blockArray.getBlock(x + aa, y + bb).blowUp();
+                    }
+                }
+            }
+        }
+        else
+        {
+            switch(block.getBomb())
+            {
+                case(ActiveBombs.DYNAMITE):
+                    int boulders = 0;
+                    if (block.isIce())
+                    {
+                        achievementManager.unlockAchievement(mContext.getResources().getString(R.string.freeze_thaw));
+                    }
+                    for (int aa = -1; aa <=1; aa++)
+                    {
+                        for (int bb = -1; bb<=1; bb++)
+                        {
+                            if (blockArray.getBlock(x + aa, y + bb).getType() == GlobalConstants.BOULDER)
+                            {
+                                boulders ++;
+                            }
+                            if (blockArray.getBlock(x + aa, y + bb).getType() == GlobalConstants.COSTUMEGEM)
+                            {
+                                achievementManager.unlockAchievement(mContext.getResources().getString(R.string.naturism));
+                            }
+                            blockArray.getBlock(x + aa, y + bb).blowUp();
+                        }
+                    }
+                    if (boulders >= 4)
+                    {
+                        achievementManager.unlockAchievement(mContext.getResources().getString(R.string.blast_miner));
+                    }
+                    break;
+                case(ActiveBombs.ICEBOMB):
+                    int numberConverted = 0;
+                    int numberGas = 0;
+                    for (int aa = -1; aa <=1; aa++)
+                    {
+                        for (int bb = -1; bb<=1; bb++)
+                        {
+                            if (blockArray.getBlock(x + aa, y + bb).getType() == GlobalConstants.CAVERN)
+                            {
+                                numberConverted ++;
+                            }
+                            if (blockArray.getBlock(x + aa, y + bb).getGasPercentage() > 0)
+                            {
+                                numberGas ++;
+                            }
+                            blockArray.getBlock(x + aa, y + bb).detonateIceBomb();
+                        }
+                    }
+                    if (numberConverted == 0)
+                    {
+                        achievementManager.unlockAchievement(mContext.getResources().getString(R.string.what_a_waste));
+                    }
+                    if (numberGas == 8)
+                    {
+                        achievementManager.unlockAchievement(mContext.getResources().getString(R.string.states_of_matter));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private boolean shouldExplodeExplodiumBelow(int ii, int jj)
@@ -322,12 +401,12 @@ public class BlockPhysics {
                         if (twoBelow.isSolid() && blockBelow.getType() ==GlobalConstants.EXPLODIUM)
                         {
                             achievementManager.checkOops(blockBelow);
-                            blocksOnScreen.explodeBlock(blockBelow);
+                            explodeBlock(ii,jj+1);
                         }
                         if (twoBelow.getType() == GlobalConstants.EXPLODIUM)
                         {
                             achievementManager.checkChainReactionI(blockBelow);
-                            blocksOnScreen.explodeBlock(twoBelow);
+                            explodeBlock(ii,jj+2);
                         }
 
                         if (twoBelow.isSolid())

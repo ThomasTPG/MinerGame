@@ -34,7 +34,7 @@ public class Block {
     private int heightFallen = 0;
     private boolean achievementChainReactionII = false;
     private Bitmap mBitmap;
-    private BitmapStore bitmapStore;
+    private BitmapFlyWeight bitmapFlyWeight;
     protected BlockBitmapManager blockBitmapManager;
     protected MiningBitmapManager miningBitmapManager;
     private int MINING_STAGE_1 = 40;
@@ -43,7 +43,7 @@ public class Block {
     //If this is a crystal block, we need to record the maximum ice that has surrounded it.
     private boolean frozen = false;
 
-    public Block (Coordinates coordinates,int seed, Context context, int blocksAcross, MinedLocations minedLocations, BitmapStore bitmapStore)
+    public Block (Coordinates coordinates,int seed, Context context, int blocksAcross, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
         xCoord = coordinates.getX();
         yCoord = coordinates.getY();
@@ -55,9 +55,9 @@ public class Block {
         blockLiquidData = new NonSolidBlocks();
         blockStatusData = new BlockStatusData();
         mMinedLocations = minedLocations;
-        this.bitmapStore = bitmapStore;
-        miningBitmapManager = bitmapStore.getMiningBitmapManager();
-        blockBitmapManager = bitmapStore.getBlockBitmapManager();
+        this.bitmapFlyWeight = bitmapFlyWeight;
+        miningBitmapManager = bitmapFlyWeight.getMiningBitmapManager();
+        blockBitmapManager = bitmapFlyWeight.getBlockBitmapManager();
         determineType();
     }
 
@@ -73,9 +73,9 @@ public class Block {
         blockLiquidData = oldBlock.getBlockLiquidData();
         blockStatusData = oldBlock.getBlockStatusData();
         mMinedLocations = oldBlock.getmMinedLocations();
-        bitmapStore = oldBlock.getBitmapStore();
-        miningBitmapManager = bitmapStore.getMiningBitmapManager();
-        blockBitmapManager = bitmapStore.getBlockBitmapManager();
+        bitmapFlyWeight = oldBlock.getBitmapFlyWeight();
+        miningBitmapManager = bitmapFlyWeight.getMiningBitmapManager();
+        blockBitmapManager = bitmapFlyWeight.getBlockBitmapManager();
         saveToMemory();
         determineType();
     }
@@ -630,9 +630,9 @@ public class Block {
         return achievementChainReactionII;
     }
 
-    public  BitmapStore getBitmapStore()
+    public BitmapFlyWeight getBitmapFlyWeight()
     {
-        return bitmapStore;
+        return bitmapFlyWeight;
     }
 
     protected void setBitmap(Bitmap b)

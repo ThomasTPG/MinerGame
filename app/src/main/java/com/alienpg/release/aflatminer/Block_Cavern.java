@@ -1,7 +1,6 @@
 package com.alienpg.release.aflatminer;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 
 /**
  * Created by Thomas on 15/11/2017.
@@ -9,9 +8,9 @@ import android.graphics.BitmapFactory;
 
 public class Block_Cavern extends Block{
 
-    public Block_Cavern(Coordinates coords, int seed, Context context, int blocksAcross, MinedLocations minedLocations, BitmapStore bitmapStore)
+    public Block_Cavern(Coordinates coords, int seed, Context context, int blocksAcross, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
-        super(coords,seed,context, blocksAcross, minedLocations, bitmapStore);
+        super(coords,seed,context, blocksAcross, minedLocations, bitmapFlyWeight);
         setData();
     }
 

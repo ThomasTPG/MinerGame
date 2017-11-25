@@ -315,7 +315,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     drawIceBombButton(c);
                     if (activeBombs.hasBombExploded())
                     {
-                        blocksOnScreen.explodeBlock(activeBombs.getBombBlock());
+                        Coordinates explode = blocksOnScreen.getBlockCoordinatesByIndex(activeBombs.getBombBlock());
+                        if (explode.getX() > 0)
+                        {
+                            blockPhysics.explodeBlock(explode.getX(), explode.getY());
+                        }
                     }
                     miningClass.mine();
                     inGameNotifications.onDraw(c);

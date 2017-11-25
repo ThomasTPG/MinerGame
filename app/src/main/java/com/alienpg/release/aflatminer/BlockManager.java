@@ -172,7 +172,7 @@ public class BlockManager {
         }
     }
 
-    public void explodeBlock(Block block)
+    public Coordinates getBlockCoordinatesByIndex(Block block)
     {
         int index = block.getIndex();
         int x = 0;
@@ -192,82 +192,11 @@ public class BlockManager {
         }
         if (foundBlock)
         {
-            if (block.getType() == GlobalConstants.EXPLODIUM)
-            {
-                for (int aa = -2; aa <=2; aa++)
-                {
-                    for (int bb = -2; bb<=2; bb++)
-                    {
-                        if (x + aa < horizontalBlockLimit && x + aa >= 0 && y + bb >=0 && y + bb < verticalBlockLimit)
-                        {
-                            achievementManager.checkChainReactionII(block, blockArray.getBlock(x + aa, y + bb));
-                            blockArray.getBlock(x + aa, y + bb).blowUp();
-                        }
-                    }
-                }
-            }
-            else
-            {
-                switch(block.getBomb())
-                {
-                    case(ActiveBombs.DYNAMITE):
-                        int boulders = 0;
-                        if (block.isIce())
-                        {
-                            achievementManager.unlockAchievement(context.getResources().getString(R.string.freeze_thaw));
-                        }
-                        for (int aa = -1; aa <=1; aa++)
-                        {
-                            for (int bb = -1; bb<=1; bb++)
-                            {
-                                if (blockArray.getBlock(x + aa, y + bb).getType() == GlobalConstants.BOULDER)
-                                {
-                                    boulders ++;
-                                }
-                                if (blockArray.getBlock(x + aa, y + bb).getType() == GlobalConstants.COSTUMEGEM)
-                                {
-                                    achievementManager.unlockAchievement(context.getResources().getString(R.string.naturism));
-                                }
-                                blockArray.getBlock(x + aa, y + bb).blowUp();
-                            }
-                        }
-                        if (boulders >= 4)
-                        {
-                            achievementManager.unlockAchievement(context.getResources().getString(R.string.blast_miner));
-                        }
-                        break;
-                    case(ActiveBombs.ICEBOMB):
-                        int numberConverted = 0;
-                        int numberGas = 0;
-                        for (int aa = -1; aa <=1; aa++)
-                        {
-                            for (int bb = -1; bb<=1; bb++)
-                            {
-                                if (blockArray.getBlock(x + aa, y + bb).getType() == GlobalConstants.CAVERN)
-                                {
-                                    numberConverted ++;
-                                }
-                                if (blockArray.getBlock(x + aa, y + bb).getGasPercentage() > 0)
-                                {
-                                    numberGas ++;
-                                }
-                                blockArray.getBlock(x + aa, y + bb).detonateIceBomb();
-                            }
-                        }
-                        if (numberConverted == 0)
-                        {
-                            achievementManager.unlockAchievement(context.getResources().getString(R.string.what_a_waste));
-                        }
-                        if (numberGas == 8)
-                        {
-                            achievementManager.unlockAchievement(context.getResources().getString(R.string.states_of_matter));
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+            Coordinates c = new Coordinates(x,y);
+            return c;
         }
+        Coordinates defaultC = new Coordinates(0,0);
+        return defaultC;
     }
 
     public void moveWaterRight()

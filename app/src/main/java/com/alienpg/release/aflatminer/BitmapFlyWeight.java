@@ -7,12 +7,12 @@ import android.graphics.Bitmap;
  * Created by Thomas on 25/11/2017.
  */
 
-public class BitmapStore {
+public class BitmapFlyWeight {
 
     private BlockBitmapManager blockBitmapManager;
     private MiningBitmapManager miningBitmapManager;
 
-    public BitmapStore(Context context)
+    public BitmapFlyWeight(Context context)
     {
         blockBitmapManager = new BlockBitmapManager(context);
         miningBitmapManager = new MiningBitmapManager(context);
