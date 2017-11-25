@@ -12,8 +12,8 @@ import android.graphics.Rect;
 
 public class BlockDrawing {
 
-    ArrayOfBlocksOnScreen blocksOnScreen;
-    Block[][] blockArray;
+    BlockManager blocksOnScreen;
+    BlockArray blockArray;
     private Context context;
     int blockSize;
     int borderSize;
@@ -79,9 +79,9 @@ public class BlockDrawing {
     private InGameNotifications inGameNotifications;
     private Achievements achievementManager;
 
-    public BlockDrawing(ArrayOfBlocksOnScreen arrayOfBlocksOnScreen, Context context, int blockDimensions, Camera camera, int gameWidth, int gameHeight, EncyclopediaMemory encyclopediaMemory, InGameNotifications inGameNotifications, Achievements achievements)
+    public BlockDrawing(BlockManager blockManager, Context context, int blockDimensions, Camera camera, int gameWidth, int gameHeight, EncyclopediaMemory encyclopediaMemory, InGameNotifications inGameNotifications, Achievements achievements)
     {
-        blocksOnScreen = arrayOfBlocksOnScreen;
+        blocksOnScreen = blockManager;
         blocksHorizontalScreen = blocksOnScreen.getBlocksHorizontalScreen();
         blocksVerticalScreen = blocksOnScreen.getBlocksVerticalScreen();
         this.context = context;
@@ -208,9 +208,10 @@ public class BlockDrawing {
         {
             for (int jj = 0; jj < blocksVerticalScreen; jj++)
             {
-                Bitmap blockBitmap = workOutBitmap(blockArray[ii + borderSize][jj + borderSize]);
+                Block currentBlock = blockArray.getBlock(ii + borderSize, jj + borderSize);
+                Bitmap blockBitmap = workOutBitmap(currentBlock);
 
-                checkEncyclopedia(blockArray[ii + borderSize][jj + borderSize]);
+                checkEncyclopedia(currentBlock);
 
                 int screenTopLeftX = mCamera.getCameraX() - mGameWidth/2;
                 int screenTopLeftY = mCamera.getCameraY() - mGameHeight/2;
@@ -225,7 +226,7 @@ public class BlockDrawing {
                     //Now work out the scalings for the blocks
                     Rect source = getScaledRectangle(blockBitmap,location,ii,jj);
 
-                    if (blockArray[ii +borderSize][jj+ borderSize].getType() == GlobalConstants.ICE)
+                    if (currentBlock.getType() == GlobalConstants.ICE)
                     {
                         c.drawBitmap(blockBitmap,source,location,null);
                         drawBorders(ii,jj,source,location,c);
@@ -237,15 +238,15 @@ public class BlockDrawing {
 
 
                     //Finally overlay any mining
-                    if (blockArray[ii + borderSize][jj + borderSize].isCurrentlyBeingMined())
+                    if (currentBlock.isCurrentlyBeingMined())
                     {
                         c.drawBitmap(miningborder,source,location,null);
                     }
-                    if (blockArray[ii + borderSize][jj + borderSize].getMiningProgress() >= 70)
+                    if (currentBlock.getMiningProgress() >= 70)
                     {
                         c.drawBitmap(mining2,source,location,null);
                     }
-                    else if (blockArray[ii +borderSize][jj+ borderSize].getMiningProgress() >= 40)
+                    else if (currentBlock.getMiningProgress() >= 40)
                     {
                         c.drawBitmap(mining1,source,location,null);
                     }
@@ -255,17 +256,17 @@ public class BlockDrawing {
                     Rect source = getScaledRectangle(background1,location,ii,jj);
                     c.drawBitmap(background1,source,location,null);
                     //Draw fluids
-                    if (blockArray[ii + borderSize][jj + borderSize].blockHasLiquid())
+                    if (currentBlock.blockHasLiquid())
                     {
-                        drawFluidBlock(blockArray[ii+borderSize][jj + borderSize].getBlockLiquidData(),c,location, ii ,jj);
+                        drawFluidBlock(currentBlock.getBlockLiquidData(),c,location, ii ,jj);
                     }
                     //Draw borders
                     drawBorders(ii,jj,source,location,c);
                 }
                 //Overlay any bombs
-                if (blockArray[ii + borderSize][jj + borderSize].getBomb() != ActiveBombs.NO_BOMB)
+                if (currentBlock.getBomb() != ActiveBombs.NO_BOMB)
                 {
-                    switch (blockArray[ii + borderSize][jj + borderSize].getBomb())
+                    switch (currentBlock.getBomb())
                     {
                         case(ActiveBombs.DYNAMITE):
                             c.drawBitmap(dynamite,null,location,null);
@@ -284,19 +285,19 @@ public class BlockDrawing {
     {
         int whichBitmapCode = 1;
         //Draw any borders
-        if (blockArray[ii +borderSize - 1][jj+ borderSize].canNeedBorder())
+        if (blockArray.getBlock(ii +borderSize - 1,jj+ borderSize).canNeedBorder())
         {
             whichBitmapCode *=7;
         }
-        if (blockArray[ii +borderSize + 1][jj+ borderSize].canNeedBorder())
+        if (blockArray.getBlock(ii +borderSize + 1,jj+ borderSize).canNeedBorder())
         {
             whichBitmapCode *=3;
         }
-        if (blockArray[ii +borderSize][jj+ borderSize - 1].canNeedBorder())
+        if (blockArray.getBlock(ii +borderSize,jj+ borderSize - 1).canNeedBorder())
         {
             whichBitmapCode *=2;
         }
-        if (blockArray[ii +borderSize][jj+ borderSize + 1].canNeedBorder())
+        if (blockArray.getBlock(ii +borderSize,jj+ borderSize + 1).canNeedBorder())
         {
             whichBitmapCode *=5;
         }

@@ -14,20 +14,21 @@ public class BlockCreator {
     Context mContext;
     int blocksAcross;
     MinedLocations minedLocations;
+    private BlockArray blockArray;
 
-    public BlockCreator(int seed, Context context, int blocksAcross, MinedLocations minedLocations)
+    public BlockCreator(int seed, Context context, int blocksAcross, MinedLocations minedLocations, BlockArray blockArray)
     {
         mSeed = seed;
         mContext = context;
         this.blocksAcross = blocksAcross;
         this.minedLocations = minedLocations;
+        this.blockArray = blockArray;
     }
 
-    public Block[][] setNewBlock(Coordinates coordinates, int ii, int jj, Block[][] blockArray)
+    public void setNewBlock(Coordinates coordinates, int ii, int jj)
     {
         Block newBlock = new Block(coordinates, mSeed, mContext, blocksAcross,minedLocations);
-        blockArray[ii][jj] = newBlock;
-        return blockArray;
+        blockArray.setBlock(ii,jj,newBlock);
     }
 
 

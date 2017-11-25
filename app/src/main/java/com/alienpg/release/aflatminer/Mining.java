@@ -12,7 +12,7 @@ public class Mining {
     private int gameWidth;
     private Block currentlyMining = null;
     private int miningOctant;
-    private ArrayOfBlocksOnScreen blocksOnScreen;
+    private BlockManager blocksOnScreen;
     private int blockSize;
     private double pickaxeRequired;
     private int pickaxeLevel;
@@ -20,7 +20,7 @@ public class Mining {
     private boolean miningInProcess = false;
     private InGameNotifications inGameNotifications;
 
-    public Mining(int height, int width, ArrayOfBlocksOnScreen blocks, int blockSize, OreCounter oreCounter, ShopMemory shopMemory, InGameNotifications inGameNotifications)
+    public Mining(int height, int width, BlockManager blocks, int blockSize, OreCounter oreCounter, ShopMemory shopMemory, InGameNotifications inGameNotifications)
     {
         gameHeight = height;
         gameWidth = width;

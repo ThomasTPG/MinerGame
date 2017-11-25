@@ -38,9 +38,9 @@ public class Block {
 
     public Block (Coordinates coordinates,int seed, Context context, int blocksAcross, MinedLocations minedLocations)
     {
+        xCoord = coordinates.getX();
+        yCoord = coordinates.getY();
         index = yCoord * blocksAcross + xCoord;
-        this.xCoord = coordinates.getX();
-        this.yCoord = coordinates.getY();
         this.context = context;
         this.blocksAcross = context.getResources().getInteger(R.integer.blocks_across);
         this.blocksPerScreen = context.getResources().getInteger(R.integer.blocks_per_screen_width);
@@ -98,6 +98,7 @@ public class Block {
             {
                 //Determine if the type oft he block is a cavern. Also includes y<0 regions at the top.
                 setType(GlobalConstants.CAVERN);
+
                 int distance = c.getDistanceToCavern();
                 if (yCoord > 0)
                 {

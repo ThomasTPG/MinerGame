@@ -8,37 +8,36 @@ import android.content.Context;
 
 public class BlockPhysics {
 
-    ArrayOfBlocksOnScreen blocksOnScreen;
+    BlockManager blocksOnScreen;
     private int horizontalBlockLimit;
     private int verticalBlockLimit;
     private int delay = 0;
     private int lifeFactor = 3;
     private ActiveBombs activeBombs;
-    Block[][] blockArray;
+    BlockArray blockArray;
     Achievements achievementManager;
     Context mContext;
 
     public static final int GAS_THRESHOLD = 0;
 
-    public BlockPhysics(ArrayOfBlocksOnScreen arrayOfBlocksOnScreen, ActiveBombs activeBombs, Context context, Achievements achievements)
+    public BlockPhysics(BlockArray blockArray, ActiveBombs activeBombs, Context context, Achievements achievements)
     {
         this.activeBombs = activeBombs;
-        blocksOnScreen = arrayOfBlocksOnScreen;
-        horizontalBlockLimit = blocksOnScreen.getHorizontalBlockLimit();
-        verticalBlockLimit = blocksOnScreen.getVerticalBlockLimit();
+        this.blockArray = blockArray;
+        horizontalBlockLimit = blockArray.getHorizontalBlockLimit();
+        verticalBlockLimit = blockArray.getVerticalBlockLimit();
         achievementManager = achievements;
         mContext = context;
     }
 
     public void updateDynamicBlocks()
     {
-        blockArray = blocksOnScreen.getBlockArray();
         delay ++;
         for (int ii = horizontalBlockLimit-1; ii >=0; ii --)
         {
             for (int jj = verticalBlockLimit - 1; jj >=0; jj--)
             {
-                if (blockArray[ii][jj].isCavern())
+                if (blockArray.getBlock(ii, jj).isCavern())
                 {
                     if (!updateWaterBelow(ii,jj) && (ii - delay) % 5 == 0)
                     {
@@ -61,14 +60,13 @@ public class BlockPhysics {
                 checkDynamiteFall(ii,jj);
             }
         }
-        blocksOnScreen.setBlockArray(blockArray);
     }
 
     private boolean blowUpGas(int ii, int jj)
     {
-        if (blockArray[ii][jj].getGasPercentage() > GAS_THRESHOLD)
+        if (blockArray.getBlock(ii, jj).getGasPercentage() > GAS_THRESHOLD)
         {
-            blockArray[ii][jj].blowUp();
+            blockArray.getBlock(ii, jj).blowUp();
             return true;
         }
         return false;
@@ -77,7 +75,7 @@ public class BlockPhysics {
     private void checkBlowingUpGas(int ii, int jj)
     {
         boolean detonated = false;
-        if (blockArray[ii][jj].isFire())
+        if (blockArray.getBlock(ii, jj).isFire())
         {
             if (ii > 0)
             {
@@ -96,7 +94,7 @@ public class BlockPhysics {
                 detonated = blowUpGas(ii,jj-1);
             }
         }
-        if (blockArray[ii][jj].getAchievementChainReactionII() && detonated)
+        if (blockArray.getBlock(ii, jj).getAchievementChainReactionII() && detonated)
         {
             achievementManager.unlockAchievement(mContext.getResources().getString(R.string.chain_reaction_ii));
         }
@@ -104,13 +102,13 @@ public class BlockPhysics {
 
     private void blowUpExplodium(int ii, int jj)
     {
-        if (blockArray[ii][jj].getType() == GlobalConstants.EXPLODIUM)
+        if (blockArray.getBlock(ii, jj).getType() == GlobalConstants.EXPLODIUM)
         {
             if (ii > 0)
             {
                 if (shouldExplodeExplodium(ii-1,jj))
                 {
-                    blocksOnScreen.explodeBlock(blockArray[ii][jj]);
+                    blocksOnScreen.explodeBlock(blockArray.getBlock(ii, jj));
                     return;
                 }
             }
@@ -118,7 +116,7 @@ public class BlockPhysics {
             {
                 if (shouldExplodeExplodium(ii+1,jj))
                 {
-                    blocksOnScreen.explodeBlock(blockArray[ii][jj]);
+                    blocksOnScreen.explodeBlock(blockArray.getBlock(ii, jj));
                     return;
                 }
             }
@@ -126,7 +124,7 @@ public class BlockPhysics {
             {
                 if (shouldExplodeExplodium(ii,jj-1))
                 {
-                    blocksOnScreen.explodeBlock(blockArray[ii][jj]);
+                    blocksOnScreen.explodeBlock(blockArray.getBlock(ii, jj));
                     return;
                 }
             }
@@ -134,7 +132,7 @@ public class BlockPhysics {
             {
                 if (shouldExplodeExplodiumBelow(ii,jj+1))
                 {
-                    blocksOnScreen.explodeBlock(blockArray[ii][jj]);
+                    blocksOnScreen.explodeBlock(blockArray.getBlock(ii, jj));
                     return;
                 }
             }
@@ -144,37 +142,37 @@ public class BlockPhysics {
 
     private boolean shouldExplodeExplodiumBelow(int ii, int jj)
     {
-        return (blockArray[ii][jj].getLiquidData().getGasPercentage() > 5) || (blockArray[ii][jj].isFire());
+        return (blockArray.getBlock(ii, jj).getLiquidData().getGasPercentage() > 5) || (blockArray.getBlock(ii, jj).isFire());
     }
 
     private boolean shouldExplodeExplodium(int ii, int jj)
     {
-        return (blockArray[ii][jj].getLiquidData().getWaterPercentage() + blockArray[ii][jj].getLiquidData().getGasPercentage() > 5) || (blockArray[ii][jj].isFire());
+        return (blockArray.getBlock(ii, jj).getLiquidData().getWaterPercentage() + blockArray.getBlock(ii, jj).getLiquidData().getGasPercentage() > 5) || (blockArray.getBlock(ii, jj).isFire());
     }
 
     private void decayGas(int ii, int jj)
     {
-        if (blockArray[ii][jj].getGasPercentage() > 10)
+        if (blockArray.getBlock(ii, jj).getGasPercentage() > 10)
         {
             if (ii > 0)
             {
-                if (blockArray[ii-1][jj].isSolid())
+                if (blockArray.getBlock(ii - 1, jj).isSolid())
                 {
-                    blockArray[ii-1][jj].tryDecaying();
+                    blockArray.getBlock(ii - 1, jj).tryDecaying();
                 }
             }
             if (ii < horizontalBlockLimit-1)
             {
-                if (blockArray[ii+1][jj].isSolid())
+                if (blockArray.getBlock(ii + 1, jj).isSolid())
                 {
-                    blockArray[ii+1][jj].tryDecaying();
+                    blockArray.getBlock(ii + 1, jj).tryDecaying();
                 }
             }
             if (jj > 0)
             {
-                if (blockArray[ii][jj-1].isSolid())
+                if (blockArray.getBlock(ii, jj - 1).isSolid())
                 {
-                    blockArray[ii][jj-1].tryDecaying();
+                    blockArray.getBlock(ii, jj - 1).tryDecaying();
                 }
             }
         }
@@ -182,27 +180,29 @@ public class BlockPhysics {
 
     private void updateSpring(int ii ,int jj)
     {
-        if (blockArray[ii][jj].getType() == GlobalConstants.SPRING)
+        if (blockArray.getBlock(ii, jj).getType() == GlobalConstants.SPRING)
         {
             if (ii > 0)
             {
-                if (!blockArray[ii-1][jj].isSolid())
+                if (!blockArray.getBlock(ii - 1, jj).isSolid())
                 {
-                    blockArray[ii-1][jj].setWaterPercentage(100);
+                    blockArray.getBlock(ii - 1, jj).setWaterPercentage(100);
                 }
             }
             if (ii < horizontalBlockLimit-1)
             {
-                if (!blockArray[ii+1][jj].isSolid())
+                Block blockRight = blockArray.getBlock(ii + 1, jj);
+                if (!blockRight.isSolid())
                 {
-                    blockArray[ii+1][jj].setWaterPercentage(100);
+                    blockRight.setWaterPercentage(100);
                 }
             }
             if (jj < verticalBlockLimit - 1)
             {
-                if (!blockArray[ii][jj+1].isSolid())
+                Block blockBelow = blockArray.getBlock(ii, jj+1);
+                if (!blockBelow.isSolid())
                 {
-                    blockArray[ii][jj+1].setWaterPercentage(100);
+                    blockBelow.setWaterPercentage(100);
                 }
             }
         }
@@ -214,14 +214,15 @@ public class BlockPhysics {
         if (jj > 0)
         {
             //Check above
-            if ((blockArray[ii][jj].isCavern()) && (blockArray[ii][jj].getGasPercentage() > 0) && (blockArray[ii][jj-1].isCavern()))
+            Block blockAbove = blockArray.getBlock(ii, jj-1);
+            if ((blockArray.getBlock(ii, jj).isCavern()) && (blockArray.getBlock(ii, jj).getGasPercentage() > 0) && (blockAbove.isCavern()))
             {
                 //Move gas up
-                if (blockArray[ii][jj-1].getGasPercentage() < 100)
+                if (blockAbove.getGasPercentage() < 100)
                 {
-                    int gasMoved = Math.min(blockArray[ii][jj].getGasPercentage(), 100-blockArray[ii][jj-1].getGasPercentage());
-                    blockArray[ii][jj].setGasPercentage(blockArray[ii][jj].getGasPercentage() - gasMoved);
-                    blockArray[ii][jj-1].setGasPercentage(blockArray[ii][jj-1].getGasPercentage() + gasMoved);
+                    int gasMoved = Math.min(blockArray.getBlock(ii, jj).getGasPercentage(), 100-blockAbove.getGasPercentage());
+                    blockArray.getBlock(ii, jj).setGasPercentage(blockArray.getBlock(ii, jj).getGasPercentage() - gasMoved);
+                    blockAbove.setGasPercentage(blockAbove.getGasPercentage() + gasMoved);
                     if (gasMoved > 0)
                     {
                         updated = true;
@@ -234,106 +235,109 @@ public class BlockPhysics {
 
     private void updateGasSides(int ii, int jj)
     {
+        Block currentBlock = blockArray.getBlock(ii, jj);
         if (ii < horizontalBlockLimit - 1 && ii > 0)
         {
-            boolean leftValid = blockArray[ii-1][jj].isCavern();
-            boolean rightValid = blockArray[ii+1][jj].isCavern();
+            Block blockLeft = blockArray.getBlock(ii-1, jj);
+            Block blockRight = blockArray.getBlock(ii+1,jj);
+            boolean leftValid = blockLeft.isCavern();
+            boolean rightValid = blockRight.isCavern();
             int blocksToAverage = 1;
-            int totalGas = blockArray[ii][jj].getGasPercentage();
+            int totalGas = currentBlock.getGasPercentage();
             int incrementPercent = 1;
             if (leftValid)
             {
                 blocksToAverage ++;
-                totalGas = totalGas + blockArray[ii-1][jj].getGasPercentage();
+                totalGas = totalGas + blockLeft.getGasPercentage();
             }
             if (rightValid)
             {
                 blocksToAverage ++;
-                totalGas = totalGas + blockArray[ii+1][jj].getGasPercentage();
+                totalGas = totalGas + blockRight.getGasPercentage();
             }
             int average = (int) Math.floor(totalGas/(double)blocksToAverage);
             int conservation = 0;
             if (leftValid)
             {
-                if (blockArray[ii-1][jj].getGasPercentage() - incrementPercent> average)
+                if (blockLeft.getGasPercentage() - incrementPercent> average)
                 {
-                    int amountToChange = Math.max((int) ((blockArray[ii-1][jj].getGasPercentage() - average)/4.0), incrementPercent);
-                    blockArray[ii-1][jj].setGasPercentage(blockArray[ii-1][jj].getGasPercentage() - amountToChange);
+                    int amountToChange = Math.max((int) ((blockLeft.getGasPercentage() - average)/4.0), incrementPercent);
+                    blockLeft.setGasPercentage(blockLeft.getGasPercentage() - amountToChange);
                     conservation = conservation -amountToChange;
                 }
-                else if (blockArray[ii-1][jj].getGasPercentage() + incrementPercent< average)
+                else if (blockLeft.getGasPercentage() + incrementPercent< average)
                 {
-                    int amountToChange = Math.max((int) ((-blockArray[ii-1][jj].getGasPercentage() + average)/4.0), incrementPercent);
+                    int amountToChange = Math.max((int) ((-blockLeft.getGasPercentage() + average)/4.0), incrementPercent);
 
-                    blockArray[ii-1][jj].setGasPercentage(blockArray[ii-1][jj].getGasPercentage() +amountToChange);
+                    blockLeft.setGasPercentage(blockLeft.getGasPercentage() +amountToChange);
                     conservation = conservation + amountToChange;
                 }
 
             }
             if (rightValid)
             {
-                if (blockArray[ii+1][jj].getGasPercentage()- incrementPercent> average)
+                if (blockRight.getGasPercentage()- incrementPercent> average)
                 {
-                    int amountToChange = Math.max((int) ((blockArray[ii+1][jj].getGasPercentage() - average)/4.0), incrementPercent);
-                    blockArray[ii+1][jj].setGasPercentage(blockArray[ii+1][jj].getGasPercentage() - amountToChange);
+                    int amountToChange = Math.max((int) ((blockRight.getGasPercentage() - average)/4.0), incrementPercent);
+                    blockRight.setGasPercentage(blockRight.getGasPercentage() - amountToChange);
                     conservation = conservation -amountToChange;
                 }
-                else if (blockArray[ii+1][jj].getGasPercentage()+incrementPercent < average)
+                else if (blockRight.getGasPercentage()+incrementPercent < average)
                 {
-                    int amountToChange = Math.max((int) ((-blockArray[ii+1][jj].getGasPercentage() + average)/4.0), incrementPercent);
-                    blockArray[ii+1][jj].setGasPercentage(blockArray[ii+1][jj].getGasPercentage() +amountToChange);
+                    int amountToChange = Math.max((int) ((-blockRight.getGasPercentage() + average)/4.0), incrementPercent);
+                    blockRight.setGasPercentage(blockRight.getGasPercentage() +amountToChange);
                     conservation = conservation +amountToChange;
                 }
             }
-            blockArray[ii][jj].setGasPercentage(blockArray[ii][jj].getGasPercentage() - conservation);
+            currentBlock.setGasPercentage(currentBlock.getGasPercentage() - conservation);
         }
     }
 
     private void updateFallingBlocks(int ii, int jj)
     {
-        if (blockArray[ii][jj].getMinedStage() == GlobalConstants.ALMOST_MINED && !blockArray[ii][jj].isCurrentlyBeingMined())
+        if (blockArray.getBlock(ii, jj).getMinedStage() == GlobalConstants.ALMOST_MINED && !blockArray.getBlock(ii, jj).isCurrentlyBeingMined())
         {
             if (jj < verticalBlockLimit - 1)
             {
-                if (!blockArray[ii][jj+1].isSolid())
+                Block blockBelow = blockArray.getBlock(ii, jj+1);
+                if (!blockBelow.isSolid())
                 {
-                    Block upper = blockArray[ii][jj];
-                    Block lower = blockArray[ii][jj+1];
+                    Block upper = blockArray.getBlock(ii, jj);
                     NonSolidBlocks nonSolidBlocksUpper = upper.getBlockLiquidData();
-                    NonSolidBlocks nonSolidBlocksLower = lower.getBlockLiquidData();
+                    NonSolidBlocks nonSolidBlocksLower = blockBelow.getBlockLiquidData();
                     BlockStatusData blockStatusDataUpper = upper.getBlockStatusData();
-                    BlockStatusData blockStatusDataLower = lower.getBlockStatusData();
-                    blockArray[ii][jj].setBlockLiquidData(nonSolidBlocksLower);
-                    blockArray[ii][jj+1].setBlockLiquidData(nonSolidBlocksUpper);
-                    blockArray[ii][jj].setBlockStatusData(blockStatusDataLower);
-                    blockArray[ii][jj+1].setBlockStatusData(blockStatusDataUpper);
-                    blockArray[ii][jj].saveToMemory();
-                    blockArray[ii][jj+1].saveToMemory();
-                    blockArray[ii][jj+1].increaseFallenDistance();
-                    System.out.println("DISTANCE FALLEN" + blockArray[ii][jj+1].getHeightFallen());
+                    BlockStatusData blockStatusDataLower = blockBelow.getBlockStatusData();
+                    upper.setBlockLiquidData(nonSolidBlocksLower);
+                    blockBelow.setBlockLiquidData(nonSolidBlocksUpper);
+                    upper.setBlockStatusData(blockStatusDataLower);
+                    blockBelow.setBlockStatusData(blockStatusDataUpper);
+                    upper.saveToMemory();
+                    blockBelow.saveToMemory();
+                    blockBelow.increaseFallenDistance();
 
                     if (jj < verticalBlockLimit - 2)
                     {
+                        Block twoBelow = blockArray.getBlock(ii, jj + 2);
                         //Check explodium
-                        if (blockArray[ii][jj+2].isSolid() && blockArray[ii][jj+1].getType() ==GlobalConstants.EXPLODIUM)
+                        if (twoBelow.isSolid() && blockBelow.getType() ==GlobalConstants.EXPLODIUM)
                         {
-                            achievementManager.checkOops(blockArray[ii][jj+1]);
-                            blocksOnScreen.explodeBlock(blockArray[ii][jj+1]);
+                            achievementManager.checkOops(blockBelow);
+                            blocksOnScreen.explodeBlock(blockBelow);
                         }
-                        if (blockArray[ii][jj+2].getType() == GlobalConstants.EXPLODIUM)
+                        if (twoBelow.getType() == GlobalConstants.EXPLODIUM)
                         {
-                            achievementManager.checkChainReactionI(blockArray[ii][jj+1]);
-                            blocksOnScreen.explodeBlock(blockArray[ii][jj+2]);
+                            achievementManager.checkChainReactionI(blockBelow);
+                            blocksOnScreen.explodeBlock(twoBelow);
                         }
 
-                        if (blockArray[ii][jj+2].isSolid())
+                        if (twoBelow.isSolid())
                         {
                             //Check poisoning_the_well achievement
-                            if (blockArray[ii][jj+1].getType() == GlobalConstants.GASROCK)
+                            if (blockBelow.getType() == GlobalConstants.GASROCK)
                             {
-                                if (blockArray[ii][jj].getWaterPercentage() == 100)
+                                if (blockArray.getBlock(ii, jj).getWaterPercentage() == 100)
                                 {
-                                    if (jj > 0 && blockArray[ii][jj-1].getWaterPercentage() == 100)
+                                    if (jj > 0 && blockArray.getBlock(ii, jj -1).getWaterPercentage() == 100)
                                     {
                                         achievementManager.unlockAchievement(mContext.getResources().getString(R.string.poisoning_the_well));
                                     }
@@ -341,7 +345,7 @@ public class BlockPhysics {
                             }
 
                             //Reset height fallen
-                            blockArray[ii][jj+1].resetHeightFallen();
+                            blockBelow.resetHeightFallen();
                         }
                     }
                 }
@@ -351,34 +355,41 @@ public class BlockPhysics {
 
     private void createGas(int ii, int jj)
     {
-        if (blockArray[ii][jj].getType() == GlobalConstants.GASROCK)
+        if (blockArray.getBlock(ii,jj).getType() == GlobalConstants.GASROCK)
         {
             if (ii > 0)
             {
-                if (blockArray[ii-1][jj].isCavern())
+                Block blockLeft = blockArray.getBlock(ii-1,jj);
+
+                if (blockLeft.isCavern())
                 {
-                    blockArray[ii-1][jj].incrementGas();
+                    blockLeft.incrementGas();
                 }
             }
             if (ii < horizontalBlockLimit-1)
             {
-                if (blockArray[ii+1][jj].isCavern())
+                Block blockRight = blockArray.getBlock(ii+1,jj);
+
+                if (blockRight.isCavern())
                 {
-                    blockArray[ii+1][jj].incrementGas();
+                    blockRight.incrementGas();
                 }
             }
             if (jj < verticalBlockLimit - 1)
             {
-                if (blockArray[ii][jj+1].isCavern())
+                Block blockBelow = blockArray.getBlock(ii,jj+1);
+
+                if (blockBelow.isCavern())
                 {
-                    blockArray[ii][jj+1].incrementGas();
+                    blockBelow.incrementGas();
                 }
             }
             if (jj > 0)
             {
-                if (blockArray[ii][jj-1].isCavern())
+                Block blockAbove = blockArray.getBlock(ii,jj-1);
+                if (blockAbove.isCavern())
                 {
-                    blockArray[ii][jj-1].incrementGas();
+                    blockAbove.incrementGas();
                 }
             }
         }
@@ -386,34 +397,38 @@ public class BlockPhysics {
 
     private void updateIceBlocks(int ii ,int jj)
     {
-        if (blockArray[ii][jj].getType() == GlobalConstants.ICE)
+        if (blockArray.getBlock(ii,jj).getType() == GlobalConstants.ICE)
         {
             if (ii > 0)
             {
-                if (blockArray[ii-1][jj].hasWater())
+                Block blockLeft = blockArray.getBlock(ii-1,jj);
+                if (blockLeft.hasWater())
                 {
-                    blockArray[ii-1][jj].tryFreezing();
+                    blockLeft.tryFreezing();
                 }
             }
             if (ii < horizontalBlockLimit-1)
             {
-                if (blockArray[ii+1][jj].hasWater())
+                Block blockRight = blockArray.getBlock(ii + 1, jj);
+                if (blockRight.hasWater())
                 {
-                    blockArray[ii+1][jj].tryFreezing();
+                    blockRight.tryFreezing();
                 }
             }
             if (jj < verticalBlockLimit - 1)
             {
-                if (blockArray[ii][jj+1].hasWater())
+                Block blockBelow = blockArray.getBlock(ii, jj+1);
+                if (blockBelow.hasWater())
                 {
-                    blockArray[ii][jj+1].tryFreezing();
+                    blockBelow.tryFreezing();
                 }
             }
             if (jj > 0)
             {
-                if (blockArray[ii][jj-1].hasWater())
+                Block blockAbove = blockArray.getBlock(ii, jj-1);
+                if (blockAbove.hasWater())
                 {
-                    blockArray[ii][jj-1].tryFreezing();
+                    blockAbove.tryFreezing();
                 }
             }
         }
@@ -421,43 +436,44 @@ public class BlockPhysics {
 
     private void updateLifeBlocks(int ii ,int jj)
     {
-        if (blockArray[ii][jj].getType() == GlobalConstants.LIFE)
+        if (blockArray.getBlock(ii, jj).getType() == GlobalConstants.LIFE)
         {
+            Block currentBlock = blockArray.getBlock(ii, jj);
             if (ii > 0)
             {
-                if (blockArray[ii-1][jj].hasWater())
+                Block blockLeft = blockArray.getBlock(ii-1,jj);
+                int waterMoved = 0;
+                int neighbouringWater =  blockLeft.getWaterPercentage();
+                if (currentBlock.getWaterPercentage() < 100)
                 {
-                    int waterMoved = 0;
-                    int neighbouringWater =  blockArray[ii-1][jj].getWaterPercentage();
-                    if (blockArray[ii][jj].getWaterPercentage() < 100)
-                    {
-                        waterMoved = Math.min(neighbouringWater, 100 - blockArray[ii][jj].getWaterPercentage());
-                    }
-                    blockArray[ii-1][jj].setWaterPercentage(neighbouringWater - waterMoved);
-                    blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + (int)Math.ceil(((double)waterMoved/(double)lifeFactor)));
+                    waterMoved = Math.min(neighbouringWater, 100 - currentBlock.getWaterPercentage());
                 }
+                blockLeft.setWaterPercentage(neighbouringWater - waterMoved);
+                currentBlock.setWaterPercentage(currentBlock.getWaterPercentage() + (int)Math.ceil(((double)waterMoved/(double)lifeFactor)));
             }
             if (ii < horizontalBlockLimit-1)
             {
+                Block blockRight = blockArray.getBlock(ii + 1, jj);
                 int waterMoved = 0;
-                int neighbouringWater =  blockArray[ii+1][jj].getWaterPercentage();
-                if (blockArray[ii][jj].getWaterPercentage() < 100)
+                int neighbouringWater =  blockRight.getWaterPercentage();
+                if (currentBlock.getWaterPercentage() < 100)
                 {
-                    waterMoved = Math.min(neighbouringWater, 100 - blockArray[ii][jj].getWaterPercentage());
+                    waterMoved = Math.min(neighbouringWater, 100 - currentBlock.getWaterPercentage());
                 }
-                blockArray[ii+1][jj].setWaterPercentage(neighbouringWater - waterMoved);
-                blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + (int)Math.ceil(((double)waterMoved/(double)lifeFactor)));
+                blockRight.setWaterPercentage(neighbouringWater - waterMoved);
+                currentBlock.setWaterPercentage(currentBlock.getWaterPercentage() + (int)Math.ceil(((double)waterMoved/(double)lifeFactor)));
             }
             if (jj > 0)
             {
+                Block blockAbove = blockArray.getBlock(ii, jj - 1);
                 int waterMoved = 0;
-                int neighbouringWater =  blockArray[ii][jj-1].getWaterPercentage();
-                if (blockArray[ii][jj].getWaterPercentage() < 100)
+                int neighbouringWater =  blockAbove.getWaterPercentage();
+                if (currentBlock.getWaterPercentage() < 100)
                 {
-                    waterMoved = Math.min(neighbouringWater, 100 - blockArray[ii][jj].getWaterPercentage());
+                    waterMoved = Math.min(neighbouringWater, 100 - currentBlock.getWaterPercentage());
                 }
-                blockArray[ii][jj-1].setWaterPercentage(neighbouringWater - waterMoved);
-                blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() + (int)Math.ceil(((double)waterMoved/(double)lifeFactor)));
+                blockAbove.setWaterPercentage(neighbouringWater - waterMoved);
+                currentBlock.setWaterPercentage(currentBlock.getWaterPercentage() + (int)Math.ceil(((double)waterMoved/(double)lifeFactor)));
             }
         }
     }
@@ -469,12 +485,14 @@ public class BlockPhysics {
         if (jj < verticalBlockLimit - 1)
         {
             //Check below
-            if ((blockArray[ii][jj].isCavern()) && (blockArray[ii][jj].getWaterPercentage() > 0) && (!blockArray[ii][jj+1].isSolid()))
+            Block currentBlock = blockArray.getBlock(ii ,jj);
+            Block blockBelow = blockArray.getBlock(ii, jj+1);
+            if ((currentBlock.isCavern()) && (currentBlock.getWaterPercentage() > 0) && (!blockBelow.isSolid()))
             {
                 //Move water down
-                int waterMoved = Math.min(blockArray[ii][jj].getWaterPercentage(), 100-blockArray[ii][jj+1].getWaterPercentage());
-                blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() - waterMoved);
-                blockArray[ii][jj+1].setWaterPercentage(blockArray[ii][jj+1].getWaterPercentage() + waterMoved);
+                int waterMoved = Math.min(currentBlock.getWaterPercentage(), 100-blockBelow.getWaterPercentage());
+                currentBlock.setWaterPercentage(currentBlock.getWaterPercentage() - waterMoved);
+                blockBelow.setWaterPercentage(blockBelow.getWaterPercentage() + waterMoved);
                 if (waterMoved > 0)
                 {
                     updated = true;
@@ -488,76 +506,78 @@ public class BlockPhysics {
     {
         if (ii < horizontalBlockLimit - 1 && ii > 0)
         {
-            boolean leftValid = !blockArray[ii-1][jj].isSolid();
-            boolean rightValid = !blockArray[ii+1][jj].isSolid();
+            boolean leftValid = !blockArray.getBlock(ii - 1, jj).isSolid();
+            boolean rightValid = !blockArray.getBlock(ii + 1, jj).isSolid();
             int blocksToAverage = 1;
-            int totalWater = blockArray[ii][jj].getWaterPercentage();
+            int totalWater = blockArray.getBlock(ii, jj).getWaterPercentage();
             int incrementPercent = 1;
             if (leftValid)
             {
                 blocksToAverage ++;
-                totalWater = totalWater + blockArray[ii-1][jj].getWaterPercentage();
+                totalWater = totalWater + blockArray.getBlock(ii - 1, jj).getWaterPercentage();
             }
             if (rightValid)
             {
                 blocksToAverage ++;
-                totalWater = totalWater + blockArray[ii+1][jj].getWaterPercentage();
+                totalWater = totalWater + blockArray.getBlock(ii + 1, jj).getWaterPercentage();
             }
             int average = (int) Math.floor(totalWater/(double)blocksToAverage);
             int conservation = 0;
             if (leftValid)
             {
-                if (blockArray[ii-1][jj].getWaterPercentage() - incrementPercent> average)
+                Block blockLeft = blockArray.getBlock(ii - 1, jj);
+                if (blockLeft.getWaterPercentage() - incrementPercent> average)
                 {
-                    int amountToChange = Math.max((int) ((blockArray[ii-1][jj].getWaterPercentage() - average)/4.0), incrementPercent);
-                    blockArray[ii-1][jj].setWaterPercentage(blockArray[ii-1][jj].getWaterPercentage() - amountToChange);
+                    int amountToChange = Math.max((int) ((blockLeft.getWaterPercentage() - average)/4.0), incrementPercent);
+                    blockLeft.setWaterPercentage(blockLeft.getWaterPercentage() - amountToChange);
                     conservation = conservation -amountToChange;
                 }
-                else if (blockArray[ii-1][jj].getWaterPercentage() + incrementPercent< average)
+                else if (blockLeft.getWaterPercentage() + incrementPercent< average)
                 {
-                    int amountToChange = Math.max((int) ((-blockArray[ii-1][jj].getWaterPercentage() + average)/4.0), incrementPercent);
+                    int amountToChange = Math.max((int) ((-blockLeft.getWaterPercentage() + average)/4.0), incrementPercent);
 
-                    blockArray[ii-1][jj].setWaterPercentage(blockArray[ii-1][jj].getWaterPercentage() +amountToChange);
+                    blockLeft.setWaterPercentage(blockLeft.getWaterPercentage() +amountToChange);
                     conservation = conservation + amountToChange;
                 }
 
             }
             if (rightValid)
             {
-                if (blockArray[ii+1][jj].getWaterPercentage()- incrementPercent> average)
+                Block blockRight = blockArray.getBlock(ii + 1, jj);
+                if (blockRight.getWaterPercentage()- incrementPercent> average)
                 {
-                    int amountToChange = Math.max((int) ((blockArray[ii+1][jj].getWaterPercentage() - average)/4.0), incrementPercent);
-                    blockArray[ii+1][jj].setWaterPercentage(blockArray[ii+1][jj].getWaterPercentage() - amountToChange);
+                    int amountToChange = Math.max((int) ((blockRight.getWaterPercentage() - average)/4.0), incrementPercent);
+                    blockRight.setWaterPercentage(blockRight.getWaterPercentage() - amountToChange);
                     conservation = conservation -amountToChange;
                 }
-                else if (blockArray[ii+1][jj].getWaterPercentage()+incrementPercent < average)
+                else if (blockRight.getWaterPercentage()+incrementPercent < average)
                 {
-                    int amountToChange = Math.max((int) ((-blockArray[ii+1][jj].getWaterPercentage() + average)/4.0), incrementPercent);
-                    blockArray[ii+1][jj].setWaterPercentage(blockArray[ii+1][jj].getWaterPercentage() +amountToChange);
+                    int amountToChange = Math.max((int) ((-blockRight.getWaterPercentage() + average)/4.0), incrementPercent);
+                    blockRight.setWaterPercentage(blockRight.getWaterPercentage() +amountToChange);
                     conservation = conservation +amountToChange;
                 }
             }
-            blockArray[ii][jj].setWaterPercentage(blockArray[ii][jj].getWaterPercentage() - conservation);
+            blockArray.getBlock(ii, jj).setWaterPercentage(blockArray.getBlock(ii, jj).getWaterPercentage() - conservation);
         }
     }
 
 
     private void updateCrystalBlocks(int ii ,int jj)
     {
-        if (blockArray[ii][jj].getType() == GlobalConstants.CRYSTAL && ii > 0 && jj > 0 && ii < horizontalBlockLimit-1 && jj < verticalBlockLimit - 1)
+        if (blockArray.getBlock(ii, jj).getType() == GlobalConstants.CRYSTAL && ii > 0 && jj > 0 && ii < horizontalBlockLimit-1 && jj < verticalBlockLimit - 1)
         {
             int currentIce = 0;
             for (int hh = -1; hh < 2; hh ++)
             {
                 for (int kk = -1; kk < 2; kk++)
                 {
-                    if (blockArray[ii+hh][jj+kk].isIce())
+                    if (blockArray.getBlock(ii + hh, jj + kk).isIce())
                     {
                         currentIce ++;
                     }
                 }
             }
-            blockArray[ii][jj].setSurroundingIce(currentIce);
+            blockArray.getBlock(ii, jj).setSurroundingIce(currentIce);
         }
     }
 
@@ -565,15 +585,15 @@ public class BlockPhysics {
     {
         if (activeBombs.isBombActive())
         {
-            if (activeBombs.getBombBlock().getIndex() == blockArray[ii][jj].getIndex() )
+            if (activeBombs.getBombBlock().getIndex() == blockArray.getBlock(ii, jj).getIndex() )
             {
                 //Have got the bomb block
                 //Check below
                 if (jj < verticalBlockLimit - 1)
                 {
-                    if (blockArray[ii][jj+1].isCavern())
+                    if (blockArray.getBlock(ii, jj + 1).isCavern())
                     {
-                        activeBombs.updateLocation(blockArray[ii][jj+1]);
+                        activeBombs.updateLocation(blockArray.getBlock(ii, jj + 1));
                     }
                 }
             }

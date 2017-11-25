@@ -14,8 +14,6 @@ import android.view.SurfaceView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import javax.microedition.khronos.opengles.GL;
-
 /**
  * Created by Thomas on 25/01/2017.
  */
@@ -50,7 +48,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private PickaxeManager pickaxeManager;
     Camera camera;
     private ActiveBombs activeBombs;
-    ArrayOfBlocksOnScreen blocksOnScreen;
+    BlockManager blocksOnScreen;
     boolean initialized = false;
     BlockPhysics blockPhysics;
     BlockDrawing blockDrawing;
@@ -375,12 +373,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             {
                 seed = levelMemory.loadLevelData();
             }
-            blocksOnScreen = new ArrayOfBlocksOnScreen(gameWidth, gameHeight, blockSize, mContext, seed, camera, minedLocations, achievementsManager);
+            blocksOnScreen = new BlockManager(gameWidth, gameHeight, blockSize, mContext, seed, camera, minedLocations, achievementsManager);
             blocksOnScreen.updateCurrentScreenDimensions();
             blocksOnScreen.updatePreviousScreenDimensions();
             achievementsManager.initialize(gameWidth,gameHeight,blocksOnScreen );
             mainCharacter.setBlocksOnScreen(blocksOnScreen);
-            blockPhysics = new BlockPhysics(blocksOnScreen, activeBombs, mContext, achievementsManager);
+            blockPhysics = new BlockPhysics(blocksOnScreen.getBlockArray(), activeBombs, mContext, achievementsManager);
             inGameNotifications = new InGameNotifications(gameWidth, gameHeight, blockSize, mContext);
             blockDrawing = new BlockDrawing(blocksOnScreen,mContext,blockSize, camera, gameWidth, gameHeight, encyclopediaMemory, inGameNotifications, achievementsManager);
             mapArt = new MapArt(c,mContext,blockSize, shopMemory,camera);

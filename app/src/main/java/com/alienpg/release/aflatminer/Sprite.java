@@ -20,18 +20,16 @@ public class Sprite {
     private int canvasHeight;
     boolean jumping = false;
     private int heightLeftToJump = 0;
-    private int heightToFall = 0;
     private int baseJumpSpeed;
     private int baseGravitySpeed;
     private int baseRunningSpeed;
-    private boolean falling;
     private boolean isAir = false;
     private int mBlockSize;
     private boolean isClamberingLeft = false;
     private boolean isClamberingRight = false;
     private int heightToClamber;
     private int widthToClamber;
-    private ArrayOfBlocksOnScreen blocksOnScreen;
+    private BlockManager blocksOnScreen;
     private int maxOxygenAmount;
     private int oxygenAmount;
     private boolean dead = false;
@@ -82,7 +80,7 @@ public class Sprite {
         }
     }
 
-    public void setBlocksOnScreen(ArrayOfBlocksOnScreen blocks)
+    public void setBlocksOnScreen(BlockManager blocks)
     {
         blocksOnScreen = blocks;
     }

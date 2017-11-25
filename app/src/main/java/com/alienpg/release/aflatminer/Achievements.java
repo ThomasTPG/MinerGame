@@ -15,7 +15,7 @@ public class Achievements {
     Context mContext;
     private int screenWidth;
     private int screenHeight;
-    ArrayOfBlocksOnScreen blocksOnScreen;
+    BlockManager blocksOnScreen;
 
     public Achievements(Context context) {
         mContext = context;
@@ -26,11 +26,11 @@ public class Achievements {
         mGoogleApiClient = googleApiClient;
     }
 
-    public void initialize(int screenWidth, int screenHeight, ArrayOfBlocksOnScreen arrayOfBlocksOnScreen)
+    public void initialize(int screenWidth, int screenHeight, BlockManager blockManager)
     {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        blocksOnScreen = arrayOfBlocksOnScreen;
+        blocksOnScreen = blockManager;
     }
 
 

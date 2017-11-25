@@ -6,9 +6,9 @@ import android.content.Context;
  * Created by Thomas on 13/02/2017.
  */
 
-public class ArrayOfBlocksOnScreen {
+public class BlockManager {
 
-    private Block[][] blockArray;
+    private BlockArray blockArray;
     private int mGameWidth;
     private int mGameHeight;
     private int verticalBlockLimit;
@@ -30,12 +30,11 @@ public class ArrayOfBlocksOnScreen {
     private Achievements achievementManager;
     private BlockCreator blockCreator;
 
-    public ArrayOfBlocksOnScreen(int gameWidth, int gameHeight, int blockSize, Context context, int seed, Camera camera, MinedLocations minedLocations, Achievements achievements)
+    public BlockManager(int gameWidth, int gameHeight, int blockSize, Context context, int seed, Camera camera, MinedLocations minedLocations, Achievements achievements)
     {
         blocksAcross = context.getResources().getInteger(R.integer.blocks_across);
         this.seed = seed;
         this.blockSize = blockSize;
-        this.minedLocations = minedLocations;
         mCamera = camera;
         this.context = context;
         mGameHeight = gameHeight;
@@ -44,9 +43,9 @@ public class ArrayOfBlocksOnScreen {
         blocksVerticalScreen = (int) Math.ceil(gameHeight / blockSize + 2);
         verticalBlockLimit = blocksVerticalScreen + 2*borderSize;
         horizontalBlockLimit = blocksHorizontalScreen + 2*borderSize;
-        blockArray = new Block[horizontalBlockLimit][verticalBlockLimit];
+        blockArray = new BlockArray(gameWidth,gameHeight,blockSize);
         achievementManager = achievements;
-        blockCreator = new BlockCreator(seed,context,blocksAcross,minedLocations);
+        blockCreator = new BlockCreator(seed,context,blocksAcross,minedLocations, blockArray);
         createInitialBlockArray();
     }
 
@@ -61,7 +60,7 @@ public class ArrayOfBlocksOnScreen {
             {
                 int xCoord = (int) (Math.floor(screenTopLeftX / (double)blockSize) + ii - borderSize);
                 int yCoord = (int) (Math.floor(screenTopLeftY / (double)blockSize) + jj - borderSize);
-                blockArray = blockCreator.setNewBlock(new Coordinates(xCoord,yCoord),ii ,jj, blockArray);
+                blockCreator.setNewBlock(new Coordinates(xCoord,yCoord),ii ,jj);
             }
         }
     }
@@ -80,13 +79,13 @@ public class ArrayOfBlocksOnScreen {
     public Block getBlockFromArrayUsingScreenCoordinates(Coordinates coordinates)
     {
         int[] coords = getBlockArrayIndicesFromScreenCoordinates(coordinates);
-        return blockArray[coords[0]][coords[1]];
+        return blockArray.getBlock(coords[0], coords[1]);
     }
 
     public void setBlockUsingScreenCoordinates(Coordinates coordinates, Block b)
     {
         int[] coords = getBlockArrayIndicesFromScreenCoordinates(coordinates);
-        blockArray[coords[0]][coords[1]] = b;
+        blockArray.setBlock(coords[0], coords[1], b);
     }
 
     public void calculateCurrentBlocks()
@@ -102,11 +101,11 @@ public class ArrayOfBlocksOnScreen {
             {
                 for (int jj = verticalBlockLimit - 1; jj > 0; jj--)
                 {
-                    blockArray[ii][jj] = blockArray[ii][jj-1];
+                    blockArray.setBlock(ii, jj, blockArray.getBlock(ii, jj - 1));
                 }
                 int xCoord = (int) (Math.floor(screenTopLeftX / (double)blockSize) + ii - borderSize);
                 int yCoord = (int) (Math.floor(screenTopLeftY / (double)blockSize) - borderSize);
-                blockArray = blockCreator.setNewBlock(new Coordinates(xCoord,yCoord), ii, 0, blockArray);
+                blockCreator.setNewBlock(new Coordinates(xCoord,yCoord), ii, 0);
             }
         }
         else if (Math.floor(currentScreenDimensions[0]) > Math.floor(previousScreenDimensions[0]))
@@ -118,11 +117,11 @@ public class ArrayOfBlocksOnScreen {
             {
                 for (int jj = 0; jj < verticalBlockLimit - 1; jj++)
                 {
-                    blockArray[ii][jj] = blockArray[ii][jj+1];
+                    blockArray.setBlock(ii, jj, blockArray.getBlock(ii, jj + 1));
                 }
                 int xCoord = (int) (Math.floor(screenTopLeftX / (double)blockSize + ii) - borderSize);
                 int yCoord = (int) (Math.floor(screenTopLeftY / (double)blockSize + verticalBlockLimit - 1 - borderSize));
-                blockArray = blockCreator.setNewBlock(new Coordinates(xCoord,yCoord), ii ,verticalBlockLimit-1, blockArray);
+                blockCreator.setNewBlock(new Coordinates(xCoord,yCoord), ii ,verticalBlockLimit-1);
             }
         }
         if (Math.floor(currentScreenDimensions[3]) > Math.floor(previousScreenDimensions[3]))
@@ -132,11 +131,11 @@ public class ArrayOfBlocksOnScreen {
             {
                 for (int ii = 0; ii < horizontalBlockLimit - 1; ii++)
                 {
-                    blockArray[ii][jj] = blockArray[ii+1][jj];
+                    blockArray.setBlock(ii, jj, blockArray.getBlock(ii+1, jj));
                 }
                 int xCoord = (int) (Math.floor(screenTopLeftX / (double)blockSize) + horizontalBlockLimit - 1 - borderSize);
                 int yCoord = (int) (Math.floor(screenTopLeftY / (double)blockSize) + jj -borderSize);
-                blockArray = blockCreator.setNewBlock(new Coordinates(xCoord,yCoord), horizontalBlockLimit-1, jj, blockArray);
+                blockCreator.setNewBlock(new Coordinates(xCoord,yCoord), horizontalBlockLimit-1, jj);
             }
         }
         else if (Math.floor(currentScreenDimensions[1]) < Math.floor(previousScreenDimensions[1]))
@@ -146,11 +145,11 @@ public class ArrayOfBlocksOnScreen {
             {
                 for (int ii = horizontalBlockLimit - 1; ii > 0; ii--)
                 {
-                    blockArray[ii][jj] = blockArray[ii-1][jj];
+                    blockArray.setBlock(ii, jj, blockArray.getBlock(ii-1, jj));
                 }
                 int xCoord = (int) (Math.floor(screenTopLeftX / (double)blockSize) - borderSize);
                 int yCoord = (int) (Math.floor(screenTopLeftY / (double)blockSize) + jj - borderSize);
-                blockArray = blockCreator.setNewBlock(new Coordinates(xCoord,yCoord), 0 ,jj, blockArray);
+                blockCreator.setNewBlock(new Coordinates(xCoord,yCoord), 0 ,jj);
             }
 
         }
@@ -183,7 +182,7 @@ public class ArrayOfBlocksOnScreen {
         {
             for (int jj = verticalBlockLimit - 2; jj >= 0; jj--)
             {
-                if (blockArray[ii][jj].getIndex() == index)
+                if (blockArray.getBlock(ii, jj).getIndex() == index)
                 {
                     x = ii;
                     y = jj;
@@ -201,8 +200,8 @@ public class ArrayOfBlocksOnScreen {
                     {
                         if (x + aa < horizontalBlockLimit && x + aa >= 0 && y + bb >=0 && y + bb < verticalBlockLimit)
                         {
-                            achievementManager.checkChainReactionII(block, blockArray[x + aa][y + bb]);
-                            blockArray[x + aa][y + bb].blowUp();
+                            achievementManager.checkChainReactionII(block, blockArray.getBlock(x + aa, y + bb));
+                            blockArray.getBlock(x + aa, y + bb).blowUp();
                         }
                     }
                 }
@@ -221,15 +220,15 @@ public class ArrayOfBlocksOnScreen {
                         {
                             for (int bb = -1; bb<=1; bb++)
                             {
-                                if (blockArray[x+aa][y+bb].getType() == GlobalConstants.BOULDER)
+                                if (blockArray.getBlock(x + aa, y + bb).getType() == GlobalConstants.BOULDER)
                                 {
                                     boulders ++;
                                 }
-                                if (blockArray[x+aa][y+bb].getType() == GlobalConstants.COSTUMEGEM)
+                                if (blockArray.getBlock(x + aa, y + bb).getType() == GlobalConstants.COSTUMEGEM)
                                 {
                                     achievementManager.unlockAchievement(context.getResources().getString(R.string.naturism));
                                 }
-                                blockArray[x + aa][y + bb].blowUp();
+                                blockArray.getBlock(x + aa, y + bb).blowUp();
                             }
                         }
                         if (boulders >= 4)
@@ -244,15 +243,15 @@ public class ArrayOfBlocksOnScreen {
                         {
                             for (int bb = -1; bb<=1; bb++)
                             {
-                                if (blockArray[x+aa][y+bb].getType() == GlobalConstants.CAVERN)
+                                if (blockArray.getBlock(x + aa, y + bb).getType() == GlobalConstants.CAVERN)
                                 {
                                     numberConverted ++;
                                 }
-                                if (blockArray[x+aa][y+bb].getGasPercentage() > 0)
+                                if (blockArray.getBlock(x + aa, y + bb).getGasPercentage() > 0)
                                 {
                                     numberGas ++;
                                 }
-                                blockArray[x + aa][y + bb].detonateIceBomb();
+                                blockArray.getBlock(x + aa, y + bb).detonateIceBomb();
                             }
                         }
                         if (numberConverted == 0)
@@ -338,14 +337,9 @@ public class ArrayOfBlocksOnScreen {
         return horizontalBlockLimit;
     }
 
-    public Block[][] getBlockArray()
+    public BlockArray getBlockArray()
     {
         return blockArray;
-    }
-
-    public void setBlockArray(Block[][] newBlockArray)
-    {
-        blockArray = newBlockArray;
     }
 
     public int getBorderSize()
