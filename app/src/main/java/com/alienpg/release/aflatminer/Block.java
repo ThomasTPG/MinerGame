@@ -20,18 +20,13 @@ public class Block {
 
     private int thresholdWaterToFreeze = 15;
     private int waterProducedFromIce = 12;
-    private int index;
-    Context context;
-    private int blocksAcross;
-    private int seed;
+    protected int index;
     private MinedLocations mMinedLocations;
     private int miningLimit = 100;
     private double pickaxeRequired;
-    private int blocksPerScreen;
     private int bombType = 0;
     private boolean currentlyBeingMined = false;
     private int surroundingIce = 0;
-    private int heightFallen = 0;
     private boolean achievementChainReactionII = false;
     private Bitmap mBitmap;
     private BitmapFlyWeight bitmapFlyWeight;
@@ -43,22 +38,17 @@ public class Block {
     //If this is a crystal block, we need to record the maximum ice that has surrounded it.
     private boolean frozen = false;
 
-    public Block (Coordinates coordinates,int seed, Context context, int blocksAcross, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
+    public Block (Coordinates coordinates, BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
         xCoord = coordinates.getX();
         yCoord = coordinates.getY();
-        index = yCoord * blocksAcross + xCoord;
-        this.context = context;
-        this.blocksAcross = context.getResources().getInteger(R.integer.blocks_across);
-        this.blocksPerScreen = context.getResources().getInteger(R.integer.blocks_per_screen_width);
-        this.seed = seed;
-        blockLiquidData = new NonSolidBlocks();
-        blockStatusData = new BlockStatusData();
+        this.index = blockSavedData.getIndex();
+        blockLiquidData = blockSavedData.getNonSolidBlocks();
+        blockStatusData = blockSavedData.getBlockStatusData();
         mMinedLocations = minedLocations;
         this.bitmapFlyWeight = bitmapFlyWeight;
         miningBitmapManager = bitmapFlyWeight.getMiningBitmapManager();
         blockBitmapManager = bitmapFlyWeight.getBlockBitmapManager();
-        determineType();
     }
 
     public Block(Block oldBlock)
@@ -66,10 +56,6 @@ public class Block {
         index = oldBlock.getIndex();
         xCoord = oldBlock.getX();
         yCoord = oldBlock.getY();
-        context = oldBlock.getContext();
-        blocksAcross = context.getResources().getInteger(R.integer.blocks_across);
-        blocksPerScreen = context.getResources().getInteger(R.integer.blocks_per_screen_width);
-        seed = oldBlock.getSeed();
         blockLiquidData = oldBlock.getBlockLiquidData();
         blockStatusData = oldBlock.getBlockStatusData();
         mMinedLocations = oldBlock.getmMinedLocations();
@@ -77,122 +63,11 @@ public class Block {
         miningBitmapManager = bitmapFlyWeight.getMiningBitmapManager();
         blockBitmapManager = bitmapFlyWeight.getBlockBitmapManager();
         saveToMemory();
-        determineType();
     }
 
     public MinedLocations getmMinedLocations()
     {
         return mMinedLocations;
-    }
-
-    int getSeed()
-    {
-        return seed;
-    }
-
-    public Context getContext()
-    {
-        return context;
-    }
-
-    private void determineType()
-    {
-        if (mMinedLocations.isItemContained(index))
-        {
-            setType(mMinedLocations.getThisType());
-            blockLiquidData.setWaterPercentage(mMinedLocations.getWaterPercentage(index));
-            blockLiquidData.setGasPercentage(mMinedLocations.getGasPercentage(index));
-            blockStatusData.setMinedPercentage(mMinedLocations.getMinedPercentage(index));
-        }
-        else
-        {
-            CavernCreator c = new CavernCreator(xCoord,yCoord,blocksAcross,seed);
-            if (c.getIsCavern())
-            {
-                //Determine if the type oft he block is a cavern. Also includes y<0 regions at the top.
-                setType(GlobalConstants.CAVERN);
-
-                int distance = c.getDistanceToCavern();
-                if (yCoord > 0)
-                {
-                    Random waterRandom = new Random(seed * (xCoord + yCoord) * yCoord * xCoord * xCoord);
-                    int rand = (int) (waterRandom.nextDouble() * 1000);
-                    int waterLiklihood = 0;
-                    if (distance < 50)
-                    {
-                        waterLiklihood = 50 - distance;
-                    }
-                    if (rand > 990 - waterLiklihood)
-                    {
-                        blockLiquidData.setWaterPercentage(100);
-                        saveToMemory();
-                    }
-
-                }
-            }
-            else{
-                // Not a cavern - generate a solid block instead
-                //Find the distance to the nearest cavern
-                int distance = c.getDistanceToCavern();
-                int oreLiklihood = 0;
-                if (distance < 20)
-                {
-                    oreLiklihood = (int) (4*Math.pow((20-distance),1.2));
-                }
-                Random generator = new Random(seed * (xCoord + yCoord) * yCoord * xCoord * xCoord);
-                int rand = (int) (generator.nextDouble() * 1000);
-                if (rand > 900)
-                {
-                    setType(GlobalConstants.BOULDER);
-                }
-                else if (rand > 890 - oreLiklihood)
-                {
-                    setOre();
-                }
-                else
-                {
-                    setType(GlobalConstants.SOIL);
-                }
-            }
-        }
-        if (xCoord < context.getResources().getInteger(R.integer.left_hand_side_wiggle_room) || xCoord > blocksAcross)
-        {
-            setType(GlobalConstants.HARD_BOULDER);
-        }
-        if (yCoord == 0)
-        {
-            if (Math.abs(xCoord - blocksAcross) < blocksPerScreen )
-            {
-                setType(GlobalConstants.HARD_BOULDER);
-            }
-        }
-    }
-
-
-    private void setOre()
-    {
-        Random oreRandom = new Random(seed * xCoord * yCoord + yCoord*xCoord);
-        double randomOreType = oreRandom.nextDouble();
-        if (yCoord < 20)
-        {
-            setType(OreHeightTables.determineOreTable1(randomOreType));
-        }
-        else if (yCoord < 40)
-        {
-            setType(OreHeightTables.determineOreTable2(randomOreType));
-        }
-        else if (yCoord < 60)
-        {
-            setType(OreHeightTables.determineOreTable3(randomOreType));
-        }
-        else if (yCoord < 80)
-        {
-            setType(OreHeightTables.determineOreTable4(randomOreType));
-        }
-        else
-        {
-            setType(OreHeightTables.determineOreTable5(randomOreType));
-        }
     }
 
     public int getMinedStage()
@@ -210,7 +85,6 @@ public class Block {
 
     public void resetMiningProgress()
     {
-        determineType();
         if (getMinedStage() == GlobalConstants.ALMOST_MINED)
         {
             blockStatusData.setMinedPercentage(GlobalConstants.ALMOST_PERCENTAGE);
@@ -358,7 +232,6 @@ public class Block {
     protected void setType(int newType)
     {
         blockStatusData.setType(newType);
-        setSoftness();
     }
 
     public boolean hasWater()
@@ -452,63 +325,6 @@ public class Block {
     protected void setSoftness(int pickaxeType)
     {
         pickaxeRequired = pickaxeType;
-    }
-    private void setSoftness()
-    {
-        switch (blockStatusData.getType())
-        {
-            case (GlobalConstants.CAVERN):
-                pickaxeRequired = PickaxeTypes.CANNOT_BE_MINED;
-                break;
-            case (GlobalConstants.BOULDER):
-                pickaxeRequired = PickaxeTypes.CANNOT_BE_MINED;
-                break;
-            case (GlobalConstants.HARD_BOULDER):
-                pickaxeRequired = PickaxeTypes.CANNOT_BE_MINED;
-                break;
-            case (GlobalConstants.FIREBALL):
-                pickaxeRequired = PickaxeTypes.CANNOT_BE_MINED;
-                break;
-            case (GlobalConstants.SOIL):
-                pickaxeRequired = PickaxeTypes.WOOD_PICKAXE;
-                break;
-            case (GlobalConstants.COPPER):
-                pickaxeRequired = PickaxeTypes.TIN_PICKAXE;
-                break;
-            case (GlobalConstants.IRON):
-                pickaxeRequired = PickaxeTypes.COPPER_PICKAXE;
-                break;
-            case (GlobalConstants.EXPLODIUM):
-                pickaxeRequired = PickaxeTypes.TIN_PICKAXE;
-                break;
-            case (GlobalConstants.MARBLE):
-                pickaxeRequired = PickaxeTypes.COPPER_PICKAXE;
-                break;
-            case (GlobalConstants.SPRING):
-                pickaxeRequired = PickaxeTypes.TIN_PICKAXE;
-                break;
-            case (GlobalConstants.LIFE):
-                pickaxeRequired = PickaxeTypes.COPPER_PICKAXE;
-                break;
-            case (GlobalConstants.ICE):
-                pickaxeRequired = PickaxeTypes.WOOD_PICKAXE;
-                break;
-            case (GlobalConstants.GOLD):
-                pickaxeRequired = PickaxeTypes.IRON_PICKAXE;
-                break;
-            case (GlobalConstants.CRYSTAL):
-                pickaxeRequired = PickaxeTypes.IRON_PICKAXE;
-                break;
-            case (GlobalConstants.GASROCK):
-                pickaxeRequired = PickaxeTypes.COPPER_PICKAXE;
-                break;
-            case(GlobalConstants.TIN):
-                pickaxeRequired = PickaxeTypes.WOOD_PICKAXE;
-                break;
-            case (GlobalConstants.COSTUMEGEM):
-                pickaxeRequired = PickaxeTypes.WOOD_PICKAXE;
-                break;
-        }
     }
 
     public double getPickaxeRequired()
@@ -658,5 +474,4 @@ public class Block {
             canvas.drawBitmap(mining1,src,location,null);
         }
     }
-
 }

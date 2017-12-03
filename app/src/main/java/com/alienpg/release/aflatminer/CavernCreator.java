@@ -23,22 +23,22 @@ public class CavernCreator {
     private boolean isCavern = false;
 
 
-    public CavernCreator(int xCoOrd, int yCoOrd, int blocksAcross, int seed)
+    public CavernCreator(Coordinates coordinates, int blocksAcross, int seed)
     {
-        x = xCoOrd;
-        y = yCoOrd;
+        x = coordinates.getX();
+        y = coordinates.getY();
         this.seed = seed;
         this.blocksAcross = blocksAcross;
 
 
         calculateCavernLocations();
         calculateSkew();
-        if (yCoOrd < 0)
+        if (y < 0)
         {
             //No blocks above the horizon
             isCavern = true;
         }
-        else if (yCoOrd < 12)
+        else if (y < 12)
         {
             //No caverns close to surface
             isCavern = false;
