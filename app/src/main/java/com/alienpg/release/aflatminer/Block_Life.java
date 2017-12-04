@@ -19,9 +19,39 @@ public class Block_Life extends  Block{
         setData();
     }
 
+
+
+    private void setLifeBitmap()
+    {
+        if (getWaterPercentage() >= 100)
+        {
+            setBitmap(blockBitmapManager.getLife6());
+
+        }
+        else if (getWaterPercentage() > 80)
+        {
+            setBitmap(blockBitmapManager.getLife5());
+
+        }
+        else if (getWaterPercentage() > 60)
+            {
+            setBitmap(blockBitmapManager.getLife4());
+
+        }
+        else if (getWaterPercentage() > 40)
+        {
+            setBitmap(blockBitmapManager.getLife3());
+
+        }
+        else
+        {
+            setBitmap(blockBitmapManager.getLife2());
+        }
+    }
+
     private void setData()
     {
-        setBitmap(blockBitmapManager.getLife1());
+        setLifeBitmap();
         setSoftness(PickaxeTypes.COPPER_PICKAXE);
         setType(GlobalConstants.LIFE);
     }

@@ -254,11 +254,6 @@ public class Block {
         return (blockStatusData.getType() == GlobalConstants.ICE);
     }
 
-    public boolean isGasRock()
-    {
-        return (blockStatusData.getType() == GlobalConstants.GASROCK);
-    }
-
     public boolean isFire()
     {
         return (blockStatusData.getType() == GlobalConstants.FIREBALL);
