@@ -462,17 +462,16 @@ public class BlockPhysics {
                 if (!blockBelow.isSolid())
                 {
                     Block upper = blockArray.getBlock(ii, jj);
-                    NonSolidBlocks nonSolidBlocksUpper = upper.getBlockLiquidData();
-                    NonSolidBlocks nonSolidBlocksLower = blockBelow.getBlockLiquidData();
-                    BlockStatusData blockStatusDataUpper = upper.getBlockStatusData();
-                    BlockStatusData blockStatusDataLower = blockBelow.getBlockStatusData();
-                    upper.setBlockLiquidData(nonSolidBlocksLower);
-                    blockBelow.setBlockLiquidData(nonSolidBlocksUpper);
-                    upper.setBlockStatusData(blockStatusDataLower);
-                    blockBelow.setBlockStatusData(blockStatusDataUpper);
-                    upper.saveToMemory();
-                    blockBelow.saveToMemory();
-                    blockBelow.increaseFallenDistance();
+
+                    blockArray.setBlock(ii, jj , blockBelow);
+                    blockArray.getBlock(ii,jj).setIndex(upper.getIndex());
+                    blockArray.getBlock(ii,jj).setxCoord(upper.getxCoord());
+                    blockArray.getBlock(ii,jj).setyCoord(upper.getyCoord());
+                    blockArray.setBlock(ii, jj+1, upper);
+                    blockArray.getBlock(ii,jj+1).setIndex(blockBelow.getIndex());
+                    blockArray.getBlock(ii,jj+1).setxCoord(blockBelow.getxCoord());
+                    blockArray.getBlock(ii,jj+1).setyCoord(blockBelow.getyCoord());
+                    blockArray.getBlock(ii,jj+1).increaseFallenDistance();
 
                     if (jj < verticalBlockLimit - 2)
                     {

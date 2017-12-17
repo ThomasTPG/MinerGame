@@ -14,7 +14,7 @@ public class CavernCreator {
     private int x;
     private int y;
     private int seed;
-    private int minHeightBetweenCaverns = 35;
+    private int minHeightBetweenCaverns = 25;
     private int closestCavernX = 0;
     private int closestCavernY = 0;
     private int distanceToCavern;
@@ -74,7 +74,7 @@ public class CavernCreator {
     private void calculateSkew()
     {
         Random skewRandom = new Random(closestCavernX * closestCavernY + seed);
-        skewX = skewRandom.nextDouble()/4 + 0.75;
+        skewX = skewRandom.nextDouble()/4 + 0.5;
         skewY = skewRandom.nextDouble()/4 + 0.75;
 
     }
@@ -84,7 +84,7 @@ public class CavernCreator {
         Random cavernRandom = new Random(x * y * seed);
         int distortionFactor = cavernRandom.nextInt(200);
         int cavernProbability = (int) (1000/ (distortionFactor + (Math.pow(((x - closestCavernX) * skewX), 2) + Math.pow((y - closestCavernY) * skewY, 2))));
-        return((cavernProbability > 5));
+        return((cavernProbability > 6));
     }
 
     public int getDistanceToCavern()

@@ -328,6 +328,26 @@ public class Block {
         }
     }
 
+    public int getxCoord() {
+        return xCoord;
+    }
+
+    public void setxCoord(int xCoord) {
+        this.xCoord = xCoord;
+    }
+
+    public int getyCoord() {
+        return yCoord;
+    }
+
+    public void setyCoord(int yCoord) {
+        this.yCoord = yCoord;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     public boolean canTurnIntoIce()
     {
         return false;
