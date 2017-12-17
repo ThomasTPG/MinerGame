@@ -8,9 +8,9 @@ import android.content.Context;
 
 public class Block_HardBoulder extends Block {
 
-    public Block_HardBoulder(Coordinates coordinates, BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
+    public Block_HardBoulder(BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
-        super(coordinates, blockSavedData, minedLocations, bitmapFlyWeight);
+        super(blockSavedData, minedLocations, bitmapFlyWeight);
         setData();
     }
 

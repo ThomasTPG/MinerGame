@@ -6,9 +6,9 @@ package com.alienpg.release.aflatminer;
 
 public class Block_Ice extends  Block{
 
-    public Block_Ice(Coordinates coordinates, BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
+    public Block_Ice(BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
-        super(coordinates, blockSavedData, minedLocations, bitmapFlyWeight);
+        super(blockSavedData, minedLocations, bitmapFlyWeight);
         setData();
     }
 

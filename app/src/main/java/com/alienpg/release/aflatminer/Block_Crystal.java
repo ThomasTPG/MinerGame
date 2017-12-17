@@ -8,9 +8,9 @@ public class Block_Crystal extends  Block{
 
     int crystalCount = 0;
 
-    public Block_Crystal(Coordinates coordinates, BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
+    public Block_Crystal(BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
-        super(coordinates, blockSavedData, minedLocations, bitmapFlyWeight);
+        super(blockSavedData, minedLocations, bitmapFlyWeight);
         setData();
     }
 

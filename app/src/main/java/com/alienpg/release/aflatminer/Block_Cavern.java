@@ -14,9 +14,9 @@ public class Block_Cavern extends Block{
 
     private int thresholdWaterToFreeze = 15;
 
-    public Block_Cavern(Coordinates coordinates, BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
+    public Block_Cavern(BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
-        super(coordinates, blockSavedData, minedLocations, bitmapFlyWeight);
+        super(blockSavedData, minedLocations, bitmapFlyWeight);
         setData();
     }
 
@@ -132,7 +132,7 @@ public class Block_Cavern extends Block{
             pct = 0;
         }
         blockLiquidData.setGasPercentage(pct);
-        if (yCoord >= 0) {
+        if (blockLocaleData.getCoordinates().getY() >= 0) {
             saveToMemory();
         }
     }
@@ -144,7 +144,7 @@ public class Block_Cavern extends Block{
         }
         blockLiquidData.setWaterPercentage(pct);
 
-        if (yCoord >= 0) {
+        if (blockLocaleData.getCoordinates().getY() >= 0) {
             saveToMemory();
         }
     }

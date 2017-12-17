@@ -6,20 +6,22 @@ package com.alienpg.release.aflatminer;
 
 public class BlockSavedData {
 
-    private int index;
+    private BlockLocaleData localeData;
     private NonSolidBlocks nonSolidBlocks;
     private BlockStatusData blockStatusData;
 
-    public BlockSavedData(int index)
+    public BlockSavedData(BlockLocaleData localeData)
     {
-        this.index = index;
+        this.localeData = localeData;
         nonSolidBlocks = new NonSolidBlocks();
         blockStatusData = new BlockStatusData();
     }
 
     public int getIndex() {
-        return index;
+        return localeData.getIndex();
     }
+
+    public BlockLocaleData getLocaleData() { return localeData; }
 
     public NonSolidBlocks getNonSolidBlocks() {
         return nonSolidBlocks;

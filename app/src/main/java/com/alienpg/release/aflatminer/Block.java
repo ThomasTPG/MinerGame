@@ -13,10 +13,9 @@ import java.util.Random;
 
 public class Block {
 
-    private int xCoord;
-    protected int yCoord;
     protected NonSolidBlocks blockLiquidData;
     protected BlockStatusData blockStatusData;
+    protected BlockLocaleData blockLocaleData;
     protected int index;
     private MinedLocations mMinedLocations;
     private int miningLimit = 100;
@@ -34,10 +33,9 @@ public class Block {
     public static int waterProducedFromIce = 12;
 
 
-    public Block(Coordinates coordinates, BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight) {
-        xCoord = coordinates.getX();
-        yCoord = coordinates.getY();
+    public Block(BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight) {
         this.index = blockSavedData.getIndex();
+        blockLocaleData = blockSavedData.getLocaleData();
         blockLiquidData = blockSavedData.getNonSolidBlocks();
         blockStatusData = blockSavedData.getBlockStatusData();
         mMinedLocations = minedLocations;
@@ -48,8 +46,6 @@ public class Block {
 
     public Block(Block oldBlock) {
         index = oldBlock.getIndex();
-        xCoord = oldBlock.getX();
-        yCoord = oldBlock.getY();
         blockLiquidData = oldBlock.getBlockLiquidData();
         blockStatusData = oldBlock.getBlockStatusData();
         mMinedLocations = oldBlock.getmMinedLocations();
@@ -107,11 +103,11 @@ public class Block {
     }
 
     public int getX() {
-        return xCoord;
+        return blockLocaleData.getCoordinates().getX();
     }
 
     public int getY() {
-        return yCoord;
+        return blockLocaleData.getCoordinates().getY();
     }
 
     public boolean mineFurther(OreCounter oreCounter) {
@@ -328,24 +324,12 @@ public class Block {
         }
     }
 
-    public int getxCoord() {
-        return xCoord;
+    public BlockLocaleData getBlockLocaleData() {
+        return blockLocaleData;
     }
 
-    public void setxCoord(int xCoord) {
-        this.xCoord = xCoord;
-    }
-
-    public int getyCoord() {
-        return yCoord;
-    }
-
-    public void setyCoord(int yCoord) {
-        this.yCoord = yCoord;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
+    public void setBlockLocaleData(BlockLocaleData blockLocaleData) {
+        this.blockLocaleData = blockLocaleData;
     }
 
     public boolean canTurnIntoIce()

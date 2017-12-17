@@ -34,7 +34,7 @@ public class BlockCreator {
     public void setNewBlock(Coordinates coordinates, int ii, int jj)
     {
         int index = calculateIndex(coordinates.getX(),coordinates.getY());
-        BlockSavedData blockSavedData = new BlockSavedData(index);
+        BlockSavedData blockSavedData = new BlockSavedData(new BlockLocaleData(index, coordinates));
         Block newBlock = determineType(blockSavedData, coordinates, mSeed);
         blockArray.setBlock(ii,jj,newBlock);
     }
@@ -67,41 +67,41 @@ public class BlockCreator {
         switch (type)
         {
             case (GlobalConstants.CAVERN):
-                return new Block_Cavern(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Cavern(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.BOULDER):
-                return new Block_Boulder(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Boulder(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.HARD_BOULDER):
-                return new Block_HardBoulder(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_HardBoulder(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.FIREBALL):
-                return new Block_FireBall(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_FireBall(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.SOIL):
-                return new Block_Soil(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Soil(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.COPPER):
-                return new Block_Copper(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Copper(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.IRON):
-                return new Block_Iron(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Iron(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.EXPLODIUM):
-                return new Block_Explodium(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Explodium(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.MARBLE):
-                return new Block_Marble(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Marble(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.SPRING):
-                return new Block_Spring(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Spring(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.LIFE):
-                return new Block_Life(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Life(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.ICE):
-                return new Block_Ice(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Ice(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.GOLD):
-                return new Block_Gold(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Gold(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.CRYSTAL):
-                return new Block_Crystal(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Crystal(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.GASROCK):
-                return new Block_GasRock(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_GasRock(blockSavedData,minedLocations, bitmapFlyWeight);
             case(GlobalConstants.TIN):
-                return new Block_Tin(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Tin(blockSavedData,minedLocations, bitmapFlyWeight);
             case (GlobalConstants.COSTUMEGEM):
-                return new Block_CostumeGem(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_CostumeGem(blockSavedData,minedLocations, bitmapFlyWeight);
             default:
-                return new Block_Cavern(coordinates, blockSavedData,minedLocations, bitmapFlyWeight);
+                return new Block_Cavern(blockSavedData,minedLocations, bitmapFlyWeight);
         }
     }
 

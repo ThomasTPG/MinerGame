@@ -7,9 +7,9 @@ package com.alienpg.release.aflatminer;
 
 public class Block_Life extends  Block{
 
-    public Block_Life(Coordinates coordinates, BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
+    public Block_Life(BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
-        super(coordinates, blockSavedData, minedLocations, bitmapFlyWeight);
+        super(blockSavedData, minedLocations, bitmapFlyWeight);
         setData();
     }
 
@@ -26,7 +26,7 @@ public class Block_Life extends  Block{
         }
         blockLiquidData.setWaterPercentage(pct);
 
-        if (yCoord >= 0) {
+        if (getBlockLocaleData().getCoordinates().getY() >= 0) {
             saveToMemory();
         }
     }
