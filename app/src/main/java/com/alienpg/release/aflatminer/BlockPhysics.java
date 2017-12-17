@@ -467,11 +467,13 @@ public class BlockPhysics {
                     blockArray.getBlock(ii,jj).setIndex(upper.getIndex());
                     blockArray.getBlock(ii,jj).setxCoord(upper.getxCoord());
                     blockArray.getBlock(ii,jj).setyCoord(upper.getyCoord());
+                    blockArray.getBlock(ii,jj).saveToMemory();
                     blockArray.setBlock(ii, jj+1, upper);
                     blockArray.getBlock(ii,jj+1).setIndex(blockBelow.getIndex());
                     blockArray.getBlock(ii,jj+1).setxCoord(blockBelow.getxCoord());
                     blockArray.getBlock(ii,jj+1).setyCoord(blockBelow.getyCoord());
                     blockArray.getBlock(ii,jj+1).increaseFallenDistance();
+                    blockArray.getBlock(ii,jj+1).saveToMemory();
 
                     if (jj < verticalBlockLimit - 2)
                     {
