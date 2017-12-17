@@ -16,8 +16,6 @@ public class BlockCreator {
     int blocksPerScreen;
     MinedLocations minedLocations;
     private BlockArray blockArray;
-    private BlockBitmapManager blockBitmapManager;
-    private MiningBitmapManager miningBitmapManager;
     private BitmapFlyWeight bitmapFlyWeight;
     private int leftWiggleRoom;
 
@@ -177,7 +175,6 @@ public class BlockCreator {
         }
     }
 
-
     private int setOre(Coordinates coordinates)
     {
         int xCoord = coordinates.getX();
@@ -205,6 +202,4 @@ public class BlockCreator {
             return (OreHeightTables.determineOreTable5(randomOreType));
         }
     }
-
-
 }

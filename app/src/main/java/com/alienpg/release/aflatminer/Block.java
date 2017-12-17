@@ -15,8 +15,8 @@ public class Block {
 
     private int xCoord;
     private int yCoord;
-    private NonSolidBlocks blockLiquidData;
-    private BlockStatusData blockStatusData;
+    protected NonSolidBlocks blockLiquidData;
+    protected BlockStatusData blockStatusData;
 
     private int thresholdWaterToFreeze = 15;
     private int waterProducedFromIce = 12;
@@ -34,9 +34,6 @@ public class Block {
     protected MiningBitmapManager miningBitmapManager;
     private int MINING_STAGE_1 = 40;
     private int MINING_STAGE_2 = 70;
-
-    //If this is a crystal block, we need to record the maximum ice that has surrounded it.
-    private boolean frozen = false;
 
     public Block (Coordinates coordinates, BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
@@ -239,11 +236,6 @@ public class Block {
         return (blockLiquidData.getWaterPercentage() > 0);
     }
 
-    public boolean hasGas()
-    {
-        return (blockLiquidData.getGasPercentage() > 0);
-    }
-
     public NonSolidBlocks getLiquidData()
     {
         return blockLiquidData;
@@ -371,9 +363,19 @@ public class Block {
         }
     }
 
-    public void draw()
+    public void draw(Canvas c, Rect src, Rect loc, int blockSize, int gameHeight)
     {
-
+        c.drawBitmap(mBitmap,src,loc,null);
+        drawMining(c, src, loc);
+        switch (bombType)
+        {
+            case(ActiveBombs.DYNAMITE):
+                c.drawBitmap(bitmapFlyWeight.getBlockBitmapManager().getDynamite(),null,loc,null);
+                break;
+            case(ActiveBombs.ICEBOMB):
+                c.drawBitmap(bitmapFlyWeight.getBlockBitmapManager().getIceBomb(),null,loc,null);
+                break;
+        }
     }
     
     public void setBomb(int type)
@@ -449,6 +451,11 @@ public class Block {
     protected void setBitmap(Bitmap b)
     {
         mBitmap = b;
+    }
+
+    public Bitmap getBitmap()
+    {
+        return mBitmap;
     }
 
     public void drawMining(Canvas canvas, Rect src, Rect location)
