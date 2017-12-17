@@ -15,6 +15,8 @@ public class Block_Ice extends  Block{
     public Block_Ice(Block oldBlock)
     {
         super(oldBlock);
+        blockLiquidData.setGasPercentage(0);
+        blockLiquidData.setWaterPercentage(0);
         setData();
     }
 

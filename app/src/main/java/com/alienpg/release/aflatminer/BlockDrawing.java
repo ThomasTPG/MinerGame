@@ -26,6 +26,7 @@ public class BlockDrawing {
     private BorderBitmapManager borderBitmapManager;
     private InGameNotifications inGameNotifications;
     private Achievements achievementManager;
+    private Bitmap background1;
 
     public BlockDrawing(BlockManager blockManager, Context context, int blockDimensions, Camera camera, int gameWidth, int gameHeight, EncyclopediaMemory encyclopediaMemory, InGameNotifications inGameNotifications, Achievements achievements)
     {
@@ -43,6 +44,7 @@ public class BlockDrawing {
         achievementManager = achievements;
         achievementManager.checkEncyclopediaUnlock(encyclopediaMemory.getNumberUnlocked());
         borderBitmapManager = new BorderBitmapManager(context, borderSize);
+        background1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_cave_1);
     }
 
     private void checkEncyclopedia(Block block)
@@ -121,6 +123,7 @@ public class BlockDrawing {
                 currentBlock.draw(c, source, location, blockSize, mGameHeight);
                 if (currentBlock.getType() == GlobalConstants.ICE || currentBlock.getType() == GlobalConstants.CAVERN)
                 {
+                    source = getScaledRectangle(currentBlock.getBitmap(),location,ii,jj);
                     borderBitmapManager.drawBorders(blockArray, ii, jj, c,source,location);
                 }
             }

@@ -1,7 +1,8 @@
 package com.alienpg.release.aflatminer;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
+
+import java.util.Random;
 
 /**
  * Created by Thomas on 09/09/2017.
@@ -66,7 +67,7 @@ public class BlockPhysics {
     {
         if (blockArray.getBlock(ii, jj).getGasPercentage() > GAS_THRESHOLD)
         {
-            blockArray.getBlock(ii, jj).blowUp();
+            explodeBlockByCoords(ii, jj);
             return true;
         }
         return false;
@@ -139,6 +140,85 @@ public class BlockPhysics {
         }
     }
 
+    public void explodeBlockByCoords(final int ii, final int jj)
+    {
+        final int initialType = blockArray.getBlock(ii, jj).getType();
+        Thread explosionTimer = new Thread()
+        {
+            @Override
+            public void run()
+            {
+                blockArray.getBlock(ii, jj).setGasPercentage(0);
+                blockArray.getBlock(ii, jj).setBomb(ActiveBombs.NO_BOMB);
+                try {
+                    synchronized (this)
+                    {
+                        int time = 2 + ((ii * jj * ii )*(ii * jj * 75));
+                        wait((time*time)%200);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                blockArray.setBlock(ii, jj, new Block_FireBall(blockArray.getBlock(ii, jj)));
+
+                try {
+                    synchronized (this)
+                    {
+                        wait(200 + (ii * jj * jj )%83);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                blockArray.setBlock(ii, jj, new Block_Cavern(blockArray.getBlock(ii, jj)));
+
+                if (initialType == GlobalConstants.ICE)
+                {
+                    blockArray.getBlock(ii, jj).setWaterPercentage(Block.waterProducedFromIce);
+                }
+                blockArray.getBlock(ii, jj).setAchievementChainReactionII(false);
+            }
+        };
+        if (blockArray.getBlock(ii, jj).getType() != GlobalConstants.HARD_BOULDER)
+        {
+            explosionTimer.start();
+        }
+    }
+
+    private void blowUpIceBomb(final int ii, final int jj)
+    {
+        final int initialType = blockArray.getBlock(ii, jj).getType();
+        Thread explosionTimer = new Thread()
+        {
+            @Override
+            public void run()
+            {
+                blockArray.getBlock(ii, jj).setBomb(ActiveBombs.NO_BOMB);
+                blockArray.getBlock(ii, jj).blockLiquidData.setWaterPercentage(0);
+
+                try {
+                    synchronized (this)
+                    {
+                        int time = 2 + ((ii * jj * ii )*(ii * jj * 75));
+                        wait((time*time)%200);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                blockArray.setBlock(ii, jj, new Block_Ice(blockArray.getBlock(ii, jj)));
+            }
+        };
+        if (blockArray.getBlock(ii, jj).canTurnIntoIce())
+        {
+            explosionTimer.start();
+        }
+    }
+
     public void explodeBlock(int x,int y)
     {
         Block block = blockArray.getBlock(x,y);
@@ -151,7 +231,7 @@ public class BlockPhysics {
                     if (x + aa < horizontalBlockLimit && x + aa >= 0 && y + bb >=0 && y + bb < verticalBlockLimit)
                     {
                         achievementManager.checkChainReactionII(block, blockArray.getBlock(x + aa, y + bb));
-                        blockArray.getBlock(x + aa, y + bb).blowUp();
+                        explodeBlockByCoords(x + aa, y + bb);
                     }
                 }
             }
@@ -178,7 +258,7 @@ public class BlockPhysics {
                             {
                                 achievementManager.unlockAchievement(mContext.getResources().getString(R.string.naturism));
                             }
-                            blockArray.getBlock(x + aa, y + bb).blowUp();
+                            explodeBlockByCoords(x + aa, y + bb);
                         }
                     }
                     if (boulders >= 4)
@@ -193,7 +273,7 @@ public class BlockPhysics {
                     {
                         for (int bb = -1; bb<=1; bb++)
                         {
-                            if (blockArray.getBlock(x + aa, y + bb).getType() == GlobalConstants.CAVERN)
+                            if (blockArray.getBlock(x + aa, y + bb).canTurnIntoIce())
                             {
                                 numberConverted ++;
                             }
@@ -201,7 +281,7 @@ public class BlockPhysics {
                             {
                                 numberGas ++;
                             }
-                            blockArray.getBlock(x + aa, y + bb).detonateIceBomb();
+                            blowUpIceBomb(x + aa, y + bb);
                         }
                     }
                     if (numberConverted == 0)
@@ -439,37 +519,34 @@ public class BlockPhysics {
             if (ii > 0)
             {
                 Block blockLeft = blockArray.getBlock(ii-1,jj);
-
-                if (blockLeft.isCavern())
-                {
-                    blockLeft.incrementGas();
-                }
+                blockLeft.incrementGas();
             }
             if (ii < horizontalBlockLimit-1)
             {
                 Block blockRight = blockArray.getBlock(ii+1,jj);
-
-                if (blockRight.isCavern())
-                {
-                    blockRight.incrementGas();
-                }
+                blockRight.incrementGas();
             }
             if (jj < verticalBlockLimit - 1)
             {
                 Block blockBelow = blockArray.getBlock(ii,jj+1);
-
-                if (blockBelow.isCavern())
-                {
-                    blockBelow.incrementGas();
-                }
+                blockBelow.incrementGas();
             }
             if (jj > 0)
             {
                 Block blockAbove = blockArray.getBlock(ii,jj-1);
-                if (blockAbove.isCavern())
-                {
-                    blockAbove.incrementGas();
-                }
+                blockAbove.incrementGas();
+            }
+        }
+    }
+
+    private void tryFreezingBlock(Block b)
+    {
+        if (b.canFreeze())
+        {
+            Random iceRandom = new Random(System.nanoTime());
+            if (iceRandom.nextDouble() > 0.99)
+            {
+                b = new Block_Ice(b);
             }
         }
     }
@@ -481,34 +558,22 @@ public class BlockPhysics {
             if (ii > 0)
             {
                 Block blockLeft = blockArray.getBlock(ii-1,jj);
-                if (blockLeft.hasWater())
-                {
-                    blockLeft.tryFreezing();
-                }
+                tryFreezingBlock(blockLeft);
             }
             if (ii < horizontalBlockLimit-1)
             {
                 Block blockRight = blockArray.getBlock(ii + 1, jj);
-                if (blockRight.hasWater())
-                {
-                    blockRight.tryFreezing();
-                }
+                tryFreezingBlock(blockRight);
             }
             if (jj < verticalBlockLimit - 1)
             {
                 Block blockBelow = blockArray.getBlock(ii, jj+1);
-                if (blockBelow.hasWater())
-                {
-                    blockBelow.tryFreezing();
-                }
+                tryFreezingBlock(blockBelow);
             }
             if (jj > 0)
             {
                 Block blockAbove = blockArray.getBlock(ii, jj-1);
-                if (blockAbove.hasWater())
-                {
-                    blockAbove.tryFreezing();
-                }
+                tryFreezingBlock(blockAbove);
             }
         }
     }

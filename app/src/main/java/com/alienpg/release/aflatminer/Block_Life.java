@@ -19,6 +19,18 @@ public class Block_Life extends  Block{
         setData();
     }
 
+    @Override
+    public void setWaterPercentage(int pct) {
+        if (pct < 0) {
+            pct = 0;
+        }
+        blockLiquidData.setWaterPercentage(pct);
+
+        if (yCoord >= 0) {
+            saveToMemory();
+        }
+    }
+
 
 
     private void setLifeBitmap()

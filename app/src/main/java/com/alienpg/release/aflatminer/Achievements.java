@@ -85,7 +85,7 @@ public class Achievements {
             }
             else
             {
-                exploding.setAchievementChainReactionII();
+                exploding.setAchievementChainReactionII(true);
             }
         }
     }

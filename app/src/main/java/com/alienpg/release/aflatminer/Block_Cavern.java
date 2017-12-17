@@ -4,11 +4,15 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import java.util.Random;
+
 /**
  * Created by Thomas on 15/11/2017.
  */
 
 public class Block_Cavern extends Block{
+
+    private int thresholdWaterToFreeze = 15;
 
     public Block_Cavern(Coordinates coordinates, BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
@@ -33,6 +37,7 @@ public class Block_Cavern extends Block{
     public void draw(Canvas c, Rect src, Rect loc, int blockSize, int gameHeight) {
         c.drawBitmap(blockBitmapManager.getBackground1(), src, loc, null);
         drawFluidBlock(c, src, loc, blockSize, gameHeight);
+        drawBombs(c, loc);
     }
 
     private void drawFluidBlock(Canvas canvas, Rect source, Rect location, int blockSize, int mGameHeight)
@@ -97,4 +102,52 @@ public class Block_Cavern extends Block{
             canvas.drawBitmap(blockBitmapManager.getWaterBitmap(),whichBmp,scaledLocation,null);
         }
     }
+
+    @Override
+    public boolean canFreeze()
+    {
+        return (blockLiquidData.getWaterPercentage() > thresholdWaterToFreeze);
+    }
+
+    @Override
+    public boolean canTurnIntoIce()
+    {
+        return true;
+    }
+
+    @Override
+    public void incrementGas()
+    {
+        int totalVol = getGasPercentage();
+        if (totalVol < 100)
+        {
+            int incrementPct = Math.min(5, 100-totalVol);
+            setGasPercentage(getGasPercentage() + incrementPct);
+        }
+    }
+
+    @Override
+    public void setGasPercentage(int pct) {
+        if (pct < 0) {
+            pct = 0;
+        }
+        blockLiquidData.setGasPercentage(pct);
+        if (yCoord >= 0) {
+            saveToMemory();
+        }
+    }
+
+    @Override
+    public void setWaterPercentage(int pct) {
+        if (pct < 0) {
+            pct = 0;
+        }
+        blockLiquidData.setWaterPercentage(pct);
+
+        if (yCoord >= 0) {
+            saveToMemory();
+        }
+    }
+
+
 }

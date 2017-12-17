@@ -24,6 +24,7 @@ public class Block_Boulder extends Block {
     {
         setBitmap(blockBitmapManager.getBoulderBitmap());
         setSoftness(PickaxeTypes.CANNOT_BE_MINED);
+
         setType(GlobalConstants.BOULDER);
     }
 }
