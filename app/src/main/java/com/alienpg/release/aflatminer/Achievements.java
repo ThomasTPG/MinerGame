@@ -15,7 +15,7 @@ public class Achievements {
     Context mContext;
     private int screenWidth;
     private int screenHeight;
-    ArrayOfBlocksOnScreen blocksOnScreen;
+    BlockManager blocksOnScreen;
 
     public Achievements(Context context) {
         mContext = context;
@@ -26,11 +26,11 @@ public class Achievements {
         mGoogleApiClient = googleApiClient;
     }
 
-    public void initialize(int screenWidth, int screenHeight, ArrayOfBlocksOnScreen arrayOfBlocksOnScreen)
+    public void initialize(int screenWidth, int screenHeight, BlockManager blockManager)
     {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        blocksOnScreen = arrayOfBlocksOnScreen;
+        blocksOnScreen = blockManager;
     }
 
 
@@ -60,7 +60,7 @@ public class Achievements {
 
     public void checkOops(Block explodium)
     {
-        if (explodium.getIndex() == blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(screenWidth/2, screenHeight/2).getIndex())
+        if (explodium.getIndex() == blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(new Coordinates(screenWidth/2, screenHeight/2)).getIndex())
         {
             unlockAchievement(mContext.getResources().getString(R.string.oops));
         }
@@ -85,7 +85,7 @@ public class Achievements {
             }
             else
             {
-                exploding.setAchievementChainReactionII();
+                exploding.setAchievementChainReactionII(true);
             }
         }
     }

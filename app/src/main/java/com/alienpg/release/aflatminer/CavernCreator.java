@@ -14,7 +14,7 @@ public class CavernCreator {
     private int x;
     private int y;
     private int seed;
-    private int minHeightBetweenCaverns = 35;
+    private int minHeightBetweenCaverns = 25;
     private int closestCavernX = 0;
     private int closestCavernY = 0;
     private int distanceToCavern;
@@ -23,22 +23,22 @@ public class CavernCreator {
     private boolean isCavern = false;
 
 
-    public CavernCreator(int xCoOrd, int yCoOrd, int blocksAcross, int seed)
+    public CavernCreator(Coordinates coordinates, int blocksAcross, int seed)
     {
-        x = xCoOrd;
-        y = yCoOrd;
+        x = coordinates.getX();
+        y = coordinates.getY();
         this.seed = seed;
         this.blocksAcross = blocksAcross;
 
 
         calculateCavernLocations();
         calculateSkew();
-        if (yCoOrd < 0)
+        if (y < 0)
         {
             //No blocks above the horizon
             isCavern = true;
         }
-        else if (yCoOrd < 12)
+        else if (y < 12)
         {
             //No caverns close to surface
             isCavern = false;
@@ -74,7 +74,7 @@ public class CavernCreator {
     private void calculateSkew()
     {
         Random skewRandom = new Random(closestCavernX * closestCavernY + seed);
-        skewX = skewRandom.nextDouble()/4 + 0.75;
+        skewX = skewRandom.nextDouble()/4 + 0.5;
         skewY = skewRandom.nextDouble()/4 + 0.75;
 
     }
@@ -84,7 +84,7 @@ public class CavernCreator {
         Random cavernRandom = new Random(x * y * seed);
         int distortionFactor = cavernRandom.nextInt(200);
         int cavernProbability = (int) (1000/ (distortionFactor + (Math.pow(((x - closestCavernX) * skewX), 2) + Math.pow((y - closestCavernY) * skewY, 2))));
-        return((cavernProbability > 5));
+        return((cavernProbability > 6));
     }
 
     public int getDistanceToCavern()

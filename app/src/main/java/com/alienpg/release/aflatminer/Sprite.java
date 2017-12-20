@@ -20,18 +20,16 @@ public class Sprite {
     private int canvasHeight;
     boolean jumping = false;
     private int heightLeftToJump = 0;
-    private int heightToFall = 0;
     private int baseJumpSpeed;
     private int baseGravitySpeed;
     private int baseRunningSpeed;
-    private boolean falling;
     private boolean isAir = false;
     private int mBlockSize;
     private boolean isClamberingLeft = false;
     private boolean isClamberingRight = false;
     private int heightToClamber;
     private int widthToClamber;
-    private ArrayOfBlocksOnScreen blocksOnScreen;
+    private BlockManager blocksOnScreen;
     private int maxOxygenAmount;
     private int oxygenAmount;
     private boolean dead = false;
@@ -45,6 +43,7 @@ public class Sprite {
     private int takeOffX = 0;
     private int landingX = 0;
     private Achievements achievementManager;
+    private Coordinates myCoords;
 
     public Sprite(Context context, Canvas canvas, int dimension, int blockSize, Achievements achievements)
     {
@@ -58,6 +57,7 @@ public class Sprite {
         sprite = BitmapFactory.decodeResource(context.getResources(), R.drawable.miner);
         canvasHeight = canvas.getHeight();
         canvasWidth = canvas.getWidth();
+        myCoords = new Coordinates(canvasWidth/2, canvasHeight/2);
         airInner = BitmapFactory.decodeResource(context.getResources(), R.drawable.airinner);
         airOuter = BitmapFactory.decodeResource(context.getResources(), R.drawable.airouter);
         shopMemory = new ShopMemory(context);
@@ -80,7 +80,7 @@ public class Sprite {
         }
     }
 
-    public void setBlocksOnScreen(ArrayOfBlocksOnScreen blocks)
+    public void setBlocksOnScreen(BlockManager blocks)
     {
         blocksOnScreen = blocks;
     }
@@ -190,14 +190,14 @@ public class Sprite {
     {
         if (!isAir && air)
         {
-            takeOffDepth = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getY();
-            takeOffX = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getX();
+            takeOffDepth = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords).getY();
+            takeOffX = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords).getX();
             landingDepth = takeOffDepth;
         }
         else if (isAir && ! air)
         {
-            landingDepth = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getY();
-            landingX = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getX();
+            landingDepth = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords).getY();
+            landingX = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords).getX();
             if (landingDepth - takeOffDepth > 19)
             {
                 achievementManager.unlockAchievement(mContext.getResources().getString(R.string.falling_with_style_i));
@@ -242,7 +242,7 @@ public class Sprite {
 
     public boolean isInWater()
     {
-        return (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).getWaterPercentage() > 50);
+        return (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords).getWaterPercentage() > 50);
     }
 
     public boolean isDead()
@@ -252,12 +252,12 @@ public class Sprite {
             dead = true;
             deathReason = GlobalConstants.SUFFOCATED;
         }
-        else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isIce())
+        else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords).isIce())
         {
             dead = true;
             deathReason = GlobalConstants.FROZEN;
         }
-        else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(canvasWidth/2, canvasHeight/2).isFire())
+        else if (blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords).isFire())
         {
             dead = true;
             deathReason = GlobalConstants.EXPLOSION;
