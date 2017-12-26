@@ -25,8 +25,10 @@ public class LevelMemory {
     private Camera camera;
     private OreCounter oreCounter;
     private Sprite mSprite;
+    private EnemyList mEnemyList;
+    private static String ENEMY_HEADER = "ENEMY_DATA";
 
-    public LevelMemory(Context context, MinedLocations minedLocations, int seed, Camera cam, OreCounter oreCounter, Sprite sprite)
+    public LevelMemory(Context context, MinedLocations minedLocations, int seed, Camera cam, OreCounter oreCounter, Sprite sprite, EnemyList enemyList)
     {
         mMinedLocations = minedLocations;
         mSeed = seed;
@@ -35,6 +37,7 @@ public class LevelMemory {
         levelFile = new File(path, context.getResources().getString(R.string.level_data_file_name));
         this.oreCounter = oreCounter;
         mSprite = sprite;
+        mEnemyList = enemyList;
     }
 
     public boolean canLoadLevel()
@@ -68,7 +71,7 @@ public class LevelMemory {
                     oreCounter.setOre(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
                 }
                 //Read the mined blocks
-                while ((line = bufferedReader.readLine()) != null)
+                while ((line = bufferedReader.readLine()) != ENEMY_HEADER)
                 {
                     String liquidDataString = line.split("-")[2];
                     NonSolidBlocks blockLiquidData = new NonSolidBlocks();
@@ -77,6 +80,14 @@ public class LevelMemory {
                     BlockStatusData blockStatusData = new BlockStatusData();
                     blockStatusData.setFromMemory(statusDataString);
                     mMinedLocations.addToMinedLocations(Integer.parseInt(line.split("-")[0]),blockStatusData,blockLiquidData);
+                }
+                // Read the enemy data
+                while ((line = bufferedReader.readLine()) != null)
+                {
+                    String typeString = line.split("-")[0];
+                    int xCoOrd = Integer.parseInt(line.split("-")[1]);
+                    int yCoOrd = Integer.parseInt(line.split("-")[2]);
+                    mEnemyList.addEnemy(typeString, xCoOrd, yCoOrd);
                 }
             }
             catch (IOException e)
@@ -132,11 +143,22 @@ public class LevelMemory {
                     bufferedWriter.newLine();
                 }
 
+                //Write block data
                 while (nodeToWrite != null)
                 {
                     bufferedWriter.write(nodeToWrite.getData());
                     bufferedWriter.newLine();
                     nodeToWrite = nodeToWrite.getNextNode();
+                }
+                //Write enemy data
+                bufferedWriter.write(ENEMY_HEADER);
+
+                EnemyNode currentNode = mEnemyList.getHeadNode();
+                while (currentNode != null)
+                {
+                    bufferedWriter.write(currentNode.getData());
+                    bufferedWriter.newLine();
+                    currentNode = currentNode.nextNode();
                 }
                 bufferedWriter.close();
                 fileOutputStream.close();

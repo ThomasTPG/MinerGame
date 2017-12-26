@@ -350,9 +350,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
         private void initialize(Canvas c)
         {
-            camera = new Camera();
             gameHeight = c.getHeight();
             gameWidth = c.getWidth();
+            camera = new Camera(gameHeight, gameWidth);
             dynamiteButtonSize = gameWidth/15;
             dynamiteButtonLocation = new Rect(dynamiteButtonSize,dynamiteButtonSize,2*dynamiteButtonSize,2*dynamiteButtonSize);
             iceBombButtonLocation = new Rect(dynamiteButtonSize,4*dynamiteButtonSize,2*dynamiteButtonSize,5*dynamiteButtonSize);

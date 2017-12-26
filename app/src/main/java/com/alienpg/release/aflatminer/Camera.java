@@ -6,11 +6,15 @@ package com.alienpg.release.aflatminer;
 
 public class Camera {
 
+    private int gameHeight;
+    private int gameWidth;
     private int cameraX;
     private int cameraY;
 
-    public Camera()
+    public Camera(int gameHeight, int gameWidth)
     {
+        this.gameHeight = gameHeight;
+        this.gameWidth = gameWidth;
         cameraX = 0;
         cameraY = 0;
     }
@@ -29,5 +33,10 @@ public class Camera {
 
     public void setCameraX(int cameraX) {
         this.cameraX = cameraX;
+    }
+
+    public Coordinates getScreenTopLeft()
+    {
+        return (new Coordinates((int)Math.floor(cameraX - gameWidth/2), (int)Math.floor(cameraY - gameHeight/2)));
     }
 }

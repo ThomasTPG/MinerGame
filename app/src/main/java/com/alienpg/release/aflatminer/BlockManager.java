@@ -76,6 +76,19 @@ public class BlockManager {
         return arrayIndices;
     }
 
+    public boolean isInBlockArray(Coordinates coordinates)
+    {
+        int screenTopLeftX = (int)Math.floor((mCamera.getCameraX() - mGameWidth/2));
+        int screenTopLeftY = (int)Math.floor((mCamera.getCameraY() - mGameHeight/2));
+        int arrayIndicesX = borderSize + (int) (Math.floor((screenTopLeftX + coordinates.getX())/blockSize) - Math.floor(screenTopLeftX/blockSize));
+        int arrayIndicesY = borderSize + (int) (Math.floor((double)(screenTopLeftY + coordinates.getY())/(double)blockSize) - Math.floor((double)screenTopLeftY/(double)blockSize));
+
+        boolean xValid = (arrayIndicesX >= 0 && arrayIndicesX < blockArray.getHorizontalBlockLimit());
+        boolean yValid = (arrayIndicesY >= 0 && arrayIndicesY < blockArray.getVerticalBlockLimit());
+        return (xValid && yValid);
+    }
+
+
     public Block getBlockFromArrayUsingScreenCoordinates(Coordinates coordinates)
     {
         int[] coords = getBlockArrayIndicesFromScreenCoordinates(coordinates);
