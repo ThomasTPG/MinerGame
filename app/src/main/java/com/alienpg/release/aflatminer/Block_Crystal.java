@@ -27,7 +27,6 @@ public class Block_Crystal extends  Block{
         if (surroundingIce == 0)
         {
             setBitmap(blockBitmapManager.getCrystal1());
-
         }
         else if (surroundingIce < 3)
         {
@@ -37,19 +36,16 @@ public class Block_Crystal extends  Block{
         else if (surroundingIce < GlobalConstants.CRYSTALFREEZEAMOUNT)
         {
             setBitmap(blockBitmapManager.getCrystal3());
-
         }
         else
         {
             if (crystalCount < 10)
             {
                 setBitmap(blockBitmapManager.getCrystal4());
-
             }
             else
             {
                 setBitmap(blockBitmapManager.getCrystal5());
-
             }
             crystalCount ++;
             if (crystalCount == 20)
@@ -62,6 +58,7 @@ public class Block_Crystal extends  Block{
     public void setSurroundingIce(int ice)
     {
         surroundingIce = ice;
+        setCrystalBitmap();
     }
 
     public int getSurroundingIce()
