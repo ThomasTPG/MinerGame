@@ -11,7 +11,7 @@ import java.util.Random;
  * Created by Thomas on 25/01/2017.
  */
 
-public class Block {
+public abstract class Block {
 
     protected NonSolidBlocks blockLiquidData;
     protected BlockStatusData blockStatusData;
@@ -22,7 +22,6 @@ public class Block {
     private double pickaxeRequired;
     private int bombType = 0;
     private boolean currentlyBeingMined = false;
-    private int surroundingIce = 0;
     private boolean achievementChainReactionII = false;
     private Bitmap mBitmap;
     private BitmapFlyWeight bitmapFlyWeight;
@@ -30,7 +29,6 @@ public class Block {
     protected MiningBitmapManager miningBitmapManager;
     private int MINING_STAGE_1 = 40;
     private int MINING_STAGE_2 = 70;
-    public static int waterProducedFromIce = 12;
 
 
     public Block(BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight) {
@@ -113,27 +111,21 @@ public class Block {
 
     public boolean mineFurther(OreCounter oreCounter) {
         currentlyBeingMined = true;
-        if (blockStatusData.getType() == GlobalConstants.LIFE && blockLiquidData.getWaterPercentage() < 100) {
-            return false;
-        }
-        if (blockStatusData.getType() == GlobalConstants.CRYSTAL && getSurroundingIce() < GlobalConstants.CRYSTALFREEZEAMOUNT) {
-            return false;
-        }
         blockStatusData.incrementMinedPercentage();
         if (blockStatusData.getMinedPercentage() >= miningLimit) {
             oreCounter.incrementOre(blockStatusData.getType());
-            if (blockStatusData.getType() == GlobalConstants.ICE) {
-                blockLiquidData.setWaterPercentage(waterProducedFromIce);
-            } else {
-                blockLiquidData.setWaterPercentage(0);
-            }
-            //setType(GlobalConstants.CAVERN);
+            resetWaterAfterMining();
             saveToMemory();
             blockStatusData.setMinedPercentage(0);
             currentlyBeingMined = false;
             return true;
         }
         return false;
+    }
+
+    public void resetWaterAfterMining()
+    {
+        blockLiquidData.setWaterPercentage(0);
     }
 
     protected void setType(int newType) {
@@ -156,14 +148,13 @@ public class Block {
         return (blockStatusData.getType() == GlobalConstants.FIREBALL);
     }
 
-    public boolean isSolid() {
-        return (blockStatusData.getType() != GlobalConstants.CAVERN && blockStatusData.getType() != GlobalConstants.FIREBALL);
+    protected boolean isSolid() {
+        return true;
     }
 
     public boolean canNeedBorder() {
         return (isSolid() && !isIce());
     }
-
 
     public boolean isCavern() {
         return (blockStatusData.getType() == GlobalConstants.CAVERN);
@@ -208,14 +199,10 @@ public class Block {
     }
 
     public void tryDecaying() {
-        if (blockStatusData.getType() != GlobalConstants.GASROCK &&
-                blockStatusData.getType() != GlobalConstants.BOULDER &&
-                blockStatusData.getType() != GlobalConstants.HARD_BOULDER) {
-            Random decayRandom = new Random(System.nanoTime() * index);
-            if (decayRandom.nextDouble() > 0.99992) {
-                blockStatusData.setMinedPercentage(GlobalConstants.ALMOST_PERCENTAGE);
-                saveToMemory();
-            }
+        Random decayRandom = new Random(System.nanoTime() * index);
+        if (decayRandom.nextDouble() > 0.99992) {
+            blockStatusData.setMinedPercentage(GlobalConstants.ALMOST_PERCENTAGE);
+            saveToMemory();
         }
     }
 
@@ -255,16 +242,6 @@ public class Block {
     }
 
     public void incrementGas() {}
-
-    public void setSurroundingIce(int ice)
-    {
-        surroundingIce = ice;
-    }
-
-    public int getSurroundingIce()
-    {
-        return surroundingIce;
-    }
 
     public void increaseFallenDistance()
     {

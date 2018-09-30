@@ -26,4 +26,9 @@ public class Block_HardBoulder extends Block {
         setSoftness(PickaxeTypes.CANNOT_BE_MINED);
         setType(GlobalConstants.HARD_BOULDER);
     }
+
+    @Override
+    public void tryDecaying() {
+
+    }
 }

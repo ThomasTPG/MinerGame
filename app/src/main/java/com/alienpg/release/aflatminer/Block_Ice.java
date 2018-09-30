@@ -6,6 +6,11 @@ package com.alienpg.release.aflatminer;
 
 public class Block_Ice extends  Block{
 
+    /**
+     * % of water to produce after an ice block is mined
+     */
+    public static int waterProducedFromIce = 12;
+
     public Block_Ice(BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
         super(blockSavedData, minedLocations, bitmapFlyWeight);
@@ -25,5 +30,11 @@ public class Block_Ice extends  Block{
         setBitmap(blockBitmapManager.getIceBitmap());
         setSoftness(PickaxeTypes.WOOD_PICKAXE);
         setType(GlobalConstants.ICE);
+    }
+
+    @Override
+    public void resetWaterAfterMining()
+    {
+        blockLiquidData.setWaterPercentage(waterProducedFromIce);
     }
 }

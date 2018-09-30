@@ -27,4 +27,9 @@ public class Block_Boulder extends Block {
 
         setType(GlobalConstants.BOULDER);
     }
+
+    @Override
+    public void tryDecaying() {
+
+    }
 }

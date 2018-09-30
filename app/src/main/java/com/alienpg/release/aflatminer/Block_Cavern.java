@@ -34,6 +34,11 @@ public class Block_Cavern extends Block{
     }
 
     @Override
+    protected boolean isSolid() {
+        return false;
+    }
+
+    @Override
     public void draw(Canvas c, Rect src, Rect loc, int blockSize, int gameHeight) {
         c.drawBitmap(blockBitmapManager.getBackground1(), src, loc, null);
         drawFluidBlock(c, src, loc, blockSize, gameHeight);

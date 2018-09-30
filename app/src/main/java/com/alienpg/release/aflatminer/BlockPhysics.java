@@ -183,7 +183,7 @@ public class BlockPhysics {
 
                 if (initialType == GlobalConstants.ICE)
                 {
-                    blockArray.getBlock(ii, jj).setWaterPercentage(Block.waterProducedFromIce);
+                    blockArray.getBlock(currenctCoords).resetWaterAfterMining();
                 }
                 blockArray.getBlock(currenctCoords).setAchievementChainReactionII(false);
             }
@@ -224,7 +224,7 @@ public class BlockPhysics {
 
             }
         };
-        if (blockArray.getBlock(ii, jj).canTurnIntoIce())
+        if (toExplode.canTurnIntoIce())
         {
             explosionTimer.start();
         }
@@ -594,9 +594,9 @@ public class BlockPhysics {
 
     private void updateLifeBlocks(int ii ,int jj)
     {
-        if (blockArray.getBlock(ii, jj).getType() == GlobalConstants.LIFE)
+        Block currentBlock = blockArray.getBlock(ii, jj);
+        if (currentBlock.getType() == GlobalConstants.LIFE)
         {
-            Block currentBlock = blockArray.getBlock(ii, jj);
             if (ii > 0)
             {
                 Block blockLeft = blockArray.getBlock(ii-1,jj);
@@ -722,8 +722,10 @@ public class BlockPhysics {
 
     private void updateCrystalBlocks(int ii ,int jj)
     {
-        if (blockArray.getBlock(ii, jj).getType() == GlobalConstants.CRYSTAL && ii > 0 && jj > 0 && ii < horizontalBlockLimit-1 && jj < verticalBlockLimit - 1)
+        Block currentBlock = blockArray.getBlock(ii, jj);
+        if (currentBlock.getType() == GlobalConstants.CRYSTAL && ii > 0 && jj > 0 && ii < horizontalBlockLimit-1 && jj < verticalBlockLimit - 1)
         {
+            Block_Crystal crystalBlock = (Block_Crystal) currentBlock;
             int currentIce = 0;
             for (int hh = -1; hh < 2; hh ++)
             {
@@ -735,7 +737,7 @@ public class BlockPhysics {
                     }
                 }
             }
-            blockArray.getBlock(ii, jj).setSurroundingIce(currentIce);
+            crystalBlock.setSurroundingIce(currentIce);
         }
     }
 

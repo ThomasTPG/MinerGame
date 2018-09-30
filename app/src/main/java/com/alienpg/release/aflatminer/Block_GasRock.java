@@ -24,4 +24,9 @@ public class Block_GasRock extends  Block{
         setSoftness(PickaxeTypes.COPPER_PICKAXE);
         setType(GlobalConstants.GASROCK);
     }
+
+    @Override
+    public void tryDecaying() {
+
+    }
 }

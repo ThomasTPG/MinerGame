@@ -7,6 +7,7 @@ package com.alienpg.release.aflatminer;
 public class Block_Crystal extends  Block{
 
     int crystalCount = 0;
+    private int surroundingIce = 0;
 
     public Block_Crystal(BlockSavedData blockSavedData, MinedLocations minedLocations, BitmapFlyWeight bitmapFlyWeight)
     {
@@ -56,6 +57,25 @@ public class Block_Crystal extends  Block{
                 crystalCount = 0;
             }
         }
+    }
+
+    public void setSurroundingIce(int ice)
+    {
+        surroundingIce = ice;
+    }
+
+    public int getSurroundingIce()
+    {
+        return surroundingIce;
+    }
+
+    @Override
+    public boolean mineFurther(OreCounter oreCounter)
+    {
+        if (getSurroundingIce() < GlobalConstants.CRYSTALFREEZEAMOUNT) {
+            return false;
+        }
+        return super.mineFurther(oreCounter);
     }
 
     private void setData()

@@ -24,4 +24,9 @@ public class Block_FireBall extends  Block{
         setSoftness(PickaxeTypes.CANNOT_BE_MINED);
         setType(GlobalConstants.FIREBALL);
     }
+
+    @Override
+    protected boolean isSolid() {
+        return false;
+    }
 }
