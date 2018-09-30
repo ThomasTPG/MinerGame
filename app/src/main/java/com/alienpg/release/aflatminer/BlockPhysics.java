@@ -142,14 +142,16 @@ public class BlockPhysics {
 
     public void explodeBlockByCoords(final int ii, final int jj)
     {
-        final int initialType = blockArray.getBlock(ii, jj).getType();
+        final Block toExplode = blockArray.getBlock(ii, jj);
+        final int initialType = toExplode.getType();
         Thread explosionTimer = new Thread()
         {
             @Override
             public void run()
             {
-                blockArray.getBlock(ii, jj).setGasPercentage(0);
-                blockArray.getBlock(ii, jj).setBomb(ActiveBombs.NO_BOMB);
+                Coordinates currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
+                blockArray.getBlock(currenctCoords).setGasPercentage(0);
+                blockArray.getBlock(currenctCoords).setBomb(ActiveBombs.NO_BOMB);
                 try {
                     synchronized (this)
                     {
@@ -162,28 +164,31 @@ public class BlockPhysics {
                 {
                     e.printStackTrace();
                 }
-                blockArray.setBlock(ii, jj, new Block_FireBall(blockArray.getBlock(ii, jj)));
+                currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
+                blockArray.setBlock(currenctCoords, new Block_FireBall(blockArray.getBlock(currenctCoords)));
 
                 try {
                     synchronized (this)
                     {
-                        wait(200 + (ii * jj * jj )%83);
+                        int msToWait = Math.abs(200 + (ii * jj * jj )%83);
+                        wait(msToWait);
                     }
                 }
                 catch (Exception e)
                 {
                     e.printStackTrace();
                 }
-                blockArray.setBlock(ii, jj, new Block_Cavern(blockArray.getBlock(ii, jj)));
+                currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
+                blockArray.setBlock(currenctCoords, new Block_Cavern(blockArray.getBlock(currenctCoords)));
 
                 if (initialType == GlobalConstants.ICE)
                 {
                     blockArray.getBlock(ii, jj).setWaterPercentage(Block.waterProducedFromIce);
                 }
-                blockArray.getBlock(ii, jj).setAchievementChainReactionII(false);
+                blockArray.getBlock(currenctCoords).setAchievementChainReactionII(false);
             }
         };
-        if (blockArray.getBlock(ii, jj).getType() != GlobalConstants.HARD_BOULDER)
+        if (toExplode.getType() != GlobalConstants.HARD_BOULDER)
         {
             explosionTimer.start();
         }
@@ -191,14 +196,15 @@ public class BlockPhysics {
 
     private void blowUpIceBomb(final int ii, final int jj)
     {
-        final int initialType = blockArray.getBlock(ii, jj).getType();
+        final Block toExplode = blockArray.getBlock(ii, jj);
         Thread explosionTimer = new Thread()
         {
             @Override
             public void run()
             {
-                blockArray.getBlock(ii, jj).setBomb(ActiveBombs.NO_BOMB);
-                blockArray.getBlock(ii, jj).blockLiquidData.setWaterPercentage(0);
+                Coordinates currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
+                blockArray.getBlock(currenctCoords).setBomb(ActiveBombs.NO_BOMB);
+                blockArray.getBlock(currenctCoords).blockLiquidData.setWaterPercentage(0);
 
                 try {
                     synchronized (this)
@@ -212,7 +218,10 @@ public class BlockPhysics {
                 {
                     e.printStackTrace();
                 }
-                blockArray.setBlock(ii, jj, new Block_Ice(blockArray.getBlock(ii, jj)));
+                //The screen might have moved, so we need to get the new co-ords.
+                currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
+                blockArray.setBlock(currenctCoords, new Block_Ice(blockArray.getBlock(currenctCoords)));
+
             }
         };
         if (blockArray.getBlock(ii, jj).canTurnIntoIce())

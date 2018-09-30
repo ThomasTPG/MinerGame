@@ -174,29 +174,7 @@ public class BlockManager {
 
     public Coordinates getBlockCoordinatesByIndex(Block block)
     {
-        int index = block.getIndex();
-        int x = 0;
-        int y = 0;
-        boolean foundBlock = false;
-        for (int ii = horizontalBlockLimit-2; ii >=0; ii --)
-        {
-            for (int jj = verticalBlockLimit - 2; jj >= 0; jj--)
-            {
-                if (blockArray.getBlock(ii, jj).getIndex() == index)
-                {
-                    x = ii;
-                    y = jj;
-                    foundBlock = true;
-                }
-            }
-        }
-        if (foundBlock)
-        {
-            Coordinates c = new Coordinates(x,y);
-            return c;
-        }
-        Coordinates defaultC = new Coordinates(0,0);
-        return defaultC;
+        return blockArray.getBlockCoordinatesByIndex(block);
     }
 
     public void moveWaterRight()

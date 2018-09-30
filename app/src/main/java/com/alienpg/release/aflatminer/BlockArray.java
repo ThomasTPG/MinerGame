@@ -37,9 +37,40 @@ public class BlockArray {
         blockArray[ii][jj] = b;
     }
 
+    public void setBlock(Coordinates coords, Block b ){ blockArray[coords.getX()][ coords.getY()] = b;}
+
     public Block getBlock(int ii, int jj)
     {
         return blockArray[ii][jj];
+    }
+
+    public Block getBlock(Coordinates coods) { return blockArray[coods.getX()][coods.getY()];}
+
+    public Coordinates getBlockCoordinatesByIndex(Block block)
+    {
+        int index = block.getIndex();
+        int x = 0;
+        int y = 0;
+        boolean foundBlock = false;
+        for (int ii = horizontalBlockLimit-2; ii >=0; ii --)
+        {
+            for (int jj = verticalBlockLimit - 2; jj >= 0; jj--)
+            {
+                if (getBlock(ii, jj).getIndex() == index)
+                {
+                    x = ii;
+                    y = jj;
+                    foundBlock = true;
+                }
+            }
+        }
+        if (foundBlock)
+        {
+            Coordinates c = new Coordinates(x,y);
+            return c;
+        }
+        Coordinates defaultC = new Coordinates(0,0);
+        return defaultC;
     }
 
 
