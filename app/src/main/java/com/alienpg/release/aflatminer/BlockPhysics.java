@@ -153,8 +153,9 @@ public class BlockPhysics {
                 try {
                     synchronized (this)
                     {
-                        int time = 2 + ((ii * jj * ii )*(ii * jj * 75));
-                        wait((time*time)%200);
+                        int number = 2 + ((ii * jj * ii )*(ii * jj * 75));
+                        int msToWait = Math.abs((number*number)%200);
+                        wait(msToWait);
                     }
                 }
                 catch (Exception e)
@@ -202,8 +203,9 @@ public class BlockPhysics {
                 try {
                     synchronized (this)
                     {
-                        int time = 2 + ((ii * jj * ii )*(ii * jj * 75));
-                        wait((time*time)%200);
+                        int number = 2 + ((ii * jj * ii )*(ii * jj * 75));
+                        int msToWait = Math.abs((number*number)%200);
+                        wait(msToWait);
                     }
                 }
                 catch (Exception e)
@@ -536,15 +538,25 @@ public class BlockPhysics {
         }
     }
 
-    private void tryFreezingBlock(Block b)
+    private boolean shouldFreezeBlock(Block b)
     {
         if (b.canFreeze())
         {
             Random iceRandom = new Random(System.nanoTime());
             if (iceRandom.nextDouble() > 0.99)
             {
-                b = new Block_Ice(b);
+                return true;
             }
+        }
+        return false;
+    }
+
+    private void tryFreezeBlock(int ii, int jj)
+    {
+        Block blockLeft = blockArray.getBlock(ii,jj);
+        if (shouldFreezeBlock(blockLeft))
+        {
+            blockArray.setBlock(ii, jj, new Block_Ice(blockArray.getBlock(ii, jj)));
         }
     }
 
@@ -554,23 +566,19 @@ public class BlockPhysics {
         {
             if (ii > 0)
             {
-                Block blockLeft = blockArray.getBlock(ii-1,jj);
-                tryFreezingBlock(blockLeft);
+                tryFreezeBlock(ii - 1, jj);
             }
             if (ii < horizontalBlockLimit-1)
             {
-                Block blockRight = blockArray.getBlock(ii + 1, jj);
-                tryFreezingBlock(blockRight);
+                tryFreezeBlock(ii + 1, jj);
             }
             if (jj < verticalBlockLimit - 1)
             {
-                Block blockBelow = blockArray.getBlock(ii, jj+1);
-                tryFreezingBlock(blockBelow);
+                tryFreezeBlock(ii, jj + 1);
             }
             if (jj > 0)
             {
-                Block blockAbove = blockArray.getBlock(ii, jj-1);
-                tryFreezingBlock(blockAbove);
+                tryFreezeBlock(ii, jj - 1);
             }
         }
     }

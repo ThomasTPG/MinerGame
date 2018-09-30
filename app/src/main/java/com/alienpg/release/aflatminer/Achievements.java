@@ -36,7 +36,7 @@ public class Achievements {
 
     public void unlockAchievement(String my_achievement_id)
     {
-        if (mGoogleApiClient != null)
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
         {
             Games.Achievements.unlock(mGoogleApiClient, my_achievement_id);
         }

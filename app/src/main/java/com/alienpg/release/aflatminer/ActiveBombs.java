@@ -10,7 +10,7 @@ public class ActiveBombs {
     public static final int DYNAMITE = 1;
     public static final int ICEBOMB = 2;
     public static final int TYPES = 2;
-    private boolean isBombActive;
+    private boolean isBombActive = false;
     private Bomb activeBomb;
     private Block bombBlock;
     private int type;
@@ -20,13 +20,19 @@ public class ActiveBombs {
 
     }
 
-    public boolean newBomb(int newType, int x, int y)
+    /**
+     * Returns true if we can make a new bomb. Only one bomb can be created at a time
+     * @param newType the type of bomb
+     * @return true if a new bomb is created
+     */
+    public boolean newBomb(int newType, Block location)
     {
         if (!isBombActive)
         {
             activeBomb = new Bomb();
-            isBombActive = true;
             type = newType;
+            setBlock(location);
+            isBombActive = true;
             activeBomb.startTimer();
             return true;
         }
@@ -53,6 +59,10 @@ public class ActiveBombs {
         bombBlock.setBomb(type);
     }
 
+    /**
+     * Function called to set the new location of a bomb
+     * @param newLocation New block that the bomb resides
+     */
     public void updateLocation(Block newLocation)
     {
         bombBlock.setBomb(NO_BOMB);

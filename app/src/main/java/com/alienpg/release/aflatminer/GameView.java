@@ -207,20 +207,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                 else if (e.getX() < dynamiteButtonSize * 3 && e.getY() < dynamiteButtonSize * 3)
                 {
                     //Player has pressed dynamite button
-                    if (activeBombs.newBomb(ActiveBombs.DYNAMITE, camera.getCameraX(),camera.getCameraY()))
-                    {
-                        Block current = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords);
-                        activeBombs.setBlock(current);
-                    }
+                    activeBombs.newBomb(ActiveBombs.DYNAMITE, blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords));
                 }
                 else if (e.getX() < dynamiteButtonSize * 3 && e.getY() < dynamiteButtonSize * 6)
                 {
                     //Player has pressed icebomb button
-                    if (activeBombs.newBomb(ActiveBombs.ICEBOMB, camera.getCameraX(),camera.getCameraY()))
-                    {
-                        Block current = blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords);
-                        activeBombs.setBlock(current);
-                    }
+                    activeBombs.newBomb(ActiveBombs.ICEBOMB, blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords));
                 }
                 else
                 {

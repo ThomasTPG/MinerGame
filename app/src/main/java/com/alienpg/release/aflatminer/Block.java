@@ -47,6 +47,7 @@ public class Block {
     public Block(Block oldBlock) {
         index = oldBlock.getIndex();
         blockLiquidData = oldBlock.getBlockLiquidData();
+        blockLocaleData = oldBlock.getBlockLocaleData();
         blockStatusData = oldBlock.getBlockStatusData();
         mMinedLocations = oldBlock.getmMinedLocations();
         bitmapFlyWeight = oldBlock.getBitmapFlyWeight();
