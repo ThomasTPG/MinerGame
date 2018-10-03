@@ -54,6 +54,11 @@ public abstract class Block {
         saveToMemory();
     }
 
+    public Block(BitmapFlyWeight bitmapFlyweight)
+    {
+        this.bitmapFlyWeight = bitmapFlyweight;
+    }
+
     public MinedLocations getmMinedLocations() {
         return mMinedLocations;
     }

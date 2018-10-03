@@ -43,6 +43,7 @@ public final class GlobalConstants {
     public static final int HOUSEUPGRADE = 2;
     public static final int GARDENUPGRADE = 3;
     public static final int DYNAMITEUPGRADE = 4;
+    public static final int ICE_BOMB_UPGRADE = 5;
 
     //Percentage to dislodge blocks
     public static final int UNMINED = 0;

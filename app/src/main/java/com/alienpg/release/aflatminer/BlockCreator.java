@@ -130,7 +130,7 @@ public class BlockCreator {
             {
                 //Determine if the type oft he block is a cavern. Also includes y<0 regions at the top.
                 int distance = c.getDistanceToCavern();
-                if (coordinates.getY() > 0)
+                if (yCoord > 0)
                 {
                     Random waterRandom = new Random(seed * (xCoord + yCoord) * yCoord * xCoord * xCoord);
                     int rand = (int) (waterRandom.nextDouble() * 1000);
@@ -151,11 +151,11 @@ public class BlockCreator {
             else{
                 // Not a cavern - generate a solid block instead
                 //Find the distance to the nearest cavern
-                int distance = c.getDistanceToCavern();
+                final int distance = c.getDistanceToCavern();
                 int oreLiklihood = 0;
                 if (distance < 20)
                 {
-                    oreLiklihood = (int) (4*Math.pow((20-distance),1.2));
+                    oreLiklihood = (int) (4*Math.pow((20-distance),1.3));
                 }
                 Random generator = new Random(seed * (xCoord + yCoord) * yCoord * xCoord * xCoord);
                 int rand = (int) (generator.nextDouble() * 1000);

@@ -139,4 +139,10 @@ public class ShopMemory {
         readFile();
         return shopArray[item];
     }
+
+    public boolean isUnlocked(int item)
+    {
+        readFile();
+        return (shopArray[item] != 0);
+    }
 }

@@ -39,6 +39,11 @@ public class BlockStatusData {
 
     public String getMemoryString()
     {
+        System.out.print(type);
+        if (type == GlobalConstants.FIREBALL)
+        {
+            return (Integer.toString(GlobalConstants.CAVERN) + "!" + Integer.toString(minedPercentage));
+        }
         return (Integer.toString(type) + "!" + Integer.toString(minedPercentage));
     }
 

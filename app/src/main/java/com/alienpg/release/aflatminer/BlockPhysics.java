@@ -149,9 +149,20 @@ public class BlockPhysics {
             @Override
             public void run()
             {
-                Coordinates currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
-                blockArray.getBlock(currenctCoords).setGasPercentage(0);
-                blockArray.getBlock(currenctCoords).setBomb(ActiveBombs.NO_BOMB);
+                Coordinates currenctCoords;
+                try {
+                    synchronized (blockArray)
+                    {
+                        currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
+                        blockArray.getBlock(currenctCoords).setGasPercentage(0);
+                        blockArray.getBlock(currenctCoords).setBomb(ActiveBombs.NO_BOMB);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
                 try {
                     synchronized (this)
                     {
@@ -164,8 +175,18 @@ public class BlockPhysics {
                 {
                     e.printStackTrace();
                 }
-                currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
-                blockArray.setBlock(currenctCoords, new Block_FireBall(blockArray.getBlock(currenctCoords)));
+
+                try {
+                    synchronized (blockArray)
+                    {
+                        currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
+                        blockArray.setBlock(currenctCoords, new Block_FireBall(blockArray.getBlock(currenctCoords)));
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
 
                 try {
                     synchronized (this)
@@ -178,14 +199,25 @@ public class BlockPhysics {
                 {
                     e.printStackTrace();
                 }
-                currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
-                blockArray.setBlock(currenctCoords, new Block_Cavern(blockArray.getBlock(currenctCoords)));
 
-                if (initialType == GlobalConstants.ICE)
-                {
-                    blockArray.getBlock(currenctCoords).resetWaterAfterMining();
+                try {
+                    synchronized (blockArray)
+                    {
+                        currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
+                        blockArray.setBlock(currenctCoords, new Block_Cavern(blockArray.getBlock(currenctCoords)));
+
+                        if (initialType == GlobalConstants.ICE)
+                        {
+                            blockArray.getBlock(currenctCoords).resetWaterAfterMining();
+                        }
+                        blockArray.getBlock(currenctCoords).setAchievementChainReactionII(false);
+                    }
                 }
-                blockArray.getBlock(currenctCoords).setAchievementChainReactionII(false);
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
             }
         };
         if (toExplode.getType() != GlobalConstants.HARD_BOULDER)
@@ -202,9 +234,19 @@ public class BlockPhysics {
             @Override
             public void run()
             {
-                Coordinates currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
-                blockArray.getBlock(currenctCoords).setBomb(ActiveBombs.NO_BOMB);
-                blockArray.getBlock(currenctCoords).blockLiquidData.setWaterPercentage(0);
+                Coordinates currenctCoords;
+                try {
+                    synchronized (blockArray)
+                    {
+                        currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
+                        blockArray.getBlock(currenctCoords).setGasPercentage(0);
+                        blockArray.getBlock(currenctCoords).setBomb(ActiveBombs.NO_BOMB);
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
 
                 try {
                     synchronized (this)
@@ -218,9 +260,19 @@ public class BlockPhysics {
                 {
                     e.printStackTrace();
                 }
-                //The screen might have moved, so we need to get the new co-ords.
-                currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
-                blockArray.setBlock(currenctCoords, new Block_Ice(blockArray.getBlock(currenctCoords)));
+
+                try {
+                    synchronized (blockArray)
+                    {
+                        currenctCoords = blockArray.getBlockCoordinatesByIndex(toExplode);
+                        blockArray.setBlock(currenctCoords, new Block_Ice(blockArray.getBlock(currenctCoords)));
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
 
             }
         };

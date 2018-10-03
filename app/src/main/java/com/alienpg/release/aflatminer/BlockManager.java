@@ -90,6 +90,21 @@ public class BlockManager {
 
     public void calculateCurrentBlocks()
     {
+        try {
+            synchronized (blockArray)
+            {
+                calculateBlocks();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void calculateBlocks()
+    {
         int screenTopLeftX = (int)Math.floor((mCamera.getCameraX() - mGameWidth/2));
         int screenTopLeftY = (int)Math.floor((mCamera.getCameraY() - mGameHeight/2));
         if (Math.floor(currentScreenDimensions[2]) < Math.floor(previousScreenDimensions[2]))

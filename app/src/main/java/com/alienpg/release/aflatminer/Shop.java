@@ -78,6 +78,14 @@ public class Shop extends OnClickFragment {
                 mCallback.onButtonClicked(GlobalConstants.SHOP_PAGES, GlobalConstants.AIRTANKUPGRADE);
             }
         });
+
+        LinearLayout ice_bomb = (LinearLayout) myView.findViewById(R.id.shop_ice_bomb_item);
+        ice_bomb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCallback.onButtonClicked(GlobalConstants.SHOP_PAGES, GlobalConstants.ICE_BOMB_UPGRADE);
+            }
+        });
     }
 
     @Override

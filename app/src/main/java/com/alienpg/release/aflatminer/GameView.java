@@ -14,6 +14,8 @@ import android.view.SurfaceView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import javax.microedition.khronos.opengles.GL;
+
 /**
  * Created by Thomas on 25/01/2017.
  */
@@ -56,6 +58,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
     private InGameNotifications inGameNotifications;
     private GoogleApiClient googleApiClient = null;
     private Achievements achievementsManager = null;
+    boolean dynamite_unlocked;
+    boolean ice_bomb_unlocked;
 
     public GameView(Context context) {
         super(context);
@@ -204,12 +208,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                         motion = false;
                     }
                 }
-                else if (e.getX() < dynamiteButtonSize * 3 && e.getY() < dynamiteButtonSize * 3)
+                else if (e.getX() < dynamiteButtonSize * 3 && e.getY() < dynamiteButtonSize * 3 && dynamite_unlocked)
                 {
                     //Player has pressed dynamite button
                     activeBombs.newBomb(ActiveBombs.DYNAMITE, blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords));
                 }
-                else if (e.getX() < dynamiteButtonSize * 3 && e.getY() < dynamiteButtonSize * 6)
+                else if (e.getX() < dynamiteButtonSize * 3 && e.getY() < dynamiteButtonSize * 6 && ice_bomb_unlocked)
                 {
                     //Player has pressed icebomb button
                     activeBombs.newBomb(ActiveBombs.ICEBOMB, blocksOnScreen.getBlockFromArrayUsingScreenCoordinates(myCoords));
@@ -303,8 +307,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
                     mapArt.drawForeGround(c);
                     mainCharacter.drawOxygen(c);
                     pickaxeManager.onDraw(c);
-                    drawDynamiteButton(c);
-                    drawIceBombButton(c);
+                    if (dynamite_unlocked)
+                    {
+                        drawDynamiteButton(c);
+                    }
+                    if (ice_bomb_unlocked)
+                    {
+                        drawIceBombButton(c);
+                    }
                     if (activeBombs.hasBombExploded())
                     {
                         Coordinates explode = blocksOnScreen.getBlockCoordinatesByIndex(activeBombs.getBombBlock());
@@ -364,6 +374,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
             levelMemory = new LevelMemory(mContext,minedLocations, seed, camera, oreCounter, mainCharacter);
             oreMemory = new OreMemory(mContext);
             shopMemory = new ShopMemory(mContext);
+            dynamite_unlocked = shopMemory.isUnlocked(GlobalConstants.DYNAMITEUPGRADE);
+            ice_bomb_unlocked = shopMemory.isUnlocked(GlobalConstants.ICE_BOMB_UPGRADE);
             encyclopediaMemory = new EncyclopediaMemory(mContext);
             if (levelMemory.canLoadLevel())
             {

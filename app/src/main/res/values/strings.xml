@@ -37,10 +37,15 @@
     <string name="current_dynamite">Current dynamite level: </string>
     <string name="next_dynamite">Next dynamite level: </string>
     <string name="dynamite_update_0">Not yet purchased</string>
-    <string name="dynamite_update_1">1</string>
-    <string name="dynamite_update_1_benefit">Start each attempt with 1 dynamite.</string>
-    <string name="dynamite_update_2">2</string>
-    <string name="dynamite_update_2_benefit">Start each attempt with 2 dynamite.</string>
+    <string name="dynamite_update_1">Unlocked</string>
+    <string name="dynamite_update_1_benefit">Unlock dynamite in order to blow up rocks.</string>
+
+    <string name="ice_dynamite_update_name">Ice Bomb</string>
+    <string name="current_ice_dynamite">Current ice bomb level: </string>
+    <string name="next_ice_dynamite">Next ice bomb level: </string>
+    <string name="ice_dynamite_update_0">Not yet purchased</string>
+    <string name="ice_dynamite_update_1">Unlocked</string>
+    <string name="ice_dynamite_update_1_benefit">Unlock ice bombs in order to create ice blocks.</string>
 
     <string name="garden_update_name">Garden</string>
     <string name="current_garden">Current garden level: </string>

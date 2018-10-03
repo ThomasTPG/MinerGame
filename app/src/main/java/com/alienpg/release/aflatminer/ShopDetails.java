@@ -11,6 +11,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.games.Notifications;
+
+import java.util.Vector;
+
+import javax.microedition.khronos.opengles.GL;
+
 /**
  * Created by Thomas on 11/09/2017.
  */
@@ -31,6 +37,7 @@ public class ShopDetails extends OnClickFragment{
     boolean canAfford;
     boolean confirm;
     boolean nextUpdate;
+    BitmapFlyWeight blockImages;
     View myView;
 
     @Override
@@ -47,6 +54,7 @@ public class ShopDetails extends OnClickFragment{
         shopMemory = new ShopMemory(getActivity());
         oreMemory = new OreMemory(getActivity());
         encyclopediaMemory = new EncyclopediaMemory(getActivity());
+        blockImages = new BitmapFlyWeight(getActivity());
         findScreenWidth();
         initialise();
         return myView;
@@ -119,6 +127,10 @@ public class ShopDetails extends OnClickFragment{
             case (GlobalConstants.GARDENUPGRADE):
                 itemName.setText(getResources().getString(R.string.garden_update_name));
                 setGardenUpdates();
+                break;
+            case (GlobalConstants.ICE_BOMB_UPGRADE):
+                itemName.setText(getResources().getString(R.string.ice_dynamite_update_name));
+                setIceBombUpdates();
                 break;
         }
         setCosts();
@@ -226,10 +238,19 @@ public class ShopDetails extends OnClickFragment{
                 nextItemLevel.append(getResources().getString(R.string.dynamite_update_1));
                 nextItemBenefit.setText(getResources().getString(R.string.dynamite_update_1_benefit));
                 break;
-            case (1):
-                currentLevel.append(getResources().getString(R.string.dynamite_update_1));
-                nextItemLevel.append(getResources().getString(R.string.dynamite_update_2));
-                nextItemBenefit.setText(getResources().getString(R.string.dynamite_update_2_benefit));
+        }
+    }
+
+    private void setIceBombUpdates()
+    {
+        currentLevel.setText(getResources().getString(R.string.current_ice_dynamite));
+        nextItemLevel.setText(getResources().getString(R.string.next_ice_dynamite));
+        switch (shopMemory.getItem(GlobalConstants.ICE_BOMB_UPGRADE))
+        {
+            case (0):
+                currentLevel.append(getResources().getString(R.string.ice_dynamite_update_0));
+                nextItemLevel.append(getResources().getString(R.string.ice_dynamite_update_1));
+                nextItemBenefit.setText(getResources().getString(R.string.ice_dynamite_update_1_benefit));
                 break;
         }
     }
@@ -296,6 +317,8 @@ public class ShopDetails extends OnClickFragment{
                 return getResources().getDrawable(R.drawable.marble);
             case(GlobalConstants.SPRING):
                 return getResources().getDrawable(R.drawable.spring);
+            case(GlobalConstants.ICE):
+                return getResources().getDrawable(R.drawable.ice);
             case(GlobalConstants.LIFE):
                 return getResources().getDrawable(R.drawable.life_6);
             case(GlobalConstants.GOLD):
@@ -355,6 +378,9 @@ public class ShopDetails extends OnClickFragment{
                 break;
             case (GlobalConstants.AIRTANKUPGRADE):
                 getCostsAirTank();
+                break;
+            case (GlobalConstants.ICE_BOMB_UPGRADE):
+                getIceBombCosts();
                 break;
         }
     }
@@ -416,6 +442,17 @@ public class ShopDetails extends OnClickFragment{
             case (0):
                 oreTypeNeeded[GlobalConstants.SPRING] = 1;
                 break;
+        }
+    }
+
+    private void getIceBombCosts()
+    {
+        switch (shopMemory.getItem(item))
+        {
+            case (0):
+                oreTypeNeeded[GlobalConstants.ICE] = 100;
+                oreTypeNeeded[GlobalConstants.EXPLODIUM] = 20;
+                oreTypeNeeded[GlobalConstants.CRYSTAL] = 5;
         }
     }
 
