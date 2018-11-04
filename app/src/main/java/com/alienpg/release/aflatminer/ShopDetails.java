@@ -106,6 +106,8 @@ public class ShopDetails extends OnClickFragment{
 
     public void setItemDetails()
     {
+        nextItemLevel.setVisibility(View.VISIBLE);
+        nextItemBenefit.setVisibility(View.VISIBLE);
         switch (item)
         {
             case (GlobalConstants.PICKAXEUPGRADE):
@@ -134,6 +136,12 @@ public class ShopDetails extends OnClickFragment{
                 break;
         }
         setCosts();
+    }
+
+    private String getStringResourceByName(String aString) {
+        String packageName = getActivity().getPackageName();
+        int resId = getResources().getIdentifier(aString, "string", packageName);
+        return getString(resId);
     }
 
     private void setCosts()
@@ -174,23 +182,18 @@ public class ShopDetails extends OnClickFragment{
     {
         currentLevel.setText(getResources().getString(R.string.current_pickaxe));
         nextItemLevel.setText(getResources().getString(R.string.next_pickaxe));
-        switch (shopMemory.getItem(GlobalConstants.PICKAXEUPGRADE))
+        int level = shopMemory.getItem(GlobalConstants.PICKAXEUPGRADE);
+        if (level >=0 && level < 3)
         {
-            case (0):
-                currentLevel.append(getResources().getString(R.string.pickaxe_update_0));
-                nextItemLevel.append(getResources().getString(R.string.pickaxe_update_1));
-                nextItemBenefit.setText(getResources().getString(R.string.pickaxe_update_1_benefit));
-                break;
-            case (1):
-                currentLevel.append(getResources().getString(R.string.pickaxe_update_1));
-                nextItemLevel.append(getResources().getString(R.string.pickaxe_update_2));
-                nextItemBenefit.setText(getResources().getString(R.string.pickaxe_update_2_benefit));
-                break;
-            case (2):
-                currentLevel.append(getResources().getString(R.string.pickaxe_update_2));
-                nextItemLevel.append(getResources().getString(R.string.pickaxe_update_3));
-                nextItemBenefit.setText(getResources().getString(R.string.pickaxe_update_3_benefit));
-                break;
+            currentLevel.append(getStringResourceByName("pickaxe_update_" + level));
+            nextItemLevel.append(getStringResourceByName("pickaxe_update_" + (level + 1)));
+            nextItemBenefit.setText(getStringResourceByName("pickaxe_update_" + (level + 1) + "_benefit"));
+        }
+        else if (level == 3)
+        {
+            currentLevel.append(getStringResourceByName("pickaxe_update_" + level));
+            nextItemLevel.setVisibility(View.INVISIBLE);
+            nextItemBenefit.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -238,6 +241,10 @@ public class ShopDetails extends OnClickFragment{
                 nextItemLevel.append(getResources().getString(R.string.dynamite_update_1));
                 nextItemBenefit.setText(getResources().getString(R.string.dynamite_update_1_benefit));
                 break;
+            default:
+                currentLevel.append(getResources().getString(R.string.ice_dynamite_update_1));
+                nextItemLevel.setVisibility(View.INVISIBLE);
+                nextItemBenefit.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -252,6 +259,10 @@ public class ShopDetails extends OnClickFragment{
                 nextItemLevel.append(getResources().getString(R.string.ice_dynamite_update_1));
                 nextItemBenefit.setText(getResources().getString(R.string.ice_dynamite_update_1_benefit));
                 break;
+            default:
+                currentLevel.append(getResources().getString(R.string.ice_dynamite_update_1));
+                nextItemLevel.setVisibility(View.INVISIBLE);
+                nextItemBenefit.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -419,8 +430,8 @@ public class ShopDetails extends OnClickFragment{
         switch (shopMemory.getItem(item))
         {
             case (0):
-                oreTypeNeeded[GlobalConstants.EXPLODIUM] = 10;
-                oreTypeNeeded[GlobalConstants.GASROCK] = 10;
+                oreTypeNeeded[GlobalConstants.EXPLODIUM] = 15;
+                oreTypeNeeded[GlobalConstants.GASROCK] = 5;
                 break;
         }
     }

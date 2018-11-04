@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'key1'
             keyPassword 'Sh00byd00m0p!'
-            storeFile file('C:/Users/Thomas/AndroidStudioProjects/Miner/key.jks')
+            storeFile file('C:\\Users\\User\\AndroidStudioProjects\\MinerGame\\key.jks')
             storePassword 'Sh00byd00m0p!'
         }
     }

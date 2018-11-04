@@ -41,6 +41,10 @@ public class BlockArray {
 
     public Block getBlock(int ii, int jj)
     {
+        if (ii < 0 || ii > horizontalBlockLimit - 1 || jj < 0 || jj > verticalBlockLimit - 1)
+        {
+            throw new IllegalArgumentException("Index out of range");
+        }
         return blockArray[ii][jj];
     }
 

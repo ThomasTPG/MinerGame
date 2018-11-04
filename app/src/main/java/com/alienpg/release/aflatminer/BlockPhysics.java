@@ -1,6 +1,7 @@
 package com.alienpg.release.aflatminer;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -9,6 +10,8 @@ import java.util.Random;
  */
 
 public class BlockPhysics {
+
+    private static final String TAG = BlockPhysics.class.getName();
 
     private int horizontalBlockLimit;
     private int verticalBlockLimit;
@@ -19,7 +22,7 @@ public class BlockPhysics {
     Achievements achievementManager;
     Context mContext;
 
-    public static final int GAS_THRESHOLD = 0;
+    public static final int GAS_THRESHOLD = 5;
 
     public BlockPhysics(BlockArray blockArray, ActiveBombs activeBombs, Context context, Achievements achievements)
     {
@@ -38,27 +41,77 @@ public class BlockPhysics {
         {
             for (int jj = verticalBlockLimit - 1; jj >=0; jj--)
             {
+                long startTime = System.nanoTime();
                 if (blockArray.getBlock(ii, jj).isCavern())
                 {
-                    if (!updateWaterBelow(ii,jj) && (ii - delay) % 5 == 0)
+                    if ((ii - delay) % 5 == 0 && !updateWaterBelow(ii,jj))
                     {
-                        updateWaterSides(ii,jj);
+                        decayGas(ii,jj);
+                        updateSpring(ii,jj);
+                        if (!updateWaterBelow(ii, jj))
+                        {
+                            updateWaterSides(ii,jj);
+                        }
                     }
-                    if (!updateGasAbove(ii,jj) && (ii - delay) % 10 == 0)
+                    if ((ii - delay) % 10 == 0 && !updateGasAbove(ii,jj))
                     {
                         updateGasSides(ii,jj);
                     }
                 }
-                updateSpring(ii,jj);
+                long endTime = System.nanoTime();
+                long diff = endTime - startTime;
+
+                if (diff > 10000000)
+                {
+                    Log.e(TAG, String.format("TIME1 = %d", diff));
+                }
+
+
+                long startTime1 = System.nanoTime();
                 updateLifeBlocks(ii,jj);
+                long endTimea = System.nanoTime();
+
                 updateIceBlocks(ii,jj);
+                long endTimeb = System.nanoTime();
+
                 updateCrystalBlocks(ii,jj);
+                long endTimec = System.nanoTime();
+
                 updateFallingBlocks(ii,jj);
+                long endTimed = System.nanoTime();
+
                 createGas(ii,jj);
-                decayGas(ii,jj);
+                long endTimee = System.nanoTime();
+
                 checkBlowingUpGas(ii,jj);
+                long endTimef = System.nanoTime();
+
                 blowUpExplodium(ii,jj);
+                long endTimeg = System.nanoTime();
+
                 checkDynamiteFall(ii,jj);
+                long endTime1 = System.nanoTime();
+                long diff2 = endTime1 - startTime1;
+
+                if (diff2 > 10000000)
+                {
+                    Log.e(TAG, String.format("TIME2 = %d", diff2));
+                    Log.e(TAG, String.format("TIMEa = %d", endTimea - startTime1));
+                    Log.e(TAG, String.format("TIMEb = %d", endTimeb - startTime1));
+                    Log.e(TAG, String.format("TIMEc = %d", endTimec - startTime1));
+                    Log.e(TAG, String.format("TIMEd = %d", endTimed - startTime1));
+                    Log.e(TAG, String.format("TIMEe = %d", endTimee - startTime1));
+                    Log.e(TAG, String.format("TIMEf = %d", endTimef - startTime1));
+                    Log.e(TAG, String.format("TIMEg = %d", endTimeg - startTime1));
+
+
+
+
+
+
+
+                }
+
             }
         }
     }
@@ -78,24 +131,18 @@ public class BlockPhysics {
         boolean detonated = false;
         if (blockArray.getBlock(ii, jj).isFire())
         {
-            if (ii > 0)
-            {
+            try {
                 detonated = blowUpGas(ii-1,jj);
+                detonated = detonated || blowUpGas(ii+1,jj);
+                detonated = detonated || blowUpGas(ii,jj+1);
+                detonated = detonated || blowUpGas(ii,jj-1);
             }
-            if (ii < horizontalBlockLimit-1)
+            catch (IllegalArgumentException ex)
             {
-                detonated = blowUpGas(ii+1,jj);
-            }
-            if (jj < verticalBlockLimit - 1)
-            {
-                detonated = blowUpGas(ii,jj+1);
-            }
-            if (jj > 0)
-            {
-                detonated = blowUpGas(ii,jj-1);
+                Log.e(TAG, ex.getMessage());
             }
         }
-        if (blockArray.getBlock(ii, jj).getAchievementChainReactionII() && detonated)
+        if (detonated && blockArray.getBlock(ii, jj).getAchievementChainReactionII())
         {
             achievementManager.unlockAchievement(mContext.getResources().getString(R.string.chain_reaction_ii));
         }
@@ -105,37 +152,16 @@ public class BlockPhysics {
     {
         if (blockArray.getBlock(ii, jj).getType() == GlobalConstants.EXPLODIUM)
         {
-            if (ii > 0)
-            {
-                if (shouldExplodeExplodium(ii-1,jj))
+            try {
+                if (shouldExplodeExplodium(ii-1,jj) || shouldExplodeExplodium(ii+1,jj) || shouldExplodeExplodium(ii,jj-1) || shouldExplodeExplodiumBelow(ii,jj+1))
                 {
                     explodeBlock(ii,jj);
                     return;
                 }
             }
-            if (ii < horizontalBlockLimit-1)
+            catch (IllegalArgumentException ex)
             {
-                if (shouldExplodeExplodium(ii+1,jj))
-                {
-                    explodeBlock(ii,jj);
-                    return;
-                }
-            }
-            if (jj > 0)
-            {
-                if (shouldExplodeExplodium(ii,jj-1))
-                {
-                    explodeBlock(ii,jj);
-                    return;
-                }
-            }
-            if (jj < verticalBlockLimit - 1)
-            {
-                if (shouldExplodeExplodiumBelow(ii,jj+1))
-                {
-                    explodeBlock(ii,jj);
-                    return;
-                }
+                Log.i(TAG, ex.getMessage());
             }
         }
     }
@@ -291,10 +317,12 @@ public class BlockPhysics {
             {
                 for (int bb = -2; bb<=2; bb++)
                 {
-                    if (x + aa < horizontalBlockLimit && x + aa >= 0 && y + bb >=0 && y + bb < verticalBlockLimit)
-                    {
+                    try {
                         achievementManager.checkChainReactionII(block, blockArray.getBlock(x + aa, y + bb));
                         explodeBlockByCoords(x + aa, y + bb);
+                    } catch (IllegalArgumentException ex)
+                    {
+                        Log.i(TAG, ex.getMessage());
                     }
                 }
             }
@@ -369,7 +397,18 @@ public class BlockPhysics {
 
     private boolean shouldExplodeExplodium(int ii, int jj)
     {
-        return (blockArray.getBlock(ii, jj).getLiquidData().getWaterPercentage() + blockArray.getBlock(ii, jj).getLiquidData().getGasPercentage() > 5) || (blockArray.getBlock(ii, jj).isFire());
+        Block explodiumNeighbour = blockArray.getBlock(ii, jj);
+        if (explodiumNeighbour.isSolid())
+        {
+            return false;
+        }
+        boolean willBlow = (explodiumNeighbour.getLiquidData().getWaterPercentage() + explodiumNeighbour.getLiquidData().getGasPercentage() > 5) || (explodiumNeighbour.isFire());
+        if (willBlow)
+        {
+            Log.e(TAG, String.format("WILL BLOW %d", explodiumNeighbour.getLiquidData().getGasPercentage()));
+
+        }
+        return (willBlow);
     }
 
     private void decayGas(int ii, int jj)
@@ -536,23 +575,26 @@ public class BlockPhysics {
 
                     if (jj < verticalBlockLimit - 2)
                     {
-                        Block twoBelow = blockArray.getBlock(ii, jj + 2);
+                        Block hasFallen = blockArray.getBlock(ii,jj+1);
+                        Block fallenOnto = blockArray.getBlock(ii, jj + 2);
                         //Check explodium
-                        if (twoBelow.isSolid() && blockBelow.getType() ==GlobalConstants.EXPLODIUM)
+                        if (fallenOnto.isSolid() && hasFallen.getType() ==GlobalConstants.EXPLODIUM)
                         {
-                            achievementManager.checkOops(blockBelow);
+                            Log.d(TAG, "Dropped an explodium. Will explode.");
+                            achievementManager.checkOops(hasFallen);
                             explodeBlock(ii,jj+1);
                         }
-                        if (twoBelow.getType() == GlobalConstants.EXPLODIUM)
+                        if (fallenOnto.getType() == GlobalConstants.EXPLODIUM)
                         {
-                            achievementManager.checkChainReactionI(blockBelow);
+                            Log.d(TAG, "Dropped onto an explodium. Will explode.");
+                            achievementManager.checkChainReactionI(hasFallen);
                             explodeBlock(ii,jj+2);
                         }
 
-                        if (twoBelow.isSolid())
+                        if (fallenOnto.isSolid())
                         {
                             //Check poisoning_the_well achievement
-                            if (blockBelow.getType() == GlobalConstants.GASROCK)
+                            if (hasFallen.getType() == GlobalConstants.GASROCK)
                             {
                                 if (blockArray.getBlock(ii, jj).getWaterPercentage() == 100)
                                 {
@@ -564,7 +606,7 @@ public class BlockPhysics {
                             }
 
                             //Reset height fallen
-                            blockBelow.resetHeightFallen();
+                            hasFallen.resetHeightFallen();
                         }
                     }
                 }
